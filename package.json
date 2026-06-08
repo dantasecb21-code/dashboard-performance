@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "generate": "node scripts/generate-data.mjs",
     "build": "next build",
+    "build:static": "node scripts/generate-data.mjs && next build",
     "start": "next start",
     "lint": "next lint"
   },

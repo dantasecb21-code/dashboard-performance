@@ -1,8 +1,7 @@
+// Esta route só é usada em desenvolvimento (npm run dev).
+// Em produção (GitHub Pages) os dados vêm de public/data.json gerado pelo script scripts/generate-data.mjs
 import { NextResponse } from 'next/server'
 import { fetchLojas } from '@/lib/googleSheets'
-
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 export async function GET() {
   try {

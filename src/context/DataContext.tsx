@@ -21,7 +21,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const load = useCallback(() => {
     setLoading(true)
     setError(null)
-    fetch('/api/sheets')
+    // Em produção (GitHub Pages) usa data.json gerado no build; em dev usa a API route
+    const url = process.env.NODE_ENV === 'production' ? '/dashboard-performance/data.json' : '/api/sheets'
+    fetch(url)
       .then(r => r.json())
       .then(data => {
         if (data.error) throw new Error(data.error)
