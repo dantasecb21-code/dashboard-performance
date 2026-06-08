@@ -122,6 +122,143 @@ function parseCancelamento(row: Row): Partial<Loja> | null {
   }
 }
 
+export interface RawSheetInfo {
+  name: string
+  headerRows: string[][]   // rows 1-3 from the sheet (group headers, sub-headers, etc.)
+  dataRows: { codigoLoja: string; values: string[] }[]
+  rowCount: number
+}
+
+export interface DebugData {
+  updatedAt: string
+  rawSheets: Record<'indicadores' | 'vendasDiarias' | 'vendasAnuais' | 'cancelamento', RawSheetInfo>
+  lojas: Loja[]
+  stats: {
+    rowCounts: Record<string, number>
+    totalLojas: number
+    nullCounts: Record<string, number>
+  }
+}
+
+export async function fetchDebugData(): Promise<DebugData> {
+  const auth = getAuth()
+  const sheets = google.sheets({ version: 'v4', auth })
+
+  const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A1:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A1:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A1:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A1:AF200" }),
+  ])
+
+  function splitSheet(res: typeof indRes, name: string): RawSheetInfo {
+    const all = (res.data.values as string[][] | null) ?? []
+    const headerRows = all.slice(0, 3)
+    const dataRows = all.slice(3).filter(r => r.length >= 5 && String(r[4] ?? '').trim() !== '')
+    return {
+      name,
+      headerRows,
+      dataRows: dataRows.map(r => ({ codigoLoja: String(r[3] ?? '').trim(), values: r })),
+      rowCount: dataRows.length,
+    }
+  }
+
+  const rawSheets = {
+    indicadores: splitSheet(indRes, 'indicadores'),
+    vendasDiarias: splitSheet(diarRes, 'vendas diarias e mensais'),
+    vendasAnuais: splitSheet(anuaisRes, 'vendas anuais'),
+    cancelamento: splitSheet(cancelRes, 'cancelamento'),
+  }
+
+  // Re-run the same merge to get parsed lojas
+  const toRow = (r: { values: string[] }) => r.values as Row
+
+  const baseMap = new Map<string, Partial<Loja>>()
+  for (const r of rawSheets.indicadores.dataRows) {
+    const p = parseIndicadores(toRow(r)); if (p?.codigoLoja) baseMap.set(p.codigoLoja, p)
+  }
+  for (const r of rawSheets.vendasDiarias.dataRows) {
+    const p = parseVendasDiarias(toRow(r)); if (!p?.codigoLoja) continue
+    const base = baseMap.get(p.codigoLoja) ?? {}
+    const merged = { ...p, ...base }
+    if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined) merged.cancelamentoTotal = p.cancelamentoTotal ?? null
+    baseMap.set(p.codigoLoja, merged)
+  }
+  for (const r of rawSheets.vendasAnuais.dataRows) {
+    const p = parseVendasAnuais(toRow(r)); if (!p?.codigoLoja) continue
+    const base = baseMap.get(p.codigoLoja) ?? {}
+    const merged: Partial<Loja> = { ...p, ...base }
+    merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
+    merged.nsu = base.nsu ?? p.nsu ?? null
+    merged.faturamentoJunho = p.faturamentoJunho ?? base.faturamentoJunho ?? null
+    baseMap.set(p.codigoLoja, merged)
+  }
+  for (const r of rawSheets.cancelamento.dataRows) {
+    const p = parseCancelamento(toRow(r)); if (!p?.codigoLoja) continue
+    const base = baseMap.get(p.codigoLoja) ?? {}
+    baseMap.set(p.codigoLoja, { ...base, ...p })
+  }
+
+  const lojas: Loja[] = Array.from(baseMap.values())
+    .filter(l => l.codigoLoja && l.nomeLoja)
+    .map((l, i) => {
+      const perdaTotal = (l.perdaCancelamento ?? 0) + (l.perdaRuptura ?? 0) + (l.perdaTempoOnline ?? 0)
+      const base: Loja = {
+        id: String(i), codigoLoja: l.codigoLoja ?? '', nomeLoja: l.nomeLoja ?? '',
+        cidade: l.cidade ?? '', uf: l.uf ?? '', diretorDivisional: l.diretorDivisional ?? '',
+        diretorRegional: l.diretorRegional ?? '', gerenteRegional: l.gerenteRegional ?? '',
+        projetoOlimpo: (l.nomeLoja ?? '').toLowerCase().includes('olimpo'),
+        faturamentoJaneiro: l.faturamentoJaneiro ?? null, faturamentoFevereiro: l.faturamentoFevereiro ?? null,
+        faturamentoMarco: l.faturamentoMarco ?? null, faturamentoAbril: l.faturamentoAbril ?? null,
+        faturamentoMaio: l.faturamentoMaio ?? null, faturamentoJunho: l.faturamentoJunho ?? null,
+        meta: l.meta ?? null, venda: l.venda ?? null, desvio: l.desvio ?? null,
+        crescimento: l.crescimento ?? null, participacao: l.participacao ?? null, ticketMedio: l.ticketMedio ?? null,
+        metaDia: l.metaDia ?? null, vendaDia: l.vendaDia ?? null, desvioDia: l.desvioDia ?? null, crescimentoDia: l.crescimentoDia ?? null,
+        metaAcumulada: l.metaAcumulada ?? null, vendaAcumulada: l.vendaAcumulada ?? null,
+        desvioAcumulado: l.desvioAcumulado ?? null, crescimentoAcumulado: l.crescimentoAcumulado ?? null,
+        participacaoAcumulada: l.participacaoAcumulada ?? null, ticketMedioDiario: l.ticketMedioDiario ?? null,
+        cancelamentoTotal: l.cancelamentoTotal ?? null, cancelamentoCliente: l.cancelamentoCliente ?? null,
+        cancelamentoLoja: l.cancelamentoLoja ?? null, cancelamentoEntregador: l.cancelamentoEntregador ?? null,
+        cancelamentoAbril: l.cancelamentoAbril ?? null, cancelamentoDesvio: l.cancelamentoDesvio ?? null,
+        cancelamentoTotalR: l.cancelamentoTotalR ?? null, cancelamentoClienteR: l.cancelamentoClienteR ?? null,
+        cancelamentoLojaR: l.cancelamentoLojaR ?? null, cancelamentoEntregadorR: l.cancelamentoEntregadorR ?? null,
+        slaPreparo: l.slaPreparo ?? null, slaEntrega: l.slaEntrega ?? null,
+        nsu: l.nsu ?? null, rupturaItem: l.rupturaItem ?? null, tempoOnline: l.tempoOnline ?? null,
+        perdaVendaTotal: perdaTotal > 0 ? perdaTotal : (l.perdaVendaTotal ?? null),
+        perdaCancelamento: l.perdaCancelamento ?? null, perdaRuptura: l.perdaRuptura ?? null, perdaTempoOnline: l.perdaTempoOnline ?? null,
+        scoreSaude: 0, statusLoja: 'Crítica',
+      }
+      const score = scoreSaudeLoja(base); base.scoreSaude = score; base.statusLoja = statusLoja(score)
+      return base
+    })
+
+  const nullCount = (field: keyof Loja) => lojas.filter(l => l[field] === null).length
+
+  return {
+    updatedAt: new Date().toISOString(),
+    rawSheets,
+    lojas,
+    stats: {
+      rowCounts: {
+        indicadores: rawSheets.indicadores.rowCount,
+        vendasDiarias: rawSheets.vendasDiarias.rowCount,
+        vendasAnuais: rawSheets.vendasAnuais.rowCount,
+        cancelamento: rawSheets.cancelamento.rowCount,
+      },
+      totalLojas: lojas.length,
+      nullCounts: {
+        meta: nullCount('meta'),
+        venda: nullCount('venda'),
+        cancelamentoTotal: nullCount('cancelamentoTotal'),
+        rupturaItem: nullCount('rupturaItem'),
+        tempoOnline: nullCount('tempoOnline'),
+        slaPreparo: nullCount('slaPreparo'),
+        nsu: nullCount('nsu'),
+      },
+    },
+  }
+}
+
 let cache: { lojas: Loja[]; ts: number } = { lojas: [], ts: 0 }
 const CACHE_TTL = 5 * 60 * 1000
 

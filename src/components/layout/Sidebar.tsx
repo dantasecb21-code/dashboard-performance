@@ -12,6 +12,7 @@ import {
   Table2,
   Zap,
   X,
+  ShieldCheck,
 } from 'lucide-react'
 
 const MENU = [
@@ -22,6 +23,7 @@ const MENU = [
   { href: '/indicadores',   label: 'Indicadores',        icon: Activity },
   { href: '/perda-venda',   label: 'Perda de Venda',     icon: TrendingDown },
   { href: '/tabela',        label: 'Tabela Detalhada',   icon: Table2 },
+  { href: '/auditoria',     label: 'Auditoria de Dados', icon: ShieldCheck },
 ]
 
 interface Props {
