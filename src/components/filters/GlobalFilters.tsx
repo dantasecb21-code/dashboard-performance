@@ -1,59 +1,81 @@
 'use client'
 import { useFilters } from '@/context/FilterContext'
 import { Search } from 'lucide-react'
+import GlassSelect from '@/components/common/GlassSelect'
 import type { Filtros } from '@/types/dashboard'
-
-const SELECT_CLS =
-  'text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 cursor-pointer transition-colors hover:border-slate-300 w-full min-w-0'
 
 export default function GlobalFilters() {
   const { filtros, setFiltro, opcoesUnicas } = useFilters()
 
-  const sel = (key: keyof Filtros, label: string, opts: string[], value: string) => (
-    <div className="flex flex-col gap-1 min-w-[100px] sm:min-w-[120px] flex-1 sm:flex-none">
-      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{label}</label>
-      <select className={SELECT_CLS} value={value} onChange={e => setFiltro(key, e.target.value)}>
-        <option value="">Todos</option>
-        {opts.map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-    </div>
-  )
+  const toOpts = (arr: string[]) => arr.map(v => ({ value: v, label: v }))
 
   return (
-    <div className="flex flex-wrap items-end gap-2 sm:gap-3">
-      {sel('diretorDivisional', 'Dir. Divisional', opcoesUnicas.diretoresDivisionais, filtros.diretorDivisional)}
-      {sel('diretorRegional',   'Dir. Regional',   opcoesUnicas.diretoresRegionais,   filtros.diretorRegional)}
-      {sel('gerenteRegional',   'Ger. Regional',   opcoesUnicas.gerentesRegionais,    filtros.gerenteRegional)}
-      {sel('uf',    'UF',     opcoesUnicas.ufs,     filtros.uf)}
-      {sel('cidade', 'Cidade', opcoesUnicas.cidades, filtros.cidade)}
+    <div className="flex flex-wrap items-end gap-2 sm:gap-2.5">
+      <GlassSelect
+        label="Dir. Divisional"
+        value={filtros.diretorDivisional}
+        options={toOpts(opcoesUnicas.diretoresDivisionais)}
+        onChange={v => setFiltro('diretorDivisional', v)}
+        className="min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="Dir. Regional"
+        value={filtros.diretorRegional}
+        options={toOpts(opcoesUnicas.diretoresRegionais)}
+        onChange={v => setFiltro('diretorRegional', v)}
+        className="min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="Ger. Regional"
+        value={filtros.gerenteRegional}
+        options={toOpts(opcoesUnicas.gerentesRegionais)}
+        onChange={v => setFiltro('gerenteRegional', v)}
+        className="min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="UF"
+        value={filtros.uf}
+        options={toOpts(opcoesUnicas.ufs)}
+        onChange={v => setFiltro('uf', v)}
+        className="min-w-[80px] sm:min-w-[90px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="Cidade"
+        value={filtros.cidade}
+        options={toOpts(opcoesUnicas.cidades)}
+        onChange={v => setFiltro('cidade', v)}
+        className="min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="Status"
+        value={filtros.statusLoja}
+        options={[
+          { value: 'Saudável', label: 'Saudável' },
+          { value: 'Atenção', label: 'Atenção' },
+          { value: 'Crítica', label: 'Crítica' },
+        ]}
+        onChange={v => setFiltro('statusLoja', v)}
+        className="min-w-[100px] sm:min-w-[110px] flex-1 sm:flex-none"
+      />
+      <GlassSelect
+        label="Olimpo"
+        value={filtros.projetoOlimpo}
+        options={[
+          { value: 'sim', label: 'Olimpo' },
+          { value: 'nao', label: 'Não Olimpo' },
+        ]}
+        onChange={v => setFiltro('projetoOlimpo', v)}
+        className="min-w-[100px] sm:min-w-[110px] flex-1 sm:flex-none"
+      />
 
-      <div className="flex flex-col gap-1 min-w-[90px] sm:min-w-[100px] flex-1 sm:flex-none">
-        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Status</label>
-        <select className={SELECT_CLS} value={filtros.statusLoja} onChange={e => setFiltro('statusLoja', e.target.value)}>
-          <option value="">Todos</option>
-          <option value="Saudável">Saudável</option>
-          <option value="Atenção">Atenção</option>
-          <option value="Crítica">Crítica</option>
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-1 min-w-[90px] sm:min-w-[100px] flex-1 sm:flex-none">
-        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Olimpo</label>
-        <select className={SELECT_CLS} value={filtros.projetoOlimpo} onChange={e => setFiltro('projetoOlimpo', e.target.value)}>
-          <option value="">Todos</option>
-          <option value="sim">Olimpo</option>
-          <option value="nao">Não Olimpo</option>
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Busca</label>
+      <div className="flex flex-col gap-1 flex-1 sm:flex-none">
+        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">Busca</label>
         <div className="relative">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Loja ou código..."
-            className="text-xs border border-slate-200 rounded-lg pl-6 pr-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 w-40 transition-colors hover:border-slate-300"
+            className="text-xs border border-slate-200 rounded-lg pl-6 pr-2.5 py-1.5 bg-white/70 backdrop-blur-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400 w-full sm:w-40 transition-colors hover:border-slate-300"
             value={filtros.codigoLoja}
             onChange={e => setFiltro('codigoLoja', e.target.value)}
           />

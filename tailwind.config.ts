@@ -42,6 +42,7 @@ const config: Config = {
       boxShadow: {
         'card':  '0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
         'card-hover': '0 6px 16px 0 rgb(0 0 0 / 0.12), 0 2px 6px -1px rgb(0 0 0 / 0.06)',
+        'glass': '0 8px 30px -4px rgb(15 23 42 / 0.18), 0 2px 8px -2px rgb(15 23 42 / 0.10)',
         'sidebar': '1px 0 0 0 #1e293b',
       },
       borderRadius: {

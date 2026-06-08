@@ -25,7 +25,7 @@ export default function TopBar({ onMenuToggle }: Props) {
   return (
     <div className="sticky top-0 z-20">
       {/* Barra principal */}
-      <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between gap-3 shadow-sm">
+      <div className="bg-white/75 backdrop-blur-xl border-b border-slate-200/70 px-4 sm:px-6 py-3 flex items-center justify-between gap-3 shadow-sm">
 
         {/* Esquerda */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
@@ -95,10 +95,10 @@ export default function TopBar({ onMenuToggle }: Props) {
       </div>
 
       {/* Painel de filtros colapsável */}
-      <div className={`overflow-hidden transition-all duration-200 ease-in-out ${
-        showFilters ? 'max-h-52 opacity-100' : 'max-h-0 opacity-0'
+      <div className={`transition-all duration-200 ease-in-out ${
+        showFilters ? 'max-h-[440px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
       }`}>
-        <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 sm:px-6 py-4 shadow-md">
+        <div className="bg-white/70 backdrop-blur-xl border-b border-slate-200/70 px-4 sm:px-6 py-4 shadow-glass">
           <GlobalFilters />
         </div>
       </div>

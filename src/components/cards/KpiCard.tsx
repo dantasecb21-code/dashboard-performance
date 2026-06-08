@@ -46,9 +46,9 @@ const COLOR_MAP = {
 
 function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
   const len = String(value ?? '').length
-  if (len > 16) return 'text-sm'
-  if (len > 12) return 'text-base'
-  if (len > 8)  return 'text-lg'
+  if (len > 13) return 'text-sm sm:text-base'
+  if (len > 10) return 'text-base sm:text-lg'
+  if (len > 7)  return 'text-lg'
   return size === 'sm' ? 'text-lg' : 'text-xl'
 }
 
