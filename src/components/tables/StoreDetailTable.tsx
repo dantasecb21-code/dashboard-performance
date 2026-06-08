@@ -1,0 +1,167 @@
+'use client'
+import { useState, useMemo } from 'react'
+import clsx from 'clsx'
+import type { Loja } from '@/types/dashboard'
+import { fmtBRL, fmtPct } from '@/lib/formatters'
+import StatusBadge from '@/components/common/StatusBadge'
+import { statusIndicador } from '@/lib/statusRules'
+
+type SortKey = keyof Loja
+type SortDir = 'asc' | 'desc'
+
+const CELL_INDICADOR = (val: number | null, ind: Parameters<typeof statusIndicador>[0]) => {
+  const cor = statusIndicador(ind, val)
+  const cls = {
+    verde: 'text-green-700', amarelo: 'text-yellow-700', vermelho: 'text-red-700', neutro: 'text-gray-400'
+  }[cor]
+  return <td className={clsx('px-3 py-2 text-right text-xs font-medium', cls)}>{val !== null ? fmtPct(val) : '—'}</td>
+}
+
+const PAGE_SIZE = 25
+
+interface Props { lojas: Loja[] }
+
+export default function StoreDetailTable({ lojas }: Props) {
+  const [sortKey, setSortKey] = useState<SortKey>('scoreSaude')
+  const [sortDir, setSortDir] = useState<SortDir>('desc')
+  const [page, setPage] = useState(0)
+  const [search, setSearch] = useState('')
+
+  const searched = useMemo(() =>
+    search ? lojas.filter(l => l.nomeLoja.toLowerCase().includes(search.toLowerCase()) || l.codigoLoja.includes(search))
+           : lojas, [lojas, search])
+
+  const sorted = useMemo(() => [...searched].sort((a, b) => {
+    const av = a[sortKey]
+    const bv = b[sortKey]
+    if (av === null || av === undefined) return 1
+    if (bv === null || bv === undefined) return -1
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0
+    return sortDir === 'asc' ? cmp : -cmp
+  }), [searched, sortKey, sortDir])
+
+  const pageData = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+  const totalPages = Math.ceil(sorted.length / PAGE_SIZE)
+
+  const handleSort = (k: SortKey) => {
+    if (k === sortKey) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortKey(k); setSortDir('desc') }
+    setPage(0)
+  }
+
+  const th = (label: string, k: SortKey) => (
+    <th key={k} onClick={() => handleSort(k)}
+      className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-700 select-none whitespace-nowrap">
+      {label}{sortKey === k ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}
+    </th>
+  )
+
+  const exportCSV = () => {
+    const headers = ['Cod','Nome','Cidade','UF','Dir Div','Dir Reg','Ger Reg','Jan','Fev','Mar','Abr','Mai','Meta','Venda','Desvio','Cresc%','Particip%','Ticket','Cancel%','SLAPreparo','NSU','Ruptura','SLAEntrega','TempoOn','PerdaTotal','Score','Status']
+    const rows = sorted.map(l => [
+      l.codigoLoja, l.nomeLoja, l.cidade, l.uf, l.diretorDivisional, l.diretorRegional, l.gerenteRegional,
+      l.faturamentoJaneiro, l.faturamentoFevereiro, l.faturamentoMarco, l.faturamentoAbril, l.faturamentoMaio,
+      l.meta, l.venda, l.desvio, l.crescimento, l.participacao, l.ticketMedio,
+      l.cancelamentoTotal, l.slaPreparo, l.nsu, l.rupturaItem, l.slaEntrega, l.tempoOnline,
+      l.perdaVendaTotal, l.scoreSaude, l.statusLoja,
+    ].map(v => v === null || v === undefined ? '' : String(v)).join(';'))
+    const csv = [headers.join(';'), ...rows].join('\n')
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'dashboard.csv'; a.click()
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <input type="text" placeholder="Buscar loja..." value={search}
+            onChange={e => { setSearch(e.target.value); setPage(0) }}
+            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-44" />
+          <span className="text-xs text-gray-400">{sorted.length} lojas</span>
+        </div>
+        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+          Exportar CSV
+        </button>
+      </div>
+      <div className="overflow-auto">
+        <table className="w-full text-xs min-w-[1200px]">
+          <thead className="bg-gray-50 border-b border-gray-100">
+            <tr>
+              {th('Código', 'codigoLoja')}
+              {th('Nome', 'nomeLoja')}
+              {th('Cidade', 'cidade')}
+              {th('UF', 'uf')}
+              {th('Dir. Reg.', 'diretorRegional')}
+              {th('Gerente', 'gerenteRegional')}
+              {th('Jan', 'faturamentoJaneiro')}
+              {th('Fev', 'faturamentoFevereiro')}
+              {th('Mar', 'faturamentoMarco')}
+              {th('Abr', 'faturamentoAbril')}
+              {th('Mai', 'faturamentoMaio')}
+              {th('Meta', 'meta')}
+              {th('Venda', 'venda')}
+              {th('Desvio', 'desvio')}
+              {th('Cresc.', 'crescimento')}
+              {th('Ticket', 'ticketMedio')}
+              {th('Cancel.', 'cancelamentoTotal')}
+              {th('SLA Prep.', 'slaPreparo')}
+              {th('NSU', 'nsu')}
+              {th('Ruptura', 'rupturaItem')}
+              {th('Tempo On', 'tempoOnline')}
+              {th('Perda', 'perdaVendaTotal')}
+              {th('Score', 'scoreSaude')}
+              <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pageData.map(l => (
+              <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50">
+                <td className="px-3 py-2 font-mono text-gray-500">{l.codigoLoja}</td>
+                <td className="px-3 py-2 font-medium text-gray-800 whitespace-nowrap">{l.nomeLoja}</td>
+                <td className="px-3 py-2 text-gray-500">{l.cidade}</td>
+                <td className="px-3 py-2 text-gray-500">{l.uf}</td>
+                <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{l.diretorRegional}</td>
+                <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{l.gerenteRegional}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoJaneiro)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoFevereiro)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoMarco)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoAbril)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoMaio)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.meta)}</td>
+                <td className="px-3 py-2 text-right font-semibold text-gray-900">{fmtBRL(l.venda)}</td>
+                <td className={clsx('px-3 py-2 text-right font-semibold',
+                  l.desvio === null ? 'text-gray-400' : l.desvio >= 0 ? 'text-green-700' : 'text-red-700')}>
+                  {fmtBRL(l.desvio)}
+                </td>
+                <td className={clsx('px-3 py-2 text-right',
+                  l.crescimento === null ? 'text-gray-400' : l.crescimento >= 0 ? 'text-green-700' : 'text-red-700')}>
+                  {l.crescimento !== null ? fmtPct(l.crescimento) : '—'}
+                </td>
+                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.ticketMedio)}</td>
+                {CELL_INDICADOR(l.cancelamentoTotal, 'cancelamento_total')}
+                {CELL_INDICADOR(l.slaPreparo,        'sla_preparo')}
+                {CELL_INDICADOR(l.nsu,               'nsu')}
+                {CELL_INDICADOR(l.rupturaItem,       'ruptura_item')}
+                {CELL_INDICADOR(l.tempoOnline,       'tempo_online')}
+                <td className="px-3 py-2 text-right text-red-600 font-medium">{fmtBRL(l.perdaVendaTotal)}</td>
+                <td className="px-3 py-2 text-center font-bold text-gray-700">{l.scoreSaude}</td>
+                <td className="px-3 py-2"><StatusBadge status={l.statusLoja} size="sm" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+          <span className="text-xs text-gray-400">Página {page + 1} de {totalPages}</span>
+          <div className="flex gap-2">
+            <button disabled={page === 0} onClick={() => setPage(p => p - 1)}
+              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">← Anterior</button>
+            <button disabled={page === totalPages - 1} onClick={() => setPage(p => p + 1)}
+              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">Próxima →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
