@@ -1,10 +1,16 @@
 'use client'
-import { RefreshCw, Clock } from 'lucide-react'
+import { useState } from 'react'
+import { RefreshCw, Clock, SlidersHorizontal, X } from 'lucide-react'
 import GlobalFilters from '@/components/filters/GlobalFilters'
 import { useData } from '@/context/DataContext'
+import { useFilters } from '@/context/FilterContext'
 
 export default function TopBar() {
+  const [showFilters, setShowFilters] = useState(false)
   const { updatedAt, refresh, loading } = useData()
+  const { filtros, lojasFiltered, resetFiltros } = useFilters()
+
+  const activeCount = Object.values(filtros).filter(v => v !== '').length
 
   const fmtDate = (iso: string | null) => {
     if (!iso) return '—'
@@ -13,23 +19,80 @@ export default function TopBar() {
   }
 
   return (
-    <div className="bg-white border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center gap-4 justify-between sticky top-0 z-10 shadow-sm">
-      <GlobalFilters />
+    <div className="sticky top-0 z-20">
+      {/* Barra principal */}
+      <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-3 flex items-center justify-between gap-4 shadow-sm">
 
-      <div className="flex items-center gap-3 flex-shrink-0">
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
-          <Clock className="w-3 h-3" />
-          <span className="font-medium">{fmtDate(updatedAt)}</span>
+        {/* Esquerda: toggle de filtros + contagem */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowFilters(v => !v)}
+            className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border font-semibold transition-all duration-150 cursor-pointer ${
+              showFilters || activeCount > 0
+                ? 'bg-brand-50 border-brand-300 text-brand-700'
+                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-800'
+            }`}
+          >
+            {showFilters ? <X className="w-3.5 h-3.5" /> : <SlidersHorizontal className="w-3.5 h-3.5" />}
+            Filtros
+            {activeCount > 0 && (
+              <span className="min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-brand-600 text-white rounded-full flex items-center justify-center leading-none">
+                {activeCount}
+              </span>
+            )}
+          </button>
+
+          {/* Chips de filtros ativos */}
+          {activeCount > 0 && (
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {activeCount === 1 ? (
+                <span className="text-[11px] text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full font-medium">
+                  1 filtro ativo
+                </span>
+              ) : (
+                <span className="text-[11px] text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full font-medium">
+                  {activeCount} filtros ativos
+                </span>
+              )}
+              <button
+                onClick={resetFiltros}
+                className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              >
+                Limpar
+              </button>
+            </div>
+          )}
+
+          <span className="text-[11px] text-slate-400 font-medium">
+            {lojasFiltered.length} <span className="text-slate-300">lojas</span>
+          </span>
         </div>
 
-        <button
-          onClick={refresh}
-          disabled={loading}
-          className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50 transition-all duration-150 font-semibold cursor-pointer focus-visible:outline-brand-500 shadow-sm"
-        >
-          <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-          Atualizar
-        </button>
+        {/* Direita: data + refresh */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
+            <Clock className="w-3 h-3" />
+            <span className="font-medium">{fmtDate(updatedAt)}</span>
+          </div>
+
+          <button
+            onClick={refresh}
+            disabled={loading}
+            className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50 transition-all duration-150 font-semibold cursor-pointer shadow-sm"
+          >
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+            Atualizar
+          </button>
+        </div>
+      </div>
+
+      {/* Painel de filtros colapsável */}
+      <div className={`overflow-hidden transition-all duration-200 ease-in-out ${
+        showFilters ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-4 shadow-md">
+          <GlobalFilters />
+        </div>
       </div>
     </div>
   )
