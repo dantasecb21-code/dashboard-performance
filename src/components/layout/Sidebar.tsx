@@ -37,7 +37,6 @@ export default function Sidebar() {
             <h1 className="text-[13px] font-bold text-white leading-tight tracking-tight truncate">
               Performance
             </h1>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Dantas ECB · iFood</p>
           </div>
         </div>
       </div>

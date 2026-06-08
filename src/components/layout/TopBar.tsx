@@ -13,11 +13,11 @@ export default function TopBar() {
   }
 
   return (
-    <div className="bg-white border-b border-slate-100 px-6 py-2.5 flex flex-wrap items-center gap-4 justify-between sticky top-0 z-10 shadow-sm">
+    <div className="bg-white border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center gap-4 justify-between sticky top-0 z-10 shadow-sm">
       <GlobalFilters />
 
       <div className="flex items-center gap-3 flex-shrink-0">
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-slate-50 border border-slate-100 rounded-lg px-2.5 py-1.5">
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
           <Clock className="w-3 h-3" />
           <span className="font-medium">{fmtDate(updatedAt)}</span>
         </div>
