@@ -4,13 +4,13 @@ import { Search } from 'lucide-react'
 import type { Filtros } from '@/types/dashboard'
 
 const SELECT_CLS =
-  'text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 cursor-pointer transition-colors hover:border-slate-300 w-full'
+  'text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 cursor-pointer transition-colors hover:border-slate-300 w-full min-w-0'
 
 export default function GlobalFilters() {
   const { filtros, setFiltro, opcoesUnicas } = useFilters()
 
   const sel = (key: keyof Filtros, label: string, opts: string[], value: string) => (
-    <div className="flex flex-col gap-1 min-w-[120px]">
+    <div className="flex flex-col gap-1 min-w-[100px] sm:min-w-[120px] flex-1 sm:flex-none">
       <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{label}</label>
       <select className={SELECT_CLS} value={value} onChange={e => setFiltro(key, e.target.value)}>
         <option value="">Todos</option>
@@ -20,14 +20,14 @@ export default function GlobalFilters() {
   )
 
   return (
-    <div className="flex flex-wrap items-end gap-3">
+    <div className="flex flex-wrap items-end gap-2 sm:gap-3">
       {sel('diretorDivisional', 'Dir. Divisional', opcoesUnicas.diretoresDivisionais, filtros.diretorDivisional)}
       {sel('diretorRegional',   'Dir. Regional',   opcoesUnicas.diretoresRegionais,   filtros.diretorRegional)}
       {sel('gerenteRegional',   'Ger. Regional',   opcoesUnicas.gerentesRegionais,    filtros.gerenteRegional)}
       {sel('uf',    'UF',     opcoesUnicas.ufs,     filtros.uf)}
       {sel('cidade', 'Cidade', opcoesUnicas.cidades, filtros.cidade)}
 
-      <div className="flex flex-col gap-1 min-w-[100px]">
+      <div className="flex flex-col gap-1 min-w-[90px] sm:min-w-[100px] flex-1 sm:flex-none">
         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Status</label>
         <select className={SELECT_CLS} value={filtros.statusLoja} onChange={e => setFiltro('statusLoja', e.target.value)}>
           <option value="">Todos</option>
@@ -37,7 +37,7 @@ export default function GlobalFilters() {
         </select>
       </div>
 
-      <div className="flex flex-col gap-1 min-w-[100px]">
+      <div className="flex flex-col gap-1 min-w-[90px] sm:min-w-[100px] flex-1 sm:flex-none">
         <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Olimpo</label>
         <select className={SELECT_CLS} value={filtros.projetoOlimpo} onChange={e => setFiltro('projetoOlimpo', e.target.value)}>
           <option value="">Todos</option>

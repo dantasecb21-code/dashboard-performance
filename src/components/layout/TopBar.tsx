@@ -1,11 +1,15 @@
 'use client'
 import { useState } from 'react'
-import { RefreshCw, Clock, SlidersHorizontal, X } from 'lucide-react'
+import { RefreshCw, Clock, SlidersHorizontal, X, Menu } from 'lucide-react'
 import GlobalFilters from '@/components/filters/GlobalFilters'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
 
-export default function TopBar() {
+interface Props {
+  onMenuToggle: () => void
+}
+
+export default function TopBar({ onMenuToggle }: Props) {
   const [showFilters, setShowFilters] = useState(false)
   const { updatedAt, refresh, loading } = useData()
   const { filtros, lojasFiltered, resetFiltros } = useFilters()
@@ -21,20 +25,30 @@ export default function TopBar() {
   return (
     <div className="sticky top-0 z-20">
       {/* Barra principal */}
-      <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-3 flex items-center justify-between gap-4 shadow-sm">
+      <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between gap-3 shadow-sm">
 
-        {/* Esquerda: toggle de filtros + contagem */}
-        <div className="flex items-center gap-3">
+        {/* Esquerda */}
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          {/* Hamburger — só mobile */}
+          <button
+            onClick={onMenuToggle}
+            className="md:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer flex-shrink-0"
+            aria-label="Abrir menu"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+
+          {/* Toggle de filtros */}
           <button
             onClick={() => setShowFilters(v => !v)}
-            className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border font-semibold transition-all duration-150 cursor-pointer ${
+            className={`flex items-center gap-1.5 text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 ${
               showFilters || activeCount > 0
                 ? 'bg-brand-50 border-brand-300 text-brand-700'
                 : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-800'
             }`}
           >
             {showFilters ? <X className="w-3.5 h-3.5" /> : <SlidersHorizontal className="w-3.5 h-3.5" />}
-            Filtros
+            <span className="hidden sm:inline">Filtros</span>
             {activeCount > 0 && (
               <span className="min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-brand-600 text-white rounded-full flex items-center justify-center leading-none">
                 {activeCount}
@@ -44,33 +58,27 @@ export default function TopBar() {
 
           {/* Chips de filtros ativos */}
           {activeCount > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {activeCount === 1 ? (
-                <span className="text-[11px] text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full font-medium">
-                  1 filtro ativo
-                </span>
-              ) : (
-                <span className="text-[11px] text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full font-medium">
-                  {activeCount} filtros ativos
-                </span>
-              )}
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-[11px] text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
+                {activeCount} {activeCount === 1 ? 'filtro' : 'filtros'}
+              </span>
               <button
                 onClick={resetFiltros}
-                className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer whitespace-nowrap"
               >
                 Limpar
               </button>
             </div>
           )}
 
-          <span className="text-[11px] text-slate-400 font-medium">
-            {lojasFiltered.length} <span className="text-slate-300">lojas</span>
+          <span className="text-[11px] text-slate-400 font-medium whitespace-nowrap">
+            {lojasFiltered.length} <span className="text-slate-300 hidden sm:inline">lojas</span>
           </span>
         </div>
 
         {/* Direita: data + refresh */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5">
             <Clock className="w-3 h-3" />
             <span className="font-medium">{fmtDate(updatedAt)}</span>
           </div>
@@ -78,19 +86,19 @@ export default function TopBar() {
           <button
             onClick={refresh}
             disabled={loading}
-            className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50 transition-all duration-150 font-semibold cursor-pointer shadow-sm"
+            className="flex items-center gap-1.5 text-[11px] px-2.5 sm:px-3 py-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50 transition-all duration-150 font-semibold cursor-pointer shadow-sm"
           >
             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-            Atualizar
+            <span className="hidden sm:inline">Atualizar</span>
           </button>
         </div>
       </div>
 
       {/* Painel de filtros colapsável */}
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${
-        showFilters ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+        showFilters ? 'max-h-52 opacity-100' : 'max-h-0 opacity-0'
       }`}>
-        <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-4 shadow-md">
+        <div className="bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 sm:px-6 py-4 shadow-md">
           <GlobalFilters />
         </div>
       </div>

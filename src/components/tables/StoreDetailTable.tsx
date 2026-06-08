@@ -9,12 +9,12 @@ import { statusIndicador } from '@/lib/statusRules'
 type SortKey = keyof Loja
 type SortDir = 'asc' | 'desc'
 
-const CELL_INDICADOR = (val: number | null, ind: Parameters<typeof statusIndicador>[0]) => {
+const CELL_INDICADOR = (val: number | null, ind: Parameters<typeof statusIndicador>[0], cls?: string) => {
   const cor = statusIndicador(ind, val)
-  const cls = {
+  const colorCls = {
     verde: 'text-green-700', amarelo: 'text-yellow-700', vermelho: 'text-red-700', neutro: 'text-gray-400'
   }[cor]
-  return <td className={clsx('px-3 py-2 text-right text-xs font-medium', cls)}>{val !== null ? fmtPct(val) : '—'}</td>
+  return <td className={clsx('px-3 py-2 text-right text-xs font-medium', colorCls, cls)}>{val !== null ? fmtPct(val) : '—'}</td>
 }
 
 const PAGE_SIZE = 25
@@ -49,9 +49,10 @@ export default function StoreDetailTable({ lojas }: Props) {
     setPage(0)
   }
 
-  const th = (label: string, k: SortKey) => (
+  // cls = classes de visibilidade responsiva opcionais
+  const th = (label: string, k: SortKey, cls?: string) => (
     <th key={k} onClick={() => handleSort(k)}
-      className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-700 select-none whitespace-nowrap">
+      className={clsx('px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-700 select-none whitespace-nowrap', cls)}>
       {label}{sortKey === k ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}
     </th>
   )
@@ -76,75 +77,78 @@ export default function StoreDetailTable({ lojas }: Props) {
         <div className="flex items-center gap-2">
           <input type="text" placeholder="Buscar loja..." value={search}
             onChange={e => { setSearch(e.target.value); setPage(0) }}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-44" />
+            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-36 sm:w-44" />
           <span className="text-xs text-gray-400">{sorted.length} lojas</span>
         </div>
-        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition cursor-pointer">
           Exportar CSV
         </button>
       </div>
       <div className="overflow-auto">
-        <table className="w-full text-xs min-w-[1200px]">
+        <table className="w-full text-xs min-w-[480px]">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
-              {th('Código', 'codigoLoja')}
-              {th('Nome', 'nomeLoja')}
-              {th('Cidade', 'cidade')}
-              {th('UF', 'uf')}
-              {th('Dir. Reg.', 'diretorRegional')}
-              {th('Gerente', 'gerenteRegional')}
-              {th('Jan', 'faturamentoJaneiro')}
-              {th('Fev', 'faturamentoFevereiro')}
-              {th('Mar', 'faturamentoMarco')}
-              {th('Abr', 'faturamentoAbril')}
-              {th('Mai', 'faturamentoMaio')}
-              {th('Meta', 'meta')}
-              {th('Venda', 'venda')}
-              {th('Desvio', 'desvio')}
-              {th('Cresc.', 'crescimento')}
-              {th('Ticket', 'ticketMedio')}
-              {th('Cancel.', 'cancelamentoTotal')}
-              {th('SLA Prep.', 'slaPreparo')}
-              {th('NSU', 'nsu')}
-              {th('Ruptura', 'rupturaItem')}
-              {th('Tempo On', 'tempoOnline')}
-              {th('Perda', 'perdaVendaTotal')}
-              {th('Score', 'scoreSaude')}
+              {th('Código',   'codigoLoja',          'hidden sm:table-cell')}
+              {th('Nome',     'nomeLoja')}
+              {th('UF',       'uf',                  'hidden md:table-cell')}
+              {th('Cidade',   'cidade',              'hidden lg:table-cell')}
+              {th('Dir. Reg.','diretorRegional',     'hidden xl:table-cell')}
+              {th('Gerente',  'gerenteRegional',     'hidden xl:table-cell')}
+              {th('Jan',      'faturamentoJaneiro',  'hidden xl:table-cell')}
+              {th('Fev',      'faturamentoFevereiro','hidden xl:table-cell')}
+              {th('Mar',      'faturamentoMarco',    'hidden xl:table-cell')}
+              {th('Abr',      'faturamentoAbril',    'hidden xl:table-cell')}
+              {th('Mai',      'faturamentoMaio',     'hidden xl:table-cell')}
+              {th('Meta',     'meta',                'hidden lg:table-cell')}
+              {th('Venda',    'venda')}
+              {th('Desvio',   'desvio',              'hidden sm:table-cell')}
+              {th('Cresc.',   'crescimento',         'hidden md:table-cell')}
+              {th('Ticket',   'ticketMedio',         'hidden lg:table-cell')}
+              {th('Cancel.',  'cancelamentoTotal',   'hidden md:table-cell')}
+              {th('SLA Prep.','slaPreparo',          'hidden xl:table-cell')}
+              {th('NSU',      'nsu',                 'hidden xl:table-cell')}
+              {th('Ruptura',  'rupturaItem',         'hidden xl:table-cell')}
+              {th('Tempo On', 'tempoOnline',         'hidden lg:table-cell')}
+              {th('Perda',    'perdaVendaTotal',     'hidden lg:table-cell')}
+              {th('Score',    'scoreSaude',          'hidden sm:table-cell')}
               <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase">Status</th>
             </tr>
           </thead>
           <tbody>
             {pageData.map(l => (
               <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50">
-                <td className="px-3 py-2 font-mono text-gray-500">{l.codigoLoja}</td>
-                <td className="px-3 py-2 font-medium text-gray-800 whitespace-nowrap">{l.nomeLoja}</td>
-                <td className="px-3 py-2 text-gray-500">{l.cidade}</td>
-                <td className="px-3 py-2 text-gray-500">{l.uf}</td>
-                <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{l.diretorRegional}</td>
-                <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{l.gerenteRegional}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoJaneiro)}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoFevereiro)}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoMarco)}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoAbril)}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.faturamentoMaio)}</td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.meta)}</td>
+                <td className="px-3 py-2 font-mono text-gray-500 hidden sm:table-cell">{l.codigoLoja}</td>
+                <td className="px-3 py-2">
+                  <p className="font-medium text-gray-800 whitespace-nowrap">{l.nomeLoja}</p>
+                  <p className="text-[10px] text-gray-400 sm:hidden">{l.uf} · {fmtBRL(l.venda)}</p>
+                </td>
+                <td className="px-3 py-2 text-gray-500 hidden md:table-cell">{l.uf}</td>
+                <td className="px-3 py-2 text-gray-500 hidden lg:table-cell">{l.cidade}</td>
+                <td className="px-3 py-2 text-gray-500 whitespace-nowrap hidden xl:table-cell">{l.diretorRegional}</td>
+                <td className="px-3 py-2 text-gray-500 whitespace-nowrap hidden xl:table-cell">{l.gerenteRegional}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoJaneiro)}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoFevereiro)}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoMarco)}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoAbril)}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoMaio)}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden lg:table-cell">{fmtBRL(l.meta)}</td>
                 <td className="px-3 py-2 text-right font-semibold text-gray-900">{fmtBRL(l.venda)}</td>
-                <td className={clsx('px-3 py-2 text-right font-semibold',
+                <td className={clsx('px-3 py-2 text-right font-semibold hidden sm:table-cell',
                   l.desvio === null ? 'text-gray-400' : l.desvio >= 0 ? 'text-green-700' : 'text-red-700')}>
                   {fmtBRL(l.desvio)}
                 </td>
-                <td className={clsx('px-3 py-2 text-right',
+                <td className={clsx('px-3 py-2 text-right hidden md:table-cell',
                   l.crescimento === null ? 'text-gray-400' : l.crescimento >= 0 ? 'text-green-700' : 'text-red-700')}>
                   {l.crescimento !== null ? fmtPct(l.crescimento) : '—'}
                 </td>
-                <td className="px-3 py-2 text-right text-gray-700">{fmtBRL(l.ticketMedio)}</td>
-                {CELL_INDICADOR(l.cancelamentoTotal, 'cancelamento_total')}
-                {CELL_INDICADOR(l.slaPreparo,        'sla_preparo')}
-                {CELL_INDICADOR(l.nsu,               'nsu')}
-                {CELL_INDICADOR(l.rupturaItem,       'ruptura_item')}
-                {CELL_INDICADOR(l.tempoOnline,       'tempo_online')}
-                <td className="px-3 py-2 text-right text-red-600 font-medium">{fmtBRL(l.perdaVendaTotal)}</td>
-                <td className="px-3 py-2 text-center font-bold text-gray-700">{l.scoreSaude}</td>
+                <td className="px-3 py-2 text-right text-gray-700 hidden lg:table-cell">{fmtBRL(l.ticketMedio)}</td>
+                {CELL_INDICADOR(l.cancelamentoTotal, 'cancelamento_total', 'hidden md:table-cell')}
+                {CELL_INDICADOR(l.slaPreparo,        'sla_preparo',        'hidden xl:table-cell')}
+                {CELL_INDICADOR(l.nsu,               'nsu',                'hidden xl:table-cell')}
+                {CELL_INDICADOR(l.rupturaItem,       'ruptura_item',       'hidden xl:table-cell')}
+                {CELL_INDICADOR(l.tempoOnline,       'tempo_online',       'hidden lg:table-cell')}
+                <td className="px-3 py-2 text-right text-red-600 font-medium hidden lg:table-cell">{fmtBRL(l.perdaVendaTotal)}</td>
+                <td className="px-3 py-2 text-center font-bold text-gray-700 hidden sm:table-cell">{l.scoreSaude}</td>
                 <td className="px-3 py-2"><StatusBadge status={l.statusLoja} size="sm" /></td>
               </tr>
             ))}
@@ -153,12 +157,12 @@ export default function StoreDetailTable({ lojas }: Props) {
       </div>
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-          <span className="text-xs text-gray-400">Página {page + 1} de {totalPages}</span>
+          <span className="text-xs text-gray-400">Pág. {page + 1}/{totalPages}</span>
           <div className="flex gap-2">
             <button disabled={page === 0} onClick={() => setPage(p => p - 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">← Anterior</button>
+              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 cursor-pointer">← Ant.</button>
             <button disabled={page === totalPages - 1} onClick={() => setPage(p => p + 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">Próxima →</button>
+              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 cursor-pointer">Próx. →</button>
           </div>
         </div>
       )}

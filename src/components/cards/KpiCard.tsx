@@ -69,7 +69,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       {/* Accent strip */}
       <div className={clsx('h-[3px] w-full flex-shrink-0', colors.accent)} />
 
-      <div className="p-4 flex flex-col gap-2 flex-1">
+      <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
         <div className="flex items-start justify-between gap-2">
           <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-tight">
             {title}
