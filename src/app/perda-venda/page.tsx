@@ -12,6 +12,7 @@ import RankingTable from '@/components/tables/RankingTable'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
 import type { Loja } from '@/types/dashboard'
+import { TrendingDown, XCircle, Package, Clock, Store, MapPin, BarChart2, Lightbulb } from 'lucide-react'
 
 type Quadrante = 'Prioridade Máxima' | 'Saudável' | 'Atenção' | 'Baixa Prioridade'
 
@@ -89,21 +90,21 @@ export default function PerdaVendaPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Perda de Venda</h2>
-        <p className="text-sm text-gray-500 mt-0.5">{lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-slate-900">Perda de Venda</h2>
+        <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon="📉" />
-        <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon="❌" />
-        <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon="📦" />
-        <KpiCard title="Perda por Tempo Online" value={fmtBRL(kpis.perdaTOn)} icon="⏱️" />
-        <KpiCard title="Maior Loja (Perda)" value={kpis.maiorLoja?.nomeLoja ?? '—'} subtitle={fmtBRL(kpis.maiorLoja?.perdaVendaTotal ?? null)} icon="🏪" />
-        <KpiCard title="Maior Região (Perda)" value={kpis.maiorRegiao?.[0] ?? '—'} subtitle={fmtBRL(kpis.maiorRegiao?.[1] ?? null)} icon="🗺️" />
+        <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon={TrendingDown} />
+        <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon={XCircle} />
+        <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon={Package} />
+        <KpiCard title="Perda por Tempo Online" value={fmtBRL(kpis.perdaTOn)} icon={Clock} />
+        <KpiCard title="Maior Loja (Perda)" value={kpis.maiorLoja?.nomeLoja ?? '—'} subtitle={fmtBRL(kpis.maiorLoja?.perdaVendaTotal ?? null)} icon={Store} />
+        <KpiCard title="Maior Região (Perda)" value={kpis.maiorRegiao?.[0] ?? '—'} subtitle={fmtBRL(kpis.maiorRegiao?.[1] ?? null)} icon={MapPin} />
         <KpiCard title="% Perda / Faturamento"
           value={kpis.fatTotal > 0 ? fmtPct((kpis.perdaTotal / kpis.fatTotal) * 100) : '—'}
-          color="red" icon="📊" />
-        <KpiCard title="Potencial de Recuperação" value={fmtBRL(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon="💡" />
+          color="red" icon={BarChart2} />
+        <KpiCard title="Potencial de Recuperação" value={fmtBRL(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon={Lightbulb} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

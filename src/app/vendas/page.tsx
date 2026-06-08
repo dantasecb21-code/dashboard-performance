@@ -10,6 +10,7 @@ import BarChartGoalVsSales from '@/components/charts/BarChartGoalVsSales'
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
+import { DollarSign, Target, BarChart2, TrendingUp, Receipt, Percent, CalendarDays } from 'lucide-react'
 
 type Visao = 'diaria' | 'acumulada' | 'anual'
 
@@ -76,14 +77,14 @@ export default function VendasPage() {
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
   const TAB_CLS = (v: Visao) =>
-    `px-4 py-2 text-sm rounded-lg font-medium transition ${visao === v ? 'bg-brand-500 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`
+    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Vendas e Metas</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{lojasFiltered.length} lojas</p>
+          <h2 className="text-xl font-bold text-slate-900">Vendas e Metas</h2>
+          <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
         </div>
         <div className="flex gap-2">
           <button className={TAB_CLS('diaria')}    onClick={() => setVisao('diaria')}>Diária</button>
@@ -95,33 +96,33 @@ export default function VendasPage() {
       {/* KPIs conforme visão */}
       {visao === 'diaria' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon="💰" />
-          <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon="🎯" />
+          <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon={DollarSign} />
+          <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon={Target} />
           <KpiCard title="Desvio do Dia" value={fmtBRL(kpis.desvioDia)}
-            color={kpis.desvioDia >= 0 ? 'green' : 'red'} icon="📊" />
+            color={kpis.desvioDia >= 0 ? 'green' : 'red'} icon={BarChart2} />
         </div>
       )}
 
       {visao === 'acumulada' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon="💰" />
-          <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon="🎯" />
+          <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon={DollarSign} />
+          <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon={Target} />
           <KpiCard title="Desvio Acumulado" value={fmtBRL(kpis.desvioAcum)}
-            color={kpis.desvioAcum >= 0 ? 'green' : 'red'} icon="📊" />
+            color={kpis.desvioAcum >= 0 ? 'green' : 'red'} icon={BarChart2} />
           <KpiCard title="Crescimento Médio" value={fmtPct(kpis.crescAcum)}
-            color={kpis.crescAcum >= 0 ? 'green' : 'red'} icon="📈" />
-          <KpiCard title="Ticket Médio" value={fmtBRL(kpis.ticketMedio)} icon="🧾" />
-          <KpiCard title="Participação Média" value={fmtPct(kpis.participacao)} icon="📌" />
+            color={kpis.crescAcum >= 0 ? 'green' : 'red'} icon={TrendingUp} />
+          <KpiCard title="Ticket Médio" value={fmtBRL(kpis.ticketMedio)} icon={Receipt} />
+          <KpiCard title="Participação Média" value={fmtPct(kpis.participacao)} icon={Percent} />
         </div>
       )}
 
       {visao === 'anual' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Fat. Janeiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))} />
-          <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} />
-          <KpiCard title="Fat. Março" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))} />
-          <KpiCard title="Fat. Abril" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoAbril)))} />
-          <KpiCard title="Fat. Maio" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMaio)))} />
+          <KpiCard title="Fat. Janeiro"   value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))}   icon={CalendarDays} />
+          <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} icon={CalendarDays} />
+          <KpiCard title="Fat. Março"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))}     icon={CalendarDays} />
+          <KpiCard title="Fat. Abril"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoAbril)))}     icon={CalendarDays} />
+          <KpiCard title="Fat. Maio"      value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMaio)))}      icon={CalendarDays} />
         </div>
       )}
 

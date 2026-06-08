@@ -13,6 +13,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
 import { statusCancelamento } from '@/lib/statusRules'
 import clsx from 'clsx'
+import { XCircle, CalendarDays, BarChart2, DollarSign, User, Store, Bike, TrendingUp, TrendingDown } from 'lucide-react'
 
 export default function CancelamentosPage() {
   const { loading, error, refresh } = useData()
@@ -92,22 +93,22 @@ export default function CancelamentosPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Cancelamentos</h2>
-        <p className="text-sm text-gray-500 mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-slate-900">Cancelamentos</h2>
+        <p className="text-sm text-slate-400 mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <KpiCard title="Cancelamento Médio (Maio)" value={fmtPct(kpis.cancelMedio)}
-          subtitle="meta ≤ 5%" color={colorMap[cor]} icon="❌" />
-        <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon="📅" />
+          subtitle="meta ≤ 5%" color={colorMap[cor]} icon={XCircle} />
+        <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon={CalendarDays} />
         <KpiCard title="Variação Abr × Mai" value={fmtPct(kpis.variacao)}
-          color={kpis.variacao <= 0 ? 'green' : 'red'} icon="📊" />
-        <KpiCard title="Valor Cancelado Total" value={fmtBRL(kpis.valorTotal)} color="red" icon="💸" />
-        <KpiCard title="Cancelado por Cliente" value={fmtBRL(kpis.valorCliente)} icon="👤" />
-        <KpiCard title="Cancelado pela Loja" value={fmtBRL(kpis.valorLoja)} icon="🏪" />
-        <KpiCard title="Cancelado por Entregador" value={fmtBRL(kpis.valorEntregador)} icon="🛵" />
-        <KpiCard title="Lojas com Aumento" value={kpis.lojasAumento} color="red" icon="⬆️" />
-        <KpiCard title="Lojas com Redução" value={kpis.lojasReducao} color="green" icon="⬇️" />
+          color={kpis.variacao <= 0 ? 'green' : 'red'} icon={BarChart2} />
+        <KpiCard title="Valor Cancelado Total" value={fmtBRL(kpis.valorTotal)} color="red" icon={DollarSign} />
+        <KpiCard title="Cancelado por Cliente" value={fmtBRL(kpis.valorCliente)} icon={User} />
+        <KpiCard title="Cancelado pela Loja" value={fmtBRL(kpis.valorLoja)} icon={Store} />
+        <KpiCard title="Cancelado por Entregador" value={fmtBRL(kpis.valorEntregador)} icon={Bike} />
+        <KpiCard title="Lojas com Aumento" value={kpis.lojasAumento} color="red" icon={TrendingUp} />
+        <KpiCard title="Lojas com Redução" value={kpis.lojasReducao} color="green" icon={TrendingDown} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

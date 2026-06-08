@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
 import { calcularResumo } from '@/lib/calculations'
-import { fmtBRL, fmtBRLCompact, fmtPct } from '@/lib/formatters'
+import { fmtBRL, fmtPct } from '@/lib/formatters'
 import KpiCard from '@/components/cards/KpiCard'
 import AlertCard from '@/components/cards/AlertCard'
 import LineChartRevenue from '@/components/charts/LineChartRevenue'
@@ -11,6 +11,11 @@ import BarChartGoalVsSales from '@/components/charts/BarChartGoalVsSales'
 import RankingTable from '@/components/tables/RankingTable'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
+import {
+  DollarSign, Target, BarChart2, TrendingUp,
+  Receipt, XCircle, TrendingDown, Wifi,
+  CheckCircle, AlertCircle, ShieldAlert,
+} from 'lucide-react'
 
 export default function VisaoGeral() {
   const { loading, error, refresh } = useData()
@@ -50,30 +55,51 @@ export default function VisaoGeral() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Visão Geral Executiva</h2>
-        <p className="text-sm text-gray-500 mt-0.5">{resumo.totalLojas} lojas no período selecionado</p>
+        <h2 className="text-xl font-bold text-slate-900">Visão Geral Executiva</h2>
+        <p className="text-sm text-slate-400 mt-0.5">{resumo.totalLojas} lojas no período selecionado</p>
       </div>
 
       {/* KPIs principais */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        <KpiCard title="Faturamento Total" value={fmtBRL(resumo.faturamentoTotal)} icon="💰" />
-        <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon="🎯" />
-        <KpiCard title="Desvio vs Meta" value={fmtBRL(resumo.desvioTotal)}
+        <KpiCard title="Faturamento Total" value={fmtBRL(resumo.faturamentoTotal)} icon={DollarSign} />
+        <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon={Target} />
+        <KpiCard
+          title="Desvio vs Meta"
+          value={fmtBRL(resumo.desvioTotal)}
           delta={resumo.desvioPercentual}
-          color={resumo.desvioTotal >= 0 ? 'green' : 'red'} icon="📊" />
-        <KpiCard title="Crescimento Médio" value={fmtPct(resumo.crescimentoMedio)}
-          color={resumo.crescimentoMedio >= 0 ? 'green' : 'red'} icon="📈" />
-        <KpiCard title="Ticket Médio" value={fmtBRL(resumo.ticketMedioGeral)} icon="🧾" />
-        <KpiCard title="Cancelamento Médio" value={fmtPct(resumo.cancelamentoMedio)}
+          color={resumo.desvioTotal >= 0 ? 'green' : 'red'}
+          icon={BarChart2}
+        />
+        <KpiCard
+          title="Crescimento Médio"
+          value={fmtPct(resumo.crescimentoMedio)}
+          color={resumo.crescimentoMedio >= 0 ? 'green' : 'red'}
+          icon={TrendingUp}
+        />
+        <KpiCard title="Ticket Médio" value={fmtBRL(resumo.ticketMedioGeral)} icon={Receipt} />
+        <KpiCard
+          title="Cancelamento Médio"
+          value={fmtPct(resumo.cancelamentoMedio)}
           subtitle="meta ≤ 5%"
-          color={resumo.cancelamentoMedio <= 5 ? 'green' : resumo.cancelamentoMedio <= 7 ? 'yellow' : 'red'} icon="❌" />
-        <KpiCard title="Perda de Venda Total" value={fmtBRL(resumo.perdaVendaTotal)} color="red" icon="📉" />
-        <KpiCard title="Tempo Online Médio" value={fmtPct(resumo.tempoOnlineMedio)}
+          color={resumo.cancelamentoMedio <= 5 ? 'green' : resumo.cancelamentoMedio <= 7 ? 'yellow' : 'red'}
+          icon={XCircle}
+        />
+        <KpiCard
+          title="Perda de Venda Total"
+          value={fmtBRL(resumo.perdaVendaTotal)}
+          color="red"
+          icon={TrendingDown}
+        />
+        <KpiCard
+          title="Tempo Online Médio"
+          value={fmtPct(resumo.tempoOnlineMedio)}
           subtitle="meta ≥ 95%"
-          color={resumo.tempoOnlineMedio >= 95 ? 'green' : resumo.tempoOnlineMedio >= 85 ? 'yellow' : 'red'} icon="⏱️" />
-        <KpiCard title="Lojas Acima da Meta" value={resumo.lojasAcimaMeta} color="green" icon="✅" />
-        <KpiCard title="Lojas Abaixo da Meta" value={resumo.lojasBaixoMeta} color="red" icon="⚠️" />
-        <KpiCard title="Lojas Críticas" value={resumo.lojasCriticas} color="red" icon="🚨" />
+          color={resumo.tempoOnlineMedio >= 95 ? 'green' : resumo.tempoOnlineMedio >= 85 ? 'yellow' : 'red'}
+          icon={Wifi}
+        />
+        <KpiCard title="Lojas Acima da Meta" value={resumo.lojasAcimaMeta} color="green" icon={CheckCircle} />
+        <KpiCard title="Lojas Abaixo da Meta" value={resumo.lojasBaixoMeta} color="red" icon={AlertCircle} />
+        <KpiCard title="Lojas Críticas" value={resumo.lojasCriticas} color="red" icon={ShieldAlert} />
       </div>
 
       {/* Alerta de lojas críticas */}

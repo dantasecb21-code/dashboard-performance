@@ -12,6 +12,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
 import { statusIndicador } from '@/lib/statusRules'
 import type { Loja } from '@/types/dashboard'
+import { XCircle, Clock, PhoneOff, Package, Truck, Wifi } from 'lucide-react'
 
 export default function IndicadoresPage() {
   const { loading, error, refresh } = useData()
@@ -55,24 +56,24 @@ export default function IndicadoresPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Indicadores Operacionais</h2>
-        <p className="text-sm text-gray-500 mt-0.5">{lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-slate-900">Indicadores Operacionais</h2>
+        <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <KpiCard title="Cancelamento Médio" value={kpis.cancelamento !== null ? fmtPct(kpis.cancelamento) : '—'}
-          subtitle={`${kpis.foraCancel} fora da meta`} color={cor('cancelamento_total', kpis.cancelamento)} icon="❌" size="sm" />
+          subtitle={`${kpis.foraCancel} fora da meta`} color={cor('cancelamento_total', kpis.cancelamento)} icon={XCircle} size="sm" />
         <KpiCard title="SLA Preparo Médio" value={kpis.slaPreparo !== null ? fmtPct(kpis.slaPreparo) : '—'}
-          subtitle={`${kpis.foraSlaPreparo} fora`} color={cor('sla_preparo', kpis.slaPreparo)} icon="⏱️" size="sm" />
+          subtitle={`${kpis.foraSlaPreparo} fora`} color={cor('sla_preparo', kpis.slaPreparo)} icon={Clock} size="sm" />
         <KpiCard title="NSU Médio" value={kpis.nsu !== null ? fmtPct(kpis.nsu) : '—'}
-          subtitle={`${kpis.foraNsu} fora`} color={cor('nsu', kpis.nsu)} icon="📵" size="sm" />
+          subtitle={`${kpis.foraNsu} fora`} color={cor('nsu', kpis.nsu)} icon={PhoneOff} size="sm" />
         <KpiCard title="Ruptura Média" value={kpis.ruptura !== null ? fmtPct(kpis.ruptura) : '—'}
-          subtitle={`${kpis.foraRuptura} fora`} color={cor('ruptura_item', kpis.ruptura)} icon="📦" size="sm" />
+          subtitle={`${kpis.foraRuptura} fora`} color={cor('ruptura_item', kpis.ruptura)} icon={Package} size="sm" />
         <KpiCard title="SLA Entrega Médio" value={kpis.slaEntrega !== null ? fmtPct(kpis.slaEntrega) : '—'}
-          subtitle={`${kpis.foraSlaEntrega} fora`} color={cor('sla_entrega', kpis.slaEntrega)} icon="🚚" size="sm" />
+          subtitle={`${kpis.foraSlaEntrega} fora`} color={cor('sla_entrega', kpis.slaEntrega)} icon={Truck} size="sm" />
         <KpiCard title="Tempo Online Médio" value={kpis.tempoOnline !== null ? fmtPct(kpis.tempoOnline) : '—'}
-          subtitle={`${kpis.foraTempoOn} fora`} color={cor('tempo_online', kpis.tempoOnline)} icon="🟢" size="sm" />
+          subtitle={`${kpis.foraTempoOn} fora`} color={cor('tempo_online', kpis.tempoOnline)} icon={Wifi} size="sm" />
       </div>
 
       {/* Gráfico de lojas fora da meta */}

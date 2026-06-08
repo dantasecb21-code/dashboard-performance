@@ -1,4 +1,5 @@
 'use client'
+import { RefreshCw, Clock } from 'lucide-react'
 import GlobalFilters from '@/components/filters/GlobalFilters'
 import { useData } from '@/context/DataContext'
 
@@ -12,15 +13,22 @@ export default function TopBar() {
   }
 
   return (
-    <div className="bg-white border-b border-gray-100 px-6 py-3 flex flex-wrap items-end gap-4 justify-between">
+    <div className="bg-white border-b border-slate-100 px-6 py-3 flex flex-wrap items-center gap-4 justify-between sticky top-0 z-10">
       <GlobalFilters />
+
       <div className="flex items-center gap-3 flex-shrink-0">
-        <span className="text-xs text-gray-400">Atualizado: {fmtDate(updatedAt)}</span>
+        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <Clock className="w-3.5 h-3.5" />
+          <span>{fmtDate(updatedAt)}</span>
+        </div>
+
         <button
           onClick={refresh}
           disabled={loading}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-50 transition">
-          {loading ? '⏳' : '🔄'} Atualizar
+          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50 transition-all duration-150 font-medium cursor-pointer focus-visible:outline-brand-500"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          Atualizar
         </button>
       </div>
     </div>
