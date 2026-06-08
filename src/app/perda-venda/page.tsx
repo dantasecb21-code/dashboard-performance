@@ -94,7 +94,7 @@ export default function PerdaVendaPage() {
         <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon={TrendingDown} />
         <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon={XCircle} />
         <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon={Package} />
@@ -120,7 +120,7 @@ export default function PerdaVendaPage() {
       {/* Matriz de prioridade */}
       <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
         <h3 className="text-sm font-semibold text-gray-700 mb-4">Matriz de Prioridade</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="kpi-grid grid grid-cols-2 gap-3">
           {(Object.entries(matrizData.por) as [Quadrante, number][]).map(([q, count]) => (
             <div key={q} className={`rounded-lg border p-3 ${Q_COLOR[q]}`}>
               <p className="font-semibold text-sm">{q}</p>

@@ -95,7 +95,7 @@ export default function VendasPage() {
 
       {/* KPIs conforme visão */}
       {visao === 'diaria' && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon={DollarSign} />
           <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon={Target} />
           <KpiCard title="Desvio do Dia" value={fmtBRL(kpis.desvioDia)}
@@ -104,7 +104,7 @@ export default function VendasPage() {
       )}
 
       {visao === 'acumulada' && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon={DollarSign} />
           <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon={Target} />
           <KpiCard title="Desvio Acumulado" value={fmtBRL(kpis.desvioAcum)}
@@ -117,7 +117,7 @@ export default function VendasPage() {
       )}
 
       {visao === 'anual' && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           <KpiCard title="Fat. Janeiro"   value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))}   icon={CalendarDays} />
           <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} icon={CalendarDays} />
           <KpiCard title="Fat. Março"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))}     icon={CalendarDays} />

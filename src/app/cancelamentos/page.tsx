@@ -97,7 +97,7 @@ export default function CancelamentosPage() {
         <p className="text-sm text-slate-400 mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <KpiCard title="Cancelamento Médio (Maio)" value={fmtPct(kpis.cancelMedio)}
           subtitle="meta ≤ 5%" color={colorMap[cor]} icon={XCircle} />
         <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon={CalendarDays} />

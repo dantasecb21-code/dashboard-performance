@@ -60,7 +60,7 @@ export default function VisaoGeral() {
       </div>
 
       {/* KPIs principais */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         <KpiCard title="Faturamento Total" value={fmtBRL(resumo.faturamentoTotal)} icon={DollarSign} />
         <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon={Target} />
         <KpiCard

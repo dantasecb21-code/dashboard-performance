@@ -61,7 +61,7 @@ export default function IndicadoresPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <KpiCard title="Cancelamento Médio" value={kpis.cancelamento !== null ? fmtPct(kpis.cancelamento) : '—'}
           subtitle={`${kpis.foraCancel} fora da meta`} color={cor('cancelamento_total', kpis.cancelamento)} icon={XCircle} size="sm" />
         <KpiCard title="SLA Preparo Médio" value={kpis.slaPreparo !== null ? fmtPct(kpis.slaPreparo) : '—'}
@@ -84,7 +84,7 @@ export default function IndicadoresPage() {
           formatter={v => `${v} lojas`}
         />
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="kpi-grid grid grid-cols-2 gap-3">
           <RankingTable lojas={lojasFiltered} valueKey="cancelamentoTotal"
             formatter={v => fmtPct(v)} title="Pior Cancelamento" max={5} descending />
           <RankingTable lojas={lojasFiltered} valueKey="rupturaItem"
