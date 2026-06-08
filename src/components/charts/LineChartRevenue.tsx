@@ -1,7 +1,7 @@
 'use client'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import type { DadosMensais } from '@/types/dashboard'
-import { fmtBRLCompact } from '@/lib/formatters'
+import { fmtBRL, fmtBRLCompact } from '@/lib/formatters'
 
 interface Props {
   data: DadosMensais[]
@@ -17,7 +17,7 @@ export default function LineChartRevenue({ data, title }: Props) {
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis dataKey="mes" tick={{ fontSize: 11 }} />
           <YAxis tickFormatter={fmtBRLCompact} tick={{ fontSize: 11 }} width={70} />
-          <Tooltip formatter={(v: number) => fmtBRLCompact(v)} />
+          <Tooltip formatter={(v: number) => fmtBRL(v)} />
           <Line type="monotone" dataKey="valor" name="Faturamento" stroke="#4f6ef7" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
         </LineChart>
       </ResponsiveContainer>

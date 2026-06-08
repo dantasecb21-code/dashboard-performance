@@ -94,25 +94,25 @@ export default function PerdaVendaPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <KpiCard title="Perda Total" value={fmtBRLCompact(kpis.perdaTotal)} color="red" icon="📉" />
-        <KpiCard title="Perda por Cancelamento" value={fmtBRLCompact(kpis.perdaCancel)} icon="❌" />
-        <KpiCard title="Perda por Ruptura" value={fmtBRLCompact(kpis.perdaRup)} icon="📦" />
-        <KpiCard title="Perda por Tempo Online" value={fmtBRLCompact(kpis.perdaTOn)} icon="⏱️" />
+        <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon="📉" />
+        <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon="❌" />
+        <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon="📦" />
+        <KpiCard title="Perda por Tempo Online" value={fmtBRL(kpis.perdaTOn)} icon="⏱️" />
         <KpiCard title="Maior Loja (Perda)" value={kpis.maiorLoja?.nomeLoja ?? '—'} subtitle={fmtBRL(kpis.maiorLoja?.perdaVendaTotal ?? null)} icon="🏪" />
         <KpiCard title="Maior Região (Perda)" value={kpis.maiorRegiao?.[0] ?? '—'} subtitle={fmtBRL(kpis.maiorRegiao?.[1] ?? null)} icon="🗺️" />
         <KpiCard title="% Perda / Faturamento"
           value={kpis.fatTotal > 0 ? fmtPct((kpis.perdaTotal / kpis.fatTotal) * 100) : '—'}
           color="red" icon="📊" />
-        <KpiCard title="Potencial de Recuperação" value={fmtBRLCompact(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon="💡" />
+        <KpiCard title="Potencial de Recuperação" value={fmtBRL(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon="💡" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <HorizontalBarChart data={porMotivoData} title="Perda por Motivo" formatter={v => fmtBRLCompact(v)} />
-        <HorizontalBarChart data={top10Lojas}    title="Top 10 Lojas — Maior Perda" formatter={v => fmtBRLCompact(v)} />
+        <HorizontalBarChart data={porMotivoData} title="Perda por Motivo" formatter={v => fmtBRLCompact(v)} tooltipFormatter={v => fmtBRL(v)} />
+        <HorizontalBarChart data={top10Lojas}    title="Top 10 Lojas — Maior Perda" formatter={v => fmtBRLCompact(v)} tooltipFormatter={v => fmtBRL(v)} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <HorizontalBarChart data={top10Regioes} title="Top 10 Regiões — Maior Perda" formatter={v => fmtBRLCompact(v)} />
+        <HorizontalBarChart data={top10Regioes} title="Top 10 Regiões — Maior Perda" formatter={v => fmtBRLCompact(v)} tooltipFormatter={v => fmtBRL(v)} />
         <ScatterPlotChart lojas={lojasFiltered} title="Venda × Perda por Loja" />
       </div>
 

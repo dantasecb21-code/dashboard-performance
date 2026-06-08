@@ -1,6 +1,6 @@
 export function fmtBRL(v: number | null | undefined): string {
   if (v === null || v === undefined) return '—'
-  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 export function fmtBRLCompact(v: number | null | undefined): string {

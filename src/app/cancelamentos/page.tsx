@@ -102,10 +102,10 @@ export default function CancelamentosPage() {
         <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon="📅" />
         <KpiCard title="Variação Abr × Mai" value={fmtPct(kpis.variacao)}
           color={kpis.variacao <= 0 ? 'green' : 'red'} icon="📊" />
-        <KpiCard title="Valor Cancelado Total" value={fmtBRLCompact(kpis.valorTotal)} color="red" icon="💸" />
-        <KpiCard title="Cancelado por Cliente" value={fmtBRLCompact(kpis.valorCliente)} icon="👤" />
-        <KpiCard title="Cancelado pela Loja" value={fmtBRLCompact(kpis.valorLoja)} icon="🏪" />
-        <KpiCard title="Cancelado por Entregador" value={fmtBRLCompact(kpis.valorEntregador)} icon="🛵" />
+        <KpiCard title="Valor Cancelado Total" value={fmtBRL(kpis.valorTotal)} color="red" icon="💸" />
+        <KpiCard title="Cancelado por Cliente" value={fmtBRL(kpis.valorCliente)} icon="👤" />
+        <KpiCard title="Cancelado pela Loja" value={fmtBRL(kpis.valorLoja)} icon="🏪" />
+        <KpiCard title="Cancelado por Entregador" value={fmtBRL(kpis.valorEntregador)} icon="🛵" />
         <KpiCard title="Lojas com Aumento" value={kpis.lojasAumento} color="red" icon="⬆️" />
         <KpiCard title="Lojas com Redução" value={kpis.lojasReducao} color="green" icon="⬇️" />
       </div>
@@ -128,6 +128,7 @@ export default function CancelamentosPage() {
           data={valorData}
           title="Top 10 — Maior Valor Cancelado"
           formatter={v => fmtBRLCompact(v)}
+          tooltipFormatter={v => fmtBRL(v)}
         />
         <StackedBarChart
           data={stackedData}

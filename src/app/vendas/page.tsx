@@ -95,18 +95,18 @@ export default function VendasPage() {
       {/* KPIs conforme visão */}
       {visao === 'diaria' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda do Dia" value={fmtBRLCompact(kpis.vendaDia)} icon="💰" />
-          <KpiCard title="Meta do Dia" value={fmtBRLCompact(kpis.metaDia)} icon="🎯" />
-          <KpiCard title="Desvio do Dia" value={fmtBRLCompact(kpis.desvioDia)}
+          <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon="💰" />
+          <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon="🎯" />
+          <KpiCard title="Desvio do Dia" value={fmtBRL(kpis.desvioDia)}
             color={kpis.desvioDia >= 0 ? 'green' : 'red'} icon="📊" />
         </div>
       )}
 
       {visao === 'acumulada' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda Acumulada" value={fmtBRLCompact(kpis.vendaAcum)} icon="💰" />
-          <KpiCard title="Meta Acumulada" value={fmtBRLCompact(kpis.metaAcum)} icon="🎯" />
-          <KpiCard title="Desvio Acumulado" value={fmtBRLCompact(kpis.desvioAcum)}
+          <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon="💰" />
+          <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon="🎯" />
+          <KpiCard title="Desvio Acumulado" value={fmtBRL(kpis.desvioAcum)}
             color={kpis.desvioAcum >= 0 ? 'green' : 'red'} icon="📊" />
           <KpiCard title="Crescimento Médio" value={fmtPct(kpis.crescAcum)}
             color={kpis.crescAcum >= 0 ? 'green' : 'red'} icon="📈" />
@@ -117,11 +117,11 @@ export default function VendasPage() {
 
       {visao === 'anual' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Fat. Janeiro" value={fmtBRLCompact(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))} />
-          <KpiCard title="Fat. Fevereiro" value={fmtBRLCompact(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} />
-          <KpiCard title="Fat. Março" value={fmtBRLCompact(sum(lojasFiltered.map(l => l.faturamentoMarco)))} />
-          <KpiCard title="Fat. Abril" value={fmtBRLCompact(sum(lojasFiltered.map(l => l.faturamentoAbril)))} />
-          <KpiCard title="Fat. Maio" value={fmtBRLCompact(sum(lojasFiltered.map(l => l.faturamentoMaio)))} />
+          <KpiCard title="Fat. Janeiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))} />
+          <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} />
+          <KpiCard title="Fat. Março" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))} />
+          <KpiCard title="Fat. Abril" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoAbril)))} />
+          <KpiCard title="Fat. Maio" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMaio)))} />
         </div>
       )}
 
@@ -139,6 +139,7 @@ export default function VendasPage() {
           data={desvioData}
           title="Desvio vs Meta por Loja (Top 15)"
           formatter={v => fmtBRLCompact(v)}
+          tooltipFormatter={v => fmtBRL(v)}
         />
         <HorizontalBarChart
           data={crescimentoData}

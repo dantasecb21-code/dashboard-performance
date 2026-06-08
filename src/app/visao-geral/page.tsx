@@ -56,9 +56,9 @@ export default function VisaoGeral() {
 
       {/* KPIs principais */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        <KpiCard title="Faturamento Total" value={fmtBRLCompact(resumo.faturamentoTotal)} icon="💰" />
-        <KpiCard title="Meta Total" value={fmtBRLCompact(resumo.metaTotal)} icon="🎯" />
-        <KpiCard title="Desvio vs Meta" value={fmtBRLCompact(resumo.desvioTotal)}
+        <KpiCard title="Faturamento Total" value={fmtBRL(resumo.faturamentoTotal)} icon="💰" />
+        <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon="🎯" />
+        <KpiCard title="Desvio vs Meta" value={fmtBRL(resumo.desvioTotal)}
           delta={resumo.desvioPercentual}
           color={resumo.desvioTotal >= 0 ? 'green' : 'red'} icon="📊" />
         <KpiCard title="Crescimento Médio" value={fmtPct(resumo.crescimentoMedio)}
@@ -67,7 +67,7 @@ export default function VisaoGeral() {
         <KpiCard title="Cancelamento Médio" value={fmtPct(resumo.cancelamentoMedio)}
           subtitle="meta ≤ 5%"
           color={resumo.cancelamentoMedio <= 5 ? 'green' : resumo.cancelamentoMedio <= 7 ? 'yellow' : 'red'} icon="❌" />
-        <KpiCard title="Perda de Venda Total" value={fmtBRLCompact(resumo.perdaVendaTotal)} color="red" icon="📉" />
+        <KpiCard title="Perda de Venda Total" value={fmtBRL(resumo.perdaVendaTotal)} color="red" icon="📉" />
         <KpiCard title="Tempo Online Médio" value={fmtPct(resumo.tempoOnlineMedio)}
           subtitle="meta ≥ 95%"
           color={resumo.tempoOnlineMedio >= 95 ? 'green' : resumo.tempoOnlineMedio >= 85 ? 'yellow' : 'red'} icon="⏱️" />
