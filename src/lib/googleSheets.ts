@@ -33,7 +33,7 @@ function col(row: Row, h: HMap, name: string, fallback: number): string {
 
 // Aba 4: indicadores — [16]=meta [17]=venda [18]=desvio [19]=cresc [20]=partic [21]=ticket
 // [22]=perdaTotal [23]=cancel% [24]=cancelDesvio [25]=perdaCancel [26]=ruptura%
-// [28]=perdaRuptura [29]=tempoOff% (inversão 100-v para obter % ON) [31]=perdaTempoOn
+// [28]=perdaRuptura [29]=tempoOn% (já em % online, sem inversão) [31]=perdaTempoOn
 function parseIndicadores(row: Row, h: HMap = {}): Partial<Loja> | null {
   if (!row || !col(row, h, 'nomeLoja', 4)?.trim()) return null
   return {
@@ -62,7 +62,7 @@ function parseIndicadores(row: Row, h: HMap = {}): Partial<Loja> | null {
     perdaCancelamento:  parseBRL(col(row, h, 'perdaCancelamento', 25)),
     rupturaItem:        parsePct(col(row, h, 'rupturaItem', 26)),
     perdaRuptura:       parseBRL(col(row, h, 'perdaRuptura', 28)),
-    tempoOnline:        (() => { const v = parsePct(col(row, h, 'tempoOffline', 29)); return v !== null ? 100 - v : null })(),
+    tempoOnline:        parsePct(col(row, h, 'tempoOnline', 29)),
     perdaTempoOnline:   parseBRL(col(row, h, 'perdaTempoOnline', 31)),
   }
 }
@@ -113,7 +113,7 @@ function parseVendasAnuais(row: Row, h: HMap = {}): Partial<Loja> | null {
     nsu:               parsePct(col(row, h, 'nsu', 24)),
     rupturaItem:       parsePct(col(row, h, 'rupturaItem', 25)),
     slaEntrega:        parsePct(col(row, h, 'slaEntrega', 26)),
-    tempoOnline:       (() => { const v = parsePct(col(row, h, 'tempoOffline', 27)); return v !== null ? 100 - v : null })(),
+    tempoOnline:       parsePct(col(row, h, 'tempoOnline', 27)),
   }
 }
 
