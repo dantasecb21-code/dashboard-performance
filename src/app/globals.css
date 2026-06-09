@@ -8,19 +8,19 @@
 
 /* ── Variáveis do tema escuro ────────────────────────────────────────── */
 :root {
-  --background:        260 25%  7%;
-  --card:              265 22% 13%;
-  --card-foreground:   280 20% 97%;
-  --foreground:        280 20% 97%;
-  --muted-foreground:  260 15% 55%;
-  --border:            280 20% 20%;
+  --background:         20 22%  6%;   /* charcoal quente quase preto */
+  --card:               20 18% 11%;   /* card escuro subtom quente */
+  --card-foreground:    30 20% 96%;   /* branco quente */
+  --foreground:         30 20% 96%;
+  --muted-foreground:   25 12% 52%;   /* cinza quente */
+  --border:             20 15% 18%;
 
-  --primary:           273 80% 65%;
-  --accent:            322 88% 66%;
-  --success:           158 70% 52%;
-  --warning:            38 95% 62%;
-  --destructive:       350 85% 62%;
-  --info:              192 90% 65%;
+  --primary:            32 95% 58%;   /* âmbar/saffron — energia, performance */
+  --accent:            174 75% 48%;   /* teal elétrico — complementar ao âmbar */
+  --success:           145 65% 46%;   /* verde floresta */
+  --warning:            40 90% 55%;   /* laranja */
+  --destructive:         4 80% 58%;   /* vermelho quente */
+  --info:              200 82% 60%;   /* azul céu */
 
   --sidebar-width: 220px;
 }
@@ -53,13 +53,13 @@ body {
 
 /* ── Glass card ──────────────────────────────────────────────────────── */
 .glass-card {
-  background: linear-gradient(145deg, hsl(280 60% 70% / 0.10), hsl(322 70% 60% / 0.04));
-  border: 1px solid hsl(280 60% 80% / 0.14);
+  background: linear-gradient(145deg, hsl(32 70% 60% / 0.08), hsl(174 65% 50% / 0.04));
+  border: 1px solid hsl(32 60% 70% / 0.12);
   backdrop-filter: blur(36px) saturate(180%);
   box-shadow:
-    0 24px 60px -20px hsl(265 80% 4% / 0.7),
-    inset 0 1px 0 hsl(0 0% 100% / 0.12),
-    inset 0 0 0 1px hsl(280 60% 80% / 0.04);
+    0 24px 60px -20px hsl(20 40% 3% / 0.75),
+    inset 0 1px 0 hsl(0 0% 100% / 0.10),
+    inset 0 0 0 1px hsl(32 60% 70% / 0.04);
   border-radius: 1rem;
 }
 

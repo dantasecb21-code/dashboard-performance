@@ -179,10 +179,10 @@ export default function AuditoriaPage() {
         setData({
           updatedAt: json.updatedAt ?? new Date().toISOString(),
           rawSheets: {
-            indicadores:   { name: '', headerRows: [], dataRows: [], rowCount: 0 },
-            vendasDiarias: { name: '', headerRows: [], dataRows: [], rowCount: 0 },
-            vendasAnuais:  { name: '', headerRows: [], dataRows: [], rowCount: 0 },
-            cancelamento:  { name: '', headerRows: [], dataRows: [], rowCount: 0 },
+            indicadores:   { name: '', headerRows: [], headerMap: {}, dataRows: [], rowCount: 0 },
+            vendasDiarias: { name: '', headerRows: [], headerMap: {}, dataRows: [], rowCount: 0 },
+            vendasAnuais:  { name: '', headerRows: [], headerMap: {}, dataRows: [], rowCount: 0 },
+            cancelamento:  { name: '', headerRows: [], headerMap: {}, dataRows: [], rowCount: 0 },
           },
           lojas,
           stats: {

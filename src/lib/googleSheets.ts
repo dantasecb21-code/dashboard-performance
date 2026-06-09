@@ -18,115 +18,119 @@ function getAuth() {
 }
 
 type Row = string[]
+type HMap = Record<string, number>
+
+// Constrói mapa nome→índice a partir da linha de headers
+function buildHeaderMap(headers: string[]): HMap {
+  const map: HMap = {}
+  headers?.forEach((h, i) => { if (h?.trim()) map[h.trim()] = i })
+  return map
+}
+
+// Retorna célula pelo nome do header (se mapeado) ou pelo índice posicional (fallback)
+function col(row: Row, h: HMap, name: string, fallback: number): string {
+  const idx = Object.prototype.hasOwnProperty.call(h, name) ? h[name] : fallback
+  return row[idx] ?? ''
+}
 
 // ── Aba: indicadores ────────────────────────────────────────────────
+// Fallback posicional (linha 3 da planilha como referência):
 // A=dirDiv B=dirOp C=ger D=cod E=nome F=cidade G=uf
 // H=jan(7) I=feb(8) J=skip(9) K=mar(10) L=skip(11) M=abr(12) N=skip(13)
 // O=meta(14) P=cresc%(15) Q=vendaAcum(16) R=desvio(17) S=particip%(18) T=ticket(19)
 // U=skip(20) V=cancel%(21) W=cancelDesvio%(22) X=perdaCancel(23)
-// Y=ruptura%(24) Z=rupturaDesvio%(25) AA=perdaRuptura(26) AB=tempoOn%(27) AC=perdaTOn(28)
-function parseIndicadores(row: Row): Partial<Loja> | null {
-  if (!row || !row[4]?.trim()) return null
+// Y=ruptura%(24) Z=rupturaDesvio%(25) AA=perdaRuptura(26) AB=tempoOff%(27) AC=perdaTOn(28)
+function parseIndicadores(row: Row, h: HMap = {}): Partial<Loja> | null {
+  if (!row || !col(row, h, 'Loja', 4)?.trim()) return null
   return {
-    diretorDivisional: row[0] || '',
-    diretorRegional:   row[1] || '',
-    gerenteRegional:   row[2] || '',
-    codigoLoja:        (row[3] || '').trim(),
-    nomeLoja:          (row[4] || '').trim(),
-    cidade:            (row[5] || '').trim(),
-    uf:                (row[6] || '').trim(),
+    diretorDivisional: col(row, h, 'Diretor Divisional', 0) || '',
+    diretorRegional:   col(row, h, 'Diretor Regional', 1) || '',
+    gerenteRegional:   col(row, h, 'Gerente Regional', 2) || '',
+    codigoLoja:        col(row, h, 'Código', 3).trim(),
+    nomeLoja:          col(row, h, 'Loja', 4).trim(),
+    cidade:            col(row, h, 'Cidade', 5).trim(),
+    uf:                col(row, h, 'UF', 6).trim(),
 
-    faturamentoJaneiro:  parseBRL(row[7]),
-    faturamentoFevereiro: parseBRL(row[8]),
-    faturamentoMarco:    parseBRL(row[10]),
-    faturamentoAbril:    parseBRL(row[12]),
-    meta:        parseBRL(row[14]),
-    crescimento: parsePct(row[15]),   // col P = crescimento %
-    venda:       parseBRL(row[16]),   // col Q = venda acumulada no mês
-    faturamentoMaio: parseBRL(row[16]),
-    desvio:      parseBRL(row[17]),   // col R = desvio vs meta
-    participacao: parsePct(row[18]),
-    ticketMedio:  parseBRL(row[19]),
+    faturamentoJaneiro:   parseBRL(col(row, h, 'Janeiro', 7)),
+    faturamentoFevereiro: parseBRL(col(row, h, 'Fevereiro', 8)),
+    faturamentoMarco:     parseBRL(col(row, h, 'Março', 10)),
+    faturamentoAbril:     parseBRL(col(row, h, 'Abril', 12)),
+    meta:        parseBRL(col(row, h, 'Meta', 14)),
+    crescimento: parsePct(col(row, h, 'Crescimento', 15)),
+    venda:       parseBRL(col(row, h, 'Venda', 16)),
+    faturamentoMaio: parseBRL(col(row, h, 'Venda', 16)),
+    desvio:      parseBRL(col(row, h, 'Desvio', 17)),
+    participacao: parsePct(col(row, h, 'Participação', 18)),
+    ticketMedio:  parseBRL(col(row, h, 'Ticket Médio', 19)),
 
-    cancelamentoTotal:  parsePct(row[21]),
-    cancelamentoDesvio: parsePct(row[22]),
-    perdaCancelamento:  parseBRL(row[23]),
-    rupturaItem:        parsePct(row[24]),
-    perdaRuptura:       parseBRL(row[26]),
-    // Col 27 armazena % downtime (tempo offline); uptime = 100 - downtime
-    tempoOnline: (() => { const v = parsePct(row[27]); return v !== null ? 100 - v : null })(),
-    perdaTempoOnline: parseBRL(row[28]),
+    cancelamentoTotal:  parsePct(col(row, h, 'Cancelamento', 21)),
+    cancelamentoDesvio: parsePct(col(row, h, 'Desvio Cancelamento', 22)),
+    perdaCancelamento:  parseBRL(col(row, h, 'Perda Cancelamento', 23)),
+    rupturaItem:        parsePct(col(row, h, 'Ruptura', 24)),
+    perdaRuptura:       parseBRL(col(row, h, 'Perda Ruptura', 26)),
+    // Coluna armazena % offline (downtime); uptime = 100 - downtime
+    tempoOnline: (() => { const v = parsePct(col(row, h, 'Tempo Offline', 27)); return v !== null ? 100 - v : null })(),
+    perdaTempoOnline: parseBRL(col(row, h, 'Perda Offline', 28)),
   }
 }
 
 // ── Aba: vendas diarias e mensais ────────────────────────────────────
-// Estrutura igual ao indicadores nas primeiras 7 colunas
-// H=metaDia I=vendaDia J=desvioDia K=crescDia L=participDia
-// M=metaAcum N=vendaAcum O=desvioAcum P=crescAcum Q=participAcum R=ticketDiario
-// S=cancelMes T=cancelOntem U..X=outros Y=slaPreparoMes Z=slaPreparoOntem AA=nsu
-function parseVendasDiarias(row: Row): Partial<Loja> | null {
-  if (!row || !row[4]?.trim()) return null
+function parseVendasDiarias(row: Row, h: HMap = {}): Partial<Loja> | null {
+  if (!row || !col(row, h, 'Loja', 4)?.trim()) return null
   return {
-    codigoLoja: (row[3] || '').trim(),
-    metaDia:    parseBRL(row[7]),
-    vendaDia:   parseBRL(row[8]),
-    desvioDia:  parseBRL(row[9]),
-    crescimentoDia: parsePct(row[10]),
+    codigoLoja: col(row, h, 'Código', 3).trim(),
+    metaDia:    parseBRL(col(row, h, 'Meta Dia', 7)),
+    vendaDia:   parseBRL(col(row, h, 'Venda Dia', 8)),
+    desvioDia:  parseBRL(col(row, h, 'Desvio Dia', 9)),
+    crescimentoDia: parsePct(col(row, h, 'Crescimento Dia', 10)),
 
-    metaAcumulada:        parseBRL(row[12]),
-    vendaAcumulada:       parseBRL(row[13]),
-    desvioAcumulado:      parseBRL(row[14]),
-    crescimentoAcumulado: parsePct(row[15]),
-    participacaoAcumulada: parsePct(row[16]),
-    ticketMedioDiario:    parseBRL(row[17]),
+    metaAcumulada:        parseBRL(col(row, h, 'Meta Acumulada', 12)),
+    vendaAcumulada:       parseBRL(col(row, h, 'Venda Acumulada', 13)),
+    desvioAcumulado:      parseBRL(col(row, h, 'Desvio Acumulado', 14)),
+    crescimentoAcumulado: parsePct(col(row, h, 'Crescimento Acumulado', 15)),
+    participacaoAcumulada: parsePct(col(row, h, 'Participação Acumulada', 16)),
+    ticketMedioDiario:    parseBRL(col(row, h, 'Ticket Médio', 17)),
 
-    cancelamentoTotal: parsePct(row[18]),  // cancelamento acumulado no mês
-    slaEntrega:  parsePct(row[25]),
-    slaPreparo:  parsePct(row[26]),
-    nsu:         parsePct(row[27]),
+    cancelamentoTotal: parsePct(col(row, h, 'Cancelamento', 18)),
+    slaEntrega:  parsePct(col(row, h, 'SLA Entrega', 25)),
+    slaPreparo:  parsePct(col(row, h, 'SLA Preparo', 26)),
+    nsu:         parsePct(col(row, h, 'NSU', 27)),
   }
 }
 
 // ── Aba: vendas anuais ───────────────────────────────────────────────
-// A-G hierarquia, H=jan I=feb J=mar K=abr L=mai M=metaJun N=vendaJun
-// O=desvio P=cresc Q=particip R=ticket ... X=slaPreparo Y=nsu
-function parseVendasAnuais(row: Row): Partial<Loja> | null {
-  if (!row || !row[3]?.trim()) return null
+function parseVendasAnuais(row: Row, h: HMap = {}): Partial<Loja> | null {
+  if (!row || !col(row, h, 'Código', 3)?.trim()) return null
   return {
-    codigoLoja:        (row[3] || '').trim(),
-    faturamentoJunho:  parseBRL(row[13]),   // venda junho (quando disponível)
-    slaPreparo:        parsePct(row[23]),
-    nsu:               parsePct(row[24]),
+    codigoLoja:       col(row, h, 'Código', 3).trim(),
+    faturamentoJunho: parseBRL(col(row, h, 'Junho', 13)),
+    slaPreparo:       parsePct(col(row, h, 'SLA Preparo', 23)),
+    nsu:              parsePct(col(row, h, 'NSU', 24)),
   }
 }
 
 // ── Aba: cancelamento ────────────────────────────────────────────────
-// A-G hierarquia
-// col 7-9: totais abril, col 10-12: totais maio, col 13: variacao
-// col 14: cancelCliente% (maio), col 15: cancelCliente% (abril), col 16: desvio
-// col 17: cancelLoja% (maio),    col 18: cancelLoja% (abril),    col 19: desvio
-// col 20: cancelEntregador% (maio), col 21: abril, col 22: desvio
-// col 23+: valores em R$
-function parseCancelamento(row: Row): Partial<Loja> | null {
-  if (!row || !row[3]?.trim()) return null
+function parseCancelamento(row: Row, h: HMap = {}): Partial<Loja> | null {
+  if (!row || !col(row, h, 'Código', 3)?.trim()) return null
   return {
-    codigoLoja:              (row[3] || '').trim(),
-    cancelamentoAbril:       parsePct(row[9]),   // % abril total
-    cancelamentoCliente:     parsePct(row[14]),
-    cancelamentoLoja:        parsePct(row[17]),
-    cancelamentoEntregador:  parsePct(row[20]),
-    cancelamentoTotalR:      parseBRL(row[23]),
-    cancelamentoClienteR:    parseBRL(row[24]),
-    cancelamentoLojaR:       parseBRL(row[25]),
-    cancelamentoEntregadorR: parseBRL(row[26]),
+    codigoLoja:              col(row, h, 'Código', 3).trim(),
+    cancelamentoAbril:       parsePct(col(row, h, 'Cancelamento Abril', 9)),
+    cancelamentoCliente:     parsePct(col(row, h, 'Cancelamento Cliente', 14)),
+    cancelamentoLoja:        parsePct(col(row, h, 'Cancelamento Loja', 17)),
+    cancelamentoEntregador:  parsePct(col(row, h, 'Cancelamento Entregador', 20)),
+    cancelamentoTotalR:      parseBRL(col(row, h, 'Total R$', 23)),
+    cancelamentoClienteR:    parseBRL(col(row, h, 'Cliente R$', 24)),
+    cancelamentoLojaR:       parseBRL(col(row, h, 'Loja R$', 25)),
+    cancelamentoEntregadorR: parseBRL(col(row, h, 'Entregador R$', 26)),
   }
 }
 
 export interface RawSheetInfo {
   name: string
-  headerRows: string[][]   // rows 1-3 from the sheet (group headers, sub-headers, etc.)
+  headerRows: string[][]
   dataRows: { codigoLoja: string; values: string[] }[]
   rowCount: number
+  headerMap: HMap   // mapa de headers reconhecidos (linha 3)
 }
 
 export interface DebugData {
@@ -158,6 +162,7 @@ export async function fetchDebugData(): Promise<DebugData> {
     return {
       name,
       headerRows,
+      headerMap: buildHeaderMap(headerRows[2] ?? []),
       dataRows: dataRows.map(r => ({ codigoLoja: String(r[3] ?? '').trim(), values: r })),
       rowCount: dataRows.length,
     }
@@ -170,22 +175,24 @@ export async function fetchDebugData(): Promise<DebugData> {
     cancelamento: splitSheet(cancelRes, 'cancelamento'),
   }
 
-  // Re-run the same merge to get parsed lojas
   const toRow = (r: { values: string[] }) => r.values as Row
 
   const baseMap = new Map<string, Partial<Loja>>()
   for (const r of rawSheets.indicadores.dataRows) {
-    const p = parseIndicadores(toRow(r)); if (p?.codigoLoja) baseMap.set(p.codigoLoja, p)
+    const p = parseIndicadores(toRow(r), rawSheets.indicadores.headerMap)
+    if (p?.codigoLoja) baseMap.set(p.codigoLoja, p)
   }
   for (const r of rawSheets.vendasDiarias.dataRows) {
-    const p = parseVendasDiarias(toRow(r)); if (!p?.codigoLoja) continue
+    const p = parseVendasDiarias(toRow(r), rawSheets.vendasDiarias.headerMap)
+    if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
     const merged = { ...p, ...base }
     if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined) merged.cancelamentoTotal = p.cancelamentoTotal ?? null
     baseMap.set(p.codigoLoja, merged)
   }
   for (const r of rawSheets.vendasAnuais.dataRows) {
-    const p = parseVendasAnuais(toRow(r)); if (!p?.codigoLoja) continue
+    const p = parseVendasAnuais(toRow(r), rawSheets.vendasAnuais.headerMap)
+    if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
     const merged: Partial<Loja> = { ...p, ...base }
     merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
@@ -194,7 +201,8 @@ export async function fetchDebugData(): Promise<DebugData> {
     baseMap.set(p.codigoLoja, merged)
   }
   for (const r of rawSheets.cancelamento.dataRows) {
-    const p = parseCancelamento(toRow(r)); if (!p?.codigoLoja) continue
+    const p = parseCancelamento(toRow(r), rawSheets.cancelamento.headerMap)
+    if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
     baseMap.set(p.codigoLoja, { ...base, ...p })
   }
@@ -268,29 +276,40 @@ export async function fetchLojas(): Promise<Loja[]> {
   const auth = getAuth()
   const sheets = google.sheets({ version: 'v4', auth })
 
+  // A3 = inclui linha 3 (headers renomeados pelo usuário) além dos dados
   const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A4:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A3:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A3:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A3:AE200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A3:AF200" }),
   ])
 
-  const rows = (res: typeof indRes) => (res.data.values as Row[] | null) ?? []
+  const getRows = (res: typeof indRes) => (res.data.values as Row[] | null) ?? []
+
+  // Primeira linha de cada range = row 3 da planilha = headers
+  const [indHeaders,     ...indRows]     = getRows(indRes)
+  const [diarHeaders,    ...diarRows]    = getRows(diarRes)
+  const [anuaisHeaders,  ...anuaisRows]  = getRows(anuaisRes)
+  const [cancelHeaders,  ...cancelRows]  = getRows(cancelRes)
+
+  const indH     = buildHeaderMap(indHeaders     ?? [])
+  const diarH    = buildHeaderMap(diarHeaders    ?? [])
+  const anuaisH  = buildHeaderMap(anuaisHeaders  ?? [])
+  const cancelH  = buildHeaderMap(cancelHeaders  ?? [])
 
   // Base: indicadores
   const baseMap = new Map<string, Partial<Loja>>()
-  for (const row of rows(indRes)) {
-    const parsed = parseIndicadores(row)
+  for (const row of indRows) {
+    const parsed = parseIndicadores(row, indH)
     if (parsed?.codigoLoja) baseMap.set(parsed.codigoLoja, parsed)
   }
 
   // Merge vendas diárias — não sobrescreve campos já presentes em indicadores
-  for (const row of rows(diarRes)) {
-    const p = parseVendasDiarias(row)
+  for (const row of diarRows) {
+    const p = parseVendasDiarias(row, diarH)
     if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
-    const merged = { ...p, ...base }  // base tem prioridade
-    // Exceções: cancelamentoTotal de diárias só se indicadores não trouxe
+    const merged = { ...p, ...base }
     if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined) {
       merged.cancelamentoTotal = p.cancelamentoTotal ?? null
     }
@@ -298,11 +317,10 @@ export async function fetchLojas(): Promise<Loja[]> {
   }
 
   // Merge vendas anuais
-  for (const row of rows(anuaisRes)) {
-    const p = parseVendasAnuais(row)
+  for (const row of anuaisRows) {
+    const p = parseVendasAnuais(row, anuaisH)
     if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
-    // Só sobrescreve slaPreparo/nsu se indicadores não trouxe
     const merged: Partial<Loja> = { ...p, ...base }
     merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
     merged.nsu = base.nsu ?? p.nsu ?? null
@@ -311,8 +329,8 @@ export async function fetchLojas(): Promise<Loja[]> {
   }
 
   // Merge cancelamento
-  for (const row of rows(cancelRes)) {
-    const p = parseCancelamento(row)
+  for (const row of cancelRows) {
+    const p = parseCancelamento(row, cancelH)
     if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
     baseMap.set(p.codigoLoja, { ...base, ...p })
