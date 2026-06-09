@@ -77,14 +77,14 @@ export default function VendasPage() {
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
   const TAB_CLS = (v: Visao) =>
-    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`
+    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-muted-foreground border border-white/10 hover:bg-white/[0.04]'}`
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Vendas e Metas</h2>
-          <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
+          <h2 className="text-xl font-bold text-foreground">Vendas e Metas</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
         </div>
         <div className="flex gap-2">
           <button className={TAB_CLS('diaria')}    onClick={() => setVisao('diaria')}>Diária</button>
@@ -96,33 +96,42 @@ export default function VendasPage() {
       {/* KPIs conforme visão */}
       {visao === 'diaria' && (
         <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon={DollarSign} />
-          <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon={Target} />
+          <KpiCard title="Venda do Dia" value={fmtBRL(kpis.vendaDia)} icon={DollarSign}
+            tooltip="Total de vendas realizadas por todas as lojas no dia de hoje." />
+          <KpiCard title="Meta do Dia" value={fmtBRL(kpis.metaDia)} icon={Target}
+            tooltip="Soma das metas diárias de todas as lojas. Calculada proporcionalmente à meta mensal." />
           <KpiCard title="Desvio do Dia" value={fmtBRL(kpis.desvioDia)}
-            color={kpis.desvioDia >= 0 ? 'green' : 'red'} icon={BarChart2} />
+            color={kpis.desvioDia >= 0 ? 'green' : 'red'} icon={BarChart2}
+            tooltip="Diferença em R$ entre a venda realizada e a meta do dia. Verde = acima, vermelho = abaixo." />
         </div>
       )}
 
       {visao === 'acumulada' && (
         <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon={DollarSign} />
-          <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon={Target} />
+          <KpiCard title="Venda Acumulada" value={fmtBRL(kpis.vendaAcum)} icon={DollarSign}
+            tooltip="Total de vendas acumuladas no mês até o dia de hoje, somando todas as lojas." />
+          <KpiCard title="Meta Acumulada" value={fmtBRL(kpis.metaAcum)} icon={Target}
+            tooltip="Meta proporcional acumulada até hoje. Serve como referência para avaliar se o ritmo de vendas está adequado." />
           <KpiCard title="Desvio Acumulado" value={fmtBRL(kpis.desvioAcum)}
-            color={kpis.desvioAcum >= 0 ? 'green' : 'red'} icon={BarChart2} />
+            color={kpis.desvioAcum >= 0 ? 'green' : 'red'} icon={BarChart2}
+            tooltip="Diferença em R$ entre venda acumulada e meta acumulada. Negativo indica que o mês está abaixo do ritmo esperado." />
           <KpiCard title="Crescimento Médio" value={fmtPct(kpis.crescAcum)}
-            color={kpis.crescAcum >= 0 ? 'green' : 'red'} icon={TrendingUp} />
-          <KpiCard title="Ticket Médio" value={fmtBRL(kpis.ticketMedio)} icon={Receipt} />
-          <KpiCard title="Participação Média" value={fmtPct(kpis.participacao)} icon={Percent} />
+            color={kpis.crescAcum >= 0 ? 'green' : 'red'} icon={TrendingUp}
+            tooltip="Média do crescimento percentual das lojas comparado ao mesmo período do mês anterior." />
+          <KpiCard title="Ticket Médio" value={fmtBRL(kpis.ticketMedio)} icon={Receipt}
+            tooltip="Valor médio por pedido no período acumulado. Aumentar o ticket é uma das formas de crescer sem aumentar volume de pedidos." />
+          <KpiCard title="Participação Média" value={fmtPct(kpis.participacao)} icon={Percent}
+            tooltip="Percentual médio de participação de cada loja no faturamento total da rede no período." />
         </div>
       )}
 
       {visao === 'anual' && (
         <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <KpiCard title="Fat. Janeiro"   value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))}   icon={CalendarDays} />
-          <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} icon={CalendarDays} />
-          <KpiCard title="Fat. Março"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))}     icon={CalendarDays} />
-          <KpiCard title="Fat. Abril"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoAbril)))}     icon={CalendarDays} />
-          <KpiCard title="Fat. Maio"      value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMaio)))}      icon={CalendarDays} />
+          <KpiCard title="Fat. Janeiro"   value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoJaneiro)))}   icon={CalendarDays} tooltip="Faturamento total de todas as lojas no mês de janeiro." />
+          <KpiCard title="Fat. Fevereiro" value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoFevereiro)))} icon={CalendarDays} tooltip="Faturamento total de todas as lojas no mês de fevereiro." />
+          <KpiCard title="Fat. Março"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMarco)))}     icon={CalendarDays} tooltip="Faturamento total de todas as lojas no mês de março." />
+          <KpiCard title="Fat. Abril"     value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoAbril)))}     icon={CalendarDays} tooltip="Faturamento total de todas as lojas no mês de abril." />
+          <KpiCard title="Fat. Maio"      value={fmtBRL(sum(lojasFiltered.map(l => l.faturamentoMaio)))}      icon={CalendarDays} tooltip="Faturamento total de todas as lojas no mês de maio (mês atual)." />
         </div>
       )}
 

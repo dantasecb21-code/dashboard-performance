@@ -1,0 +1,1 @@
+/root/dashboard-performance/.agents/skills/frontend-design/SKILL.md

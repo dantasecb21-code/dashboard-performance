@@ -18,6 +18,17 @@ function getAuth() {
   })
 }
 
+function buildHeaderMap(headers) {
+  const map = {}
+  headers?.forEach((h, i) => { if (h?.trim()) map[h.trim()] = i })
+  return map
+}
+
+function col(row, h, name, fallback) {
+  const idx = Object.prototype.hasOwnProperty.call(h, name) ? h[name] : fallback
+  return row[idx] ?? ''
+}
+
 function parseBRL(str) {
   if (!str && str !== 0) return null
   if (typeof str === 'number') return isNaN(str) ? null : str
@@ -65,70 +76,85 @@ async function main() {
   const auth = getAuth()
   const sheets = google.sheets({ version: 'v4', auth })
 
+  // A3 = inclui linha 3 (headers renomeados) além dos dados
   const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A4:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A3:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A3:AC200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A3:AB200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A3:AH200" }),
   ])
 
-  const rows = (res) => res.data.values ?? []
+  const getRows = (res) => res.data.values ?? []
+  const [indHeaders,    ...indRows]    = getRows(indRes)
+  const [diarHeaders,   ...diarRows]   = getRows(diarRes)
+  const [anuaisHeaders, ...anuaisRows] = getRows(anuaisRes)
+  const [cancelHeaders, ...cancelRows] = getRows(cancelRes)
+
+  const indH    = buildHeaderMap(indHeaders    ?? [])
+  const diarH   = buildHeaderMap(diarHeaders   ?? [])
+  const anuaisH = buildHeaderMap(anuaisHeaders ?? [])
+  const cancelH = buildHeaderMap(cancelHeaders ?? [])
+
+  console.log('Headers detectados — indicadores:', Object.keys(indH).length, 'colunas mapeadas')
+  console.log('Headers detectados — cancelamento:', Object.keys(cancelH).length, 'colunas mapeadas')
+
   const baseMap = new Map()
 
-  for (const row of rows(indRes)) {
-    if (!row[4]?.trim()) continue
-    const cod = (row[3] || '').trim()
+  for (const row of indRows) {
+    if (!col(row, indH, 'nomeLoja', 4)?.trim()) continue
+    const cod = col(row, indH, 'lojaId', 3).trim()
     if (!cod) continue
     baseMap.set(cod, {
       codigoLoja: cod,
-      nomeLoja: row[4].trim(),
-      cidade: (row[5] || '').trim(),
-      uf: (row[6] || '').trim(),
-      diretorDivisional: row[0] || '',
-      diretorRegional: row[1] || '',
-      gerenteRegional: row[2] || '',
-      faturamentoJaneiro: parseBRL(row[7]),
-      faturamentoFevereiro: parseBRL(row[8]),
-      faturamentoMarco: parseBRL(row[10]),
-      faturamentoAbril: parseBRL(row[12]),
-      meta: parseBRL(row[14]),
-      crescimento: parsePct(row[15]),
-      venda: parseBRL(row[16]),
-      faturamentoMaio: parseBRL(row[16]),
-      desvio: parseBRL(row[17]),
-      participacao: parsePct(row[18]),
-      ticketMedio: parseBRL(row[19]),
-      cancelamentoTotal: parsePct(row[21]),
-      cancelamentoDesvio: parsePct(row[22]),
-      perdaCancelamento: parseBRL(row[23]),
-      rupturaItem: parsePct(row[24]),
-      perdaRuptura: parseBRL(row[26]),
-      tempoOnline: (() => { const v = parsePct(row[27]); return v !== null ? 100 - v : null })(),
-      perdaTempoOnline: parseBRL(row[28]),
+      nomeLoja: col(row, indH, 'nomeLoja', 4).trim(),
+      cidade: col(row, indH, 'cidade', 5).trim(),
+      uf: col(row, indH, 'uf', 6).trim(),
+      diretorDivisional: col(row, indH, 'diretorDivisional', 0) || '',
+      diretorRegional: col(row, indH, 'diretorRegional', 1) || '',
+      gerenteRegional: col(row, indH, 'gerenteRegional', 2) || '',
+      faturamentoJaneiro:   parseBRL(col(row, indH, 'janFaturamento', 7)),
+      faturamentoFevereiro: parseBRL(col(row, indH, 'fevFaturamento', 8)),
+      faturamentoMarco:     parseBRL(col(row, indH, 'marFaturamento', 10)),
+      faturamentoAbril:     parseBRL(col(row, indH, 'abrFaturamento', 12)),
+      faturamentoMaio:      parseBRL(col(row, indH, 'maiFaturamento', 14)),
+      meta:         parseBRL(col(row, indH, 'junMeta', 16)),
+      venda:        parseBRL(col(row, indH, 'junVenda', 17)),
+      desvio:       parseBRL(col(row, indH, 'junDesvioMeta', 18)),
+      crescimento:  parsePct(col(row, indH, 'junCrescimento', 19)),
+      participacao: parsePct(col(row, indH, 'junParticipacao', 20)),
+      ticketMedio:  parseBRL(col(row, indH, 'ticketMedio', 21)),
+      perdaVendaTotal:    parseBRL(col(row, indH, 'perdaVendaTotal', 22)),
+      cancelamentoTotal:  parsePct(col(row, indH, 'cancelamentoTotalMeta5', 23)),
+      cancelamentoDesvio: parsePct(col(row, indH, 'cancelamentoDesvioMeta', 24)),
+      perdaCancelamento:  parseBRL(col(row, indH, 'cancelamentoPerdaVenda', 25)),
+      rupturaItem:        parsePct(col(row, indH, 'rupturaItemMeta5', 26)),
+      perdaRuptura:       parseBRL(col(row, indH, 'rupturaPerdaVenda', 28)),
+      tempoOnline: (() => { const v = parsePct(col(row, indH, 'tempoOnMeta95', 29)); return v !== null ? 100 - v : null })(),
+      perdaTempoOnline: parseBRL(col(row, indH, 'tempoOnPerdaVenda', 31)),
     })
   }
 
-  for (const row of rows(diarRes)) {
-    if (!row[4]?.trim()) continue
-    const cod = (row[3] || '').trim()
+  for (const row of diarRows) {
+    if (!col(row, diarH, 'nomeLoja', 4)?.trim()) continue
+    const cod = col(row, diarH, 'lojaId', 3).trim()
     if (!cod) continue
     const base = baseMap.get(cod) ?? {}
     const p = {
       codigoLoja: cod,
-      cancelamentoTotal: parsePct(row[18]),
-      metaDia: parseBRL(row[7]),
-      vendaDia: parseBRL(row[8]),
-      desvioDia: parseBRL(row[9]),
-      crescimentoDia: parsePct(row[10]),
-      metaAcumulada: parseBRL(row[12]),
-      vendaAcumulada: parseBRL(row[13]),
-      desvioAcumulado: parseBRL(row[14]),
-      crescimentoAcumulado: parsePct(row[15]),
-      participacaoAcumulada: parsePct(row[16]),
-      ticketMedioDiario: parseBRL(row[17]),
-      slaEntrega: parsePct(row[25]),
-      slaPreparo: parsePct(row[26]),
-      nsu: parsePct(row[27]),
+      cancelamentoTotal:     parsePct(col(row, diarH, 'junhoCancelamentoTotalMeta5', 18)),
+      metaDia:               parseBRL(col(row, diarH, 'diaMeta', 7)),
+      vendaDia:              parseBRL(col(row, diarH, 'diaVenda', 8)),
+      desvioDia:             parseBRL(col(row, diarH, 'diaDesvioMeta', 9)),
+      crescimentoDia:        parsePct(col(row, diarH, 'diaCrescimento', 10)),
+      metaAcumulada:         parseBRL(col(row, diarH, 'acumuladoMeta', 12)),
+      vendaAcumulada:        parseBRL(col(row, diarH, 'acumuladoVenda', 13)),
+      desvioAcumulado:       parseBRL(col(row, diarH, 'acumuladoDesvioMeta', 14)),
+      crescimentoAcumulado:  parsePct(col(row, diarH, 'acumuladoCrescimento', 15)),
+      participacaoAcumulada: parsePct(col(row, diarH, 'acumuladoParticipacao', 16)),
+      ticketMedioDiario:     parseBRL(col(row, diarH, 'ticketMedio', 17)),
+      slaPreparo:            parsePct(col(row, diarH, 'junhoSlaPreparoMeta85', 23)),
+      nsu:                   parsePct(col(row, diarH, 'junhoNsuMeta12', 25)),
+      rupturaItem:           parsePct(col(row, diarH, 'junhoRupturaItemMeta5', 27)),
     }
     const merged = { ...p, ...base }
     if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined)
@@ -136,32 +162,33 @@ async function main() {
     baseMap.set(cod, merged)
   }
 
-  for (const row of rows(anuaisRes)) {
-    const cod = (row[3] || '').trim()
+  for (const row of anuaisRows) {
+    const cod = col(row, anuaisH, 'lojaId', 3).trim()
     if (!cod) continue
     const base = baseMap.get(cod) ?? {}
     baseMap.set(cod, {
       ...base,
-      faturamentoJunho: base.faturamentoJunho ?? parseBRL(row[13]),
-      slaPreparo: base.slaPreparo ?? parsePct(row[23]),
-      nsu: base.nsu ?? parsePct(row[24]),
+      faturamentoJunho:  base.faturamentoJunho  ?? parseBRL(col(row, anuaisH, 'junVenda', 17)),
+      slaPreparo:        base.slaPreparo         ?? parsePct(col(row, anuaisH, 'slaPreparoMeta85', 23)),
+      nsu:               base.nsu                ?? parsePct(col(row, anuaisH, 'nsuMeta12', 24)),
+      rupturaItem:       base.rupturaItem         ?? parsePct(col(row, anuaisH, 'rupturaItemMeta5', 25)),
+      slaEntrega:        base.slaEntrega          ?? parsePct(col(row, anuaisH, 'slaEntregaMeta85', 26)),
     })
   }
 
-  for (const row of rows(cancelRes)) {
-    const cod = (row[3] || '').trim()
+  for (const row of cancelRows) {
+    const cod = col(row, cancelH, 'lojaId', 3).trim()
     if (!cod) continue
     const base = baseMap.get(cod) ?? {}
     baseMap.set(cod, {
       ...base,
-      cancelamentoAbril: base.cancelamentoAbril ?? parsePct(row[9]),
-      cancelamentoCliente: base.cancelamentoCliente ?? parsePct(row[14]),
-      cancelamentoLoja: base.cancelamentoLoja ?? parsePct(row[17]),
-      cancelamentoEntregador: base.cancelamentoEntregador ?? parsePct(row[20]),
-      cancelamentoTotalR: base.cancelamentoTotalR ?? parseBRL(row[23]),
-      cancelamentoClienteR: base.cancelamentoClienteR ?? parseBRL(row[24]),
-      cancelamentoLojaR: base.cancelamentoLojaR ?? parseBRL(row[25]),
-      cancelamentoEntregadorR: base.cancelamentoEntregadorR ?? parseBRL(row[26]),
+      cancelamentoCliente:     base.cancelamentoCliente     ?? parsePct(col(row, cancelH, 'canceladosClientesMaio', 14)),
+      cancelamentoLoja:        base.cancelamentoLoja         ?? parsePct(col(row, cancelH, 'canceladosLojaMaio', 17)),
+      cancelamentoEntregador:  base.cancelamentoEntregador   ?? parsePct(col(row, cancelH, 'canceladosEntregadoresMaio', 20)),
+      cancelamentoTotalR:      base.cancelamentoTotalR       ?? parseBRL(col(row, cancelH, 'canceladosTotalReaisMaio', 23)),
+      cancelamentoClienteR:    base.cancelamentoClienteR     ?? parseBRL(col(row, cancelH, 'canceladosClientesReaisMaio', 26)),
+      cancelamentoLojaR:       base.cancelamentoLojaR        ?? parseBRL(col(row, cancelH, 'canceladosLojaReaisMaio', 29)),
+      cancelamentoEntregadorR: base.cancelamentoEntregadorR  ?? parseBRL(col(row, cancelH, 'canceladosEntregadorReaisMaio', 32)),
     })
   }
 

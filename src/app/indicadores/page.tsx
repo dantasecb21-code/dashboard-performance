@@ -56,24 +56,30 @@ export default function IndicadoresPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Indicadores Operacionais</h2>
-        <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-foreground">Indicadores Operacionais</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
       {/* KPI Cards */}
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <KpiCard title="Cancelamento Médio" value={kpis.cancelamento !== null ? fmtPct(kpis.cancelamento) : '—'}
-          subtitle={`${kpis.foraCancel} fora da meta`} color={cor('cancelamento_total', kpis.cancelamento)} icon={XCircle} size="sm" />
+          subtitle={`${kpis.foraCancel} fora da meta`} color={cor('cancelamento_total', kpis.cancelamento)} icon={XCircle} size="sm"
+          tooltip="Taxa média de cancelamentos. Meta: ≤ 5%. Afeta diretamente o ranking e visibilidade da loja no app." />
         <KpiCard title="SLA Preparo Médio" value={kpis.slaPreparo !== null ? fmtPct(kpis.slaPreparo) : '—'}
-          subtitle={`${kpis.foraSlaPreparo} fora`} color={cor('sla_preparo', kpis.slaPreparo)} icon={Clock} size="sm" />
+          subtitle={`${kpis.foraSlaPreparo} fora`} color={cor('sla_preparo', kpis.slaPreparo)} icon={Clock} size="sm"
+          tooltip="Percentual de pedidos preparados dentro do tempo prometido ao cliente. Meta: ≥ 85%. Abaixo disso aumenta cancelamentos." />
         <KpiCard title="NSU Médio" value={kpis.nsu !== null ? fmtPct(kpis.nsu) : '—'}
-          subtitle={`${kpis.foraNsu} fora`} color={cor('nsu', kpis.nsu)} icon={PhoneOff} size="sm" />
+          subtitle={`${kpis.foraNsu} fora`} color={cor('nsu', kpis.nsu)} icon={PhoneOff} size="sm"
+          tooltip="NSU = Não Serviu ao Usuário. Pedidos em que o cliente ficou sem atendimento sobre o total. Meta: ≤ 12%. Alto NSU indica problemas de disponibilidade." />
         <KpiCard title="Ruptura Média" value={kpis.ruptura !== null ? fmtPct(kpis.ruptura) : '—'}
-          subtitle={`${kpis.foraRuptura} fora`} color={cor('ruptura_item', kpis.ruptura)} icon={Package} size="sm" />
+          subtitle={`${kpis.foraRuptura} fora`} color={cor('ruptura_item', kpis.ruptura)} icon={Package} size="sm"
+          tooltip="Percentual médio de itens do cardápio marcados como indisponíveis. Meta: ≤ 5%. Alta ruptura gera frustração e pedidos cancelados." />
         <KpiCard title="SLA Entrega Médio" value={kpis.slaEntrega !== null ? fmtPct(kpis.slaEntrega) : '—'}
-          subtitle={`${kpis.foraSlaEntrega} fora`} color={cor('sla_entrega', kpis.slaEntrega)} icon={Truck} size="sm" />
+          subtitle={`${kpis.foraSlaEntrega} fora`} color={cor('sla_entrega', kpis.slaEntrega)} icon={Truck} size="sm"
+          tooltip="Percentual de entregas realizadas dentro do prazo prometido ao cliente. Meta: ≥ 85%. Atrasos aumentam avaliações negativas e cancelamentos." />
         <KpiCard title="Tempo Online Médio" value={kpis.tempoOnline !== null ? fmtPct(kpis.tempoOnline) : '—'}
-          subtitle={`${kpis.foraTempoOn} fora`} color={cor('tempo_online', kpis.tempoOnline)} icon={Wifi} size="sm" />
+          subtitle={`${kpis.foraTempoOn} fora`} color={cor('tempo_online', kpis.tempoOnline)} icon={Wifi} size="sm"
+          tooltip="Percentual do tempo em que a loja ficou disponível no app. Meta: ≥ 95%. Ficar offline significa deixar de receber pedidos e prejudicar o posicionamento." />
       </div>
 
       {/* Gráfico de lojas fora da meta */}
@@ -98,7 +104,7 @@ export default function IndicadoresPage() {
 
       {/* Heatmap semáforo */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Tabela Semáforo por Loja</h3>
+        <h3 className="text-sm font-semibold text-foreground/80 mb-3">Tabela Semáforo por Loja</h3>
         <OperationalHeatmap lojas={lojasFiltered} />
       </div>
     </div>

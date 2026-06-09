@@ -23,6 +23,21 @@ export default function VisaoGeral() {
 
   const resumo = useMemo(() => calcularResumo(lojasFiltered), [lojasFiltered])
 
+  const mesAtual = useMemo(() => {
+    const meses = [
+      { key: 'faturamentoJunho',     label: 'Junho 2025' },
+      { key: 'faturamentoMaio',      label: 'Maio 2025' },
+      { key: 'faturamentoAbril',     label: 'Abril 2025' },
+      { key: 'faturamentoMarco',     label: 'Março 2025' },
+      { key: 'faturamentoFevereiro', label: 'Fevereiro 2025' },
+      { key: 'faturamentoJaneiro',   label: 'Janeiro 2025' },
+    ] as const
+    for (const { key, label } of meses) {
+      if (lojasFiltered.some(l => (l[key] ?? 0) > 0)) return label
+    }
+    return 'Período atual'
+  }, [lojasFiltered])
+
   const evolucaoMensal = useMemo(() => {
     const meses = [
       { mes: 'Jan', key: 'faturamentoJaneiro' },
@@ -54,41 +69,60 @@ export default function VisaoGeral() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Visão Geral Executiva</h2>
-        <p className="text-sm text-slate-400 mt-0.5">{resumo.totalLojas} lojas no período selecionado</p>
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Visão Geral Executiva</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{resumo.totalLojas} lojas</p>
+        </div>
+        <span className="rounded-full bg-primary/15 text-primary text-xs font-semibold px-3 py-1.5 border border-primary/30 flex-shrink-0">
+          {mesAtual}
+        </span>
       </div>
 
       {/* KPIs principais */}
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        <KpiCard title="Faturamento Total" value={fmtBRL(resumo.faturamentoTotal)} icon={DollarSign} />
-        <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon={Target} />
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          Faturamento — {mesAtual}
+        </p>
+        <KpiCard title="Faturamento Acumulado" subtitle={mesAtual} value={fmtBRL(resumo.faturamentoTotal)} icon={DollarSign}
+          tooltip={`Soma do faturamento acumulado de todas as lojas em ${mesAtual} (coluna venda/mai da planilha).`} />
+        <KpiCard title="Meta Total" value={fmtBRL(resumo.metaTotal)} icon={Target}
+          tooltip="Soma das metas mensais de todas as lojas no período selecionado." />
         <KpiCard
           title="Desvio vs Meta"
           value={fmtBRL(resumo.desvioTotal)}
           delta={resumo.desvioPercentual}
           color={resumo.desvioTotal >= 0 ? 'green' : 'red'}
           icon={BarChart2}
+          tooltip="Diferença em R$ entre a venda realizada e a meta. Verde = acima da meta, vermelho = abaixo."
         />
         <KpiCard
           title="Crescimento Médio"
           value={fmtPct(resumo.crescimentoMedio)}
           color={resumo.crescimentoMedio >= 0 ? 'green' : 'red'}
           icon={TrendingUp}
+          tooltip="Média do crescimento percentual das lojas em relação ao mesmo período do mês anterior."
         />
-        <KpiCard title="Ticket Médio" value={fmtBRL(resumo.ticketMedioGeral)} icon={Receipt} />
+        <KpiCard title="Ticket Médio" value={fmtBRL(resumo.ticketMedioGeral)} icon={Receipt}
+          tooltip="Valor médio por pedido considerando todas as lojas do período selecionado." />
+
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-1">
+          Qualidade Operacional
+        </p>
         <KpiCard
           title="Cancelamento Médio"
           value={fmtPct(resumo.cancelamentoMedio)}
           subtitle="meta ≤ 5%"
           color={resumo.cancelamentoMedio <= 5 ? 'green' : resumo.cancelamentoMedio <= 7 ? 'yellow' : 'red'}
           icon={XCircle}
+          tooltip="Taxa média de pedidos cancelados nas lojas. Meta: ≤ 5%. Acima de 7% é crítico — impacta faturamento e reputação no app."
         />
         <KpiCard
           title="Perda de Venda Total"
           value={fmtBRL(resumo.perdaVendaTotal)}
           color="red"
           icon={TrendingDown}
+          tooltip="Receita perdida estimada somando cancelamentos + ruptura de itens + tempo em que as lojas ficaram offline."
         />
         <KpiCard
           title="Tempo Online Médio"
@@ -96,10 +130,18 @@ export default function VisaoGeral() {
           subtitle="meta ≥ 95%"
           color={resumo.tempoOnlineMedio >= 95 ? 'green' : resumo.tempoOnlineMedio >= 85 ? 'yellow' : 'red'}
           icon={Wifi}
+          tooltip="Percentual médio de tempo em que as lojas ficaram disponíveis no app. Meta: ≥ 95%. Abaixo disso, clientes não encontram a loja e a receita cai."
         />
-        <KpiCard title="Lojas Acima da Meta" value={resumo.lojasAcimaMeta} color="green" icon={CheckCircle} />
-        <KpiCard title="Lojas Abaixo da Meta" value={resumo.lojasBaixoMeta} color="red" icon={AlertCircle} />
-        <KpiCard title="Lojas Críticas" value={resumo.lojasCriticas} color="red" icon={ShieldAlert} />
+
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-1">
+          Status das Lojas
+        </p>
+        <KpiCard title="Lojas Acima da Meta" value={resumo.lojasAcimaMeta} color="green" icon={CheckCircle}
+          tooltip="Quantidade de lojas que superaram ou igualaram a meta de vendas no período." />
+        <KpiCard title="Lojas Abaixo da Meta" value={resumo.lojasBaixoMeta} color="red" icon={AlertCircle}
+          tooltip="Quantidade de lojas que não atingiram a meta de vendas. Veja a página Vendas para detalhar." />
+        <KpiCard title="Lojas Críticas" value={resumo.lojasCriticas} color="red" icon={ShieldAlert}
+          tooltip="Lojas com score de saúde abaixo de 60 pontos (calculado por venda, crescimento, cancelamento, ruptura e tempo online). Necessitam atenção imediata." />
       </div>
 
       {/* Alerta de lojas críticas */}

@@ -69,13 +69,13 @@ export default function GlobalFilters() {
       />
 
       <div className="flex flex-col gap-1 flex-1 sm:flex-none">
-        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">Busca</label>
+        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest pl-0.5">Busca</label>
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
           <input
             type="text"
             placeholder="Loja ou código..."
-            className="text-xs border border-slate-200 rounded-lg pl-6 pr-2.5 py-1.5 bg-white/70 backdrop-blur-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400 w-full sm:w-40 transition-colors hover:border-slate-300"
+            className="text-xs border border-white/10 rounded-lg pl-6 pr-2.5 py-1.5 bg-white/[0.06] backdrop-blur-sm text-foreground/80 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary w-full sm:w-40 transition-colors hover:border-white/30"
             value={filtros.codigoLoja}
             onChange={e => setFiltro('codigoLoja', e.target.value)}
           />
