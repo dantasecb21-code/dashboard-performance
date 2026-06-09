@@ -6,7 +6,7 @@ import type { Loja } from '@/types/dashboard'
 import { fmtBRL, fmtPct } from '@/lib/formatters'
 import {
   AlertTriangle, CheckCircle, RefreshCw,
-  Search, Database, ShieldCheck, Eye,
+  Search, Database, ShieldCheck, Eye, Table2,
 } from 'lucide-react'
 import KpiCard from '@/components/cards/KpiCard'
 
@@ -23,6 +23,113 @@ const SHEET_LABELS: Record<SheetKey, string> = {
   vendasDiarias: 'Vendas Diárias',
   vendasAnuais:  'Vendas Anuais',
   cancelamento:  'Cancelamento',
+}
+
+type ColEntry = { idx: number; letra: string; campo: string; descricao: string }
+
+const COLUMN_MAP: Record<SheetKey, ColEntry[]> = {
+  indicadores: [
+    { idx: 0,  letra: 'A',  campo: 'diretorDivisional',        descricao: 'Diretor Divisional' },
+    { idx: 1,  letra: 'B',  campo: 'diretorRegional',          descricao: 'Diretor Regional' },
+    { idx: 2,  letra: 'C',  campo: 'gerenteRegional',          descricao: 'Gerente Regional' },
+    { idx: 3,  letra: 'D',  campo: 'codigoLoja',               descricao: 'Código da Loja (chave de merge)' },
+    { idx: 4,  letra: 'E',  campo: 'nomeLoja',                 descricao: 'Nome da Loja' },
+    { idx: 5,  letra: 'F',  campo: 'cidade',                   descricao: 'Cidade' },
+    { idx: 6,  letra: 'G',  campo: 'uf',                       descricao: 'UF' },
+    { idx: 7,  letra: 'H',  campo: 'faturamentoJaneiro',       descricao: 'Faturamento Janeiro (R$)' },
+    { idx: 8,  letra: 'I',  campo: 'faturamentoFevereiro',     descricao: 'Faturamento Fevereiro (R$)' },
+    { idx: 9,  letra: 'J',  campo: '—',                        descricao: 'Pulado (desvio jan ou coluna auxiliar)' },
+    { idx: 10, letra: 'K',  campo: 'faturamentoMarco',         descricao: 'Faturamento Março (R$)' },
+    { idx: 11, letra: 'L',  campo: '—',                        descricao: 'Pulado' },
+    { idx: 12, letra: 'M',  campo: 'faturamentoAbril',         descricao: 'Faturamento Abril (R$)' },
+    { idx: 13, letra: 'N',  campo: '—',                        descricao: 'Pulado' },
+    { idx: 14, letra: 'O',  campo: 'meta',                     descricao: 'Meta mensal (R$)' },
+    { idx: 15, letra: 'P',  campo: 'crescimento',              descricao: 'Crescimento % vs mês anterior' },
+    { idx: 16, letra: 'Q',  campo: 'venda / faturamentoMaio',  descricao: 'Venda acumulada Maio (R$) — usado como mês atual' },
+    { idx: 17, letra: 'R',  campo: 'desvio',                   descricao: 'Desvio vs meta (R$)' },
+    { idx: 18, letra: 'S',  campo: 'participacao',             descricao: 'Participação % na rede' },
+    { idx: 19, letra: 'T',  campo: 'ticketMedio',              descricao: 'Ticket médio (R$)' },
+    { idx: 20, letra: 'U',  campo: '—',                        descricao: 'Pulado' },
+    { idx: 21, letra: 'V',  campo: 'cancelamentoTotal',        descricao: 'Cancelamento % — meta ≤ 5%' },
+    { idx: 22, letra: 'W',  campo: 'cancelamentoDesvio',       descricao: 'Cancelamento desvio %' },
+    { idx: 23, letra: 'X',  campo: 'perdaCancelamento',        descricao: 'Perda por cancelamento (R$)' },
+    { idx: 24, letra: 'Y',  campo: 'rupturaItem',              descricao: 'Ruptura de itens % — meta ≤ 5%' },
+    { idx: 25, letra: 'Z',  campo: '—',                        descricao: 'Ruptura desvio %' },
+    { idx: 26, letra: 'AA', campo: 'perdaRuptura',             descricao: 'Perda por ruptura (R$)' },
+    { idx: 27, letra: 'AB', campo: 'tempoOnline',              descricao: '% downtime (parser inverte: uptime = 100 - v) — meta ≥ 95%' },
+    { idx: 28, letra: 'AC', campo: 'perdaTempoOnline',         descricao: 'Perda por tempo offline (R$)' },
+  ],
+  vendasDiarias: [
+    { idx: 0,  letra: 'A',  campo: 'diretorDivisional',        descricao: 'Diretor Divisional' },
+    { idx: 1,  letra: 'B',  campo: 'diretorRegional',          descricao: 'Diretor Regional' },
+    { idx: 2,  letra: 'C',  campo: 'gerenteRegional',          descricao: 'Gerente Regional' },
+    { idx: 3,  letra: 'D',  campo: 'codigoLoja',               descricao: 'Código da Loja (chave de merge)' },
+    { idx: 4,  letra: 'E',  campo: 'nomeLoja',                 descricao: 'Nome da Loja' },
+    { idx: 5,  letra: 'F',  campo: 'cidade',                   descricao: 'Cidade' },
+    { idx: 6,  letra: 'G',  campo: 'uf',                       descricao: 'UF' },
+    { idx: 7,  letra: 'H',  campo: 'metaDia',                  descricao: 'Meta do dia (R$)' },
+    { idx: 8,  letra: 'I',  campo: 'vendaDia',                 descricao: 'Venda do dia (R$)' },
+    { idx: 9,  letra: 'J',  campo: 'desvioDia',                descricao: 'Desvio do dia (R$)' },
+    { idx: 10, letra: 'K',  campo: 'crescimentoDia',           descricao: 'Crescimento diário %' },
+    { idx: 11, letra: 'L',  campo: '—',                        descricao: 'Pulado (participação diária?)' },
+    { idx: 12, letra: 'M',  campo: 'metaAcumulada',            descricao: 'Meta acumulada no mês (R$)' },
+    { idx: 13, letra: 'N',  campo: 'vendaAcumulada',           descricao: 'Venda acumulada no mês (R$)' },
+    { idx: 14, letra: 'O',  campo: 'desvioAcumulado',          descricao: 'Desvio acumulado (R$)' },
+    { idx: 15, letra: 'P',  campo: 'crescimentoAcumulado',     descricao: 'Crescimento acumulado %' },
+    { idx: 16, letra: 'Q',  campo: 'participacaoAcumulada',    descricao: 'Participação acumulada %' },
+    { idx: 17, letra: 'R',  campo: 'ticketMedioDiario',        descricao: 'Ticket médio diário (R$)' },
+    { idx: 18, letra: 'S',  campo: 'cancelamentoTotal',        descricao: 'Cancelamento acumulado no mês %' },
+    { idx: 25, letra: 'Z',  campo: 'slaEntrega',               descricao: 'SLA Entrega % — meta ≥ 85%' },
+    { idx: 26, letra: 'AA', campo: 'slaPreparo',               descricao: 'SLA Preparo % — meta ≥ 85%' },
+    { idx: 27, letra: 'AB', campo: 'nsu',                      descricao: 'NSU % — meta ≤ 12%' },
+  ],
+  vendasAnuais: [
+    { idx: 0,  letra: 'A',  campo: 'diretorDivisional',        descricao: 'Diretor Divisional' },
+    { idx: 1,  letra: 'B',  campo: 'diretorRegional',          descricao: 'Diretor Regional' },
+    { idx: 2,  letra: 'C',  campo: 'gerenteRegional',          descricao: 'Gerente Regional' },
+    { idx: 3,  letra: 'D',  campo: 'codigoLoja',               descricao: 'Código da Loja (chave de merge)' },
+    { idx: 4,  letra: 'E',  campo: 'nomeLoja',                 descricao: 'Nome da Loja' },
+    { idx: 5,  letra: 'F',  campo: 'cidade',                   descricao: 'Cidade' },
+    { idx: 6,  letra: 'G',  campo: 'uf',                       descricao: 'UF' },
+    { idx: 7,  letra: 'H',  campo: '(janeiro)',                descricao: 'Faturamento Janeiro — lido da aba Indicadores' },
+    { idx: 8,  letra: 'I',  campo: '(fevereiro)',              descricao: 'Faturamento Fevereiro — lido da aba Indicadores' },
+    { idx: 9,  letra: 'J',  campo: '(março)',                  descricao: 'Faturamento Março — lido da aba Indicadores' },
+    { idx: 10, letra: 'K',  campo: '(abril)',                  descricao: 'Faturamento Abril — lido da aba Indicadores' },
+    { idx: 11, letra: 'L',  campo: '(maio)',                   descricao: 'Faturamento Maio — lido da aba Indicadores' },
+    { idx: 12, letra: 'M',  campo: '—',                        descricao: 'Meta Junho (não lido diretamente)' },
+    { idx: 13, letra: 'N',  campo: 'faturamentoJunho',         descricao: 'Faturamento Junho (R$) — quando disponível' },
+    { idx: 23, letra: 'X',  campo: 'slaPreparo',               descricao: 'SLA Preparo % (fallback se aba diária não trouxer)' },
+    { idx: 24, letra: 'Y',  campo: 'nsu',                      descricao: 'NSU % (fallback se aba diária não trouxer)' },
+  ],
+  cancelamento: [
+    { idx: 0,  letra: 'A',  campo: 'diretorDivisional',        descricao: 'Diretor Divisional' },
+    { idx: 1,  letra: 'B',  campo: 'diretorRegional',          descricao: 'Diretor Regional' },
+    { idx: 2,  letra: 'C',  campo: 'gerenteRegional',          descricao: 'Gerente Regional' },
+    { idx: 3,  letra: 'D',  campo: 'codigoLoja',               descricao: 'Código da Loja (chave de merge)' },
+    { idx: 4,  letra: 'E',  campo: 'nomeLoja',                 descricao: 'Nome da Loja' },
+    { idx: 5,  letra: 'F',  campo: 'cidade',                   descricao: 'Cidade' },
+    { idx: 6,  letra: 'G',  campo: 'uf',                       descricao: 'UF' },
+    { idx: 7,  letra: 'H',  campo: '—',                        descricao: 'Total Abril (col 1 de 3)' },
+    { idx: 8,  letra: 'I',  campo: '—',                        descricao: 'Total Abril (col 2 de 3)' },
+    { idx: 9,  letra: 'J',  campo: 'cancelamentoAbril',        descricao: 'Cancelamento % Abril (total)' },
+    { idx: 10, letra: 'K',  campo: '—',                        descricao: 'Total Maio (col 1 de 3)' },
+    { idx: 11, letra: 'L',  campo: '—',                        descricao: 'Total Maio (col 2 de 3)' },
+    { idx: 12, letra: 'M',  campo: '—',                        descricao: 'Total Maio (col 3 de 3)' },
+    { idx: 13, letra: 'N',  campo: '—',                        descricao: 'Variação Abr × Mai' },
+    { idx: 14, letra: 'O',  campo: 'cancelamentoCliente',      descricao: 'Cancelamento por Cliente % (Maio)' },
+    { idx: 15, letra: 'P',  campo: '—',                        descricao: 'Cancelamento por Cliente % (Abril)' },
+    { idx: 16, letra: 'Q',  campo: '—',                        descricao: 'Desvio cancelamento cliente' },
+    { idx: 17, letra: 'R',  campo: 'cancelamentoLoja',         descricao: 'Cancelamento pela Loja % (Maio)' },
+    { idx: 18, letra: 'S',  campo: '—',                        descricao: 'Cancelamento pela Loja % (Abril)' },
+    { idx: 19, letra: 'T',  campo: '—',                        descricao: 'Desvio cancelamento loja' },
+    { idx: 20, letra: 'U',  campo: 'cancelamentoEntregador',   descricao: 'Cancelamento por Entregador % (Maio)' },
+    { idx: 21, letra: 'V',  campo: '—',                        descricao: 'Cancelamento por Entregador % (Abril)' },
+    { idx: 22, letra: 'W',  campo: '—',                        descricao: 'Desvio cancelamento entregador' },
+    { idx: 23, letra: 'X',  campo: 'cancelamentoTotalR',       descricao: 'Valor cancelado total (R$)' },
+    { idx: 24, letra: 'Y',  campo: 'cancelamentoClienteR',     descricao: 'Valor cancelado por cliente (R$)' },
+    { idx: 25, letra: 'Z',  campo: 'cancelamentoLojaR',        descricao: 'Valor cancelado pela loja (R$)' },
+    { idx: 26, letra: 'AA', campo: 'cancelamentoEntregadorR',  descricao: 'Valor cancelado por entregador (R$)' },
+  ],
 }
 
 const CAMPOS: { key: keyof Loja; label: string; fmt: (v: number | null) => string; meta?: string }[] = [
@@ -52,6 +159,7 @@ export default function AuditoriaPage() {
   const [search, setSearch]   = useState('')
   const [selectedLoja, setSelectedLoja] = useState('')
   const [activeSheet, setActiveSheet]   = useState<SheetKey>('indicadores')
+  const [mapSheet, setMapSheet]         = useState<SheetKey>('indicadores')
 
   async function load() {
     setLoading(true); setError(null)
@@ -287,7 +395,64 @@ export default function AuditoriaPage() {
         )}
       </section>
 
-      {/* ── Seção 3: Inspeção bruto vs parseado ── */}
+      {/* ── Seção 3: Mapeamento de colunas ── */}
+      <section>
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
+          <Table2 className="w-3.5 h-3.5" />
+          Mapeamento de colunas assumido pelo parser
+          <span className="font-normal normal-case text-slate-300">— abra a planilha lado a lado e confirme que as letras batem</span>
+        </h3>
+
+        <div className="flex gap-1 flex-wrap mb-3">
+          {(Object.entries(SHEET_LABELS) as [SheetKey, string][]).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setMapSheet(key)}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                mapSheet === key
+                  ? 'bg-brand-600 text-white shadow-sm'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead className="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th className="px-4 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide w-16">Letra</th>
+                <th className="px-3 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide w-12">Índice</th>
+                <th className="px-3 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide">Campo no Dashboard</th>
+                <th className="px-3 py-2.5 text-left text-slate-400 font-semibold uppercase tracking-wide">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {COLUMN_MAP[mapSheet].map(({ idx, letra, campo, descricao }) => {
+                const isSkip = campo === '—'
+                return (
+                  <tr key={idx} className={`hover:bg-slate-50 transition-colors ${isSkip ? 'opacity-40' : ''}`}>
+                    <td className="px-4 py-2 font-mono font-bold text-brand-700">{letra}</td>
+                    <td className="px-3 py-2 font-mono text-slate-400">{idx}</td>
+                    <td className="px-3 py-2">
+                      {isSkip ? (
+                        <span className="text-slate-300 italic">coluna ignorada</span>
+                      ) : (
+                        <code className="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[11px] font-mono">{campo}</code>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 text-slate-500">{descricao}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ── Seção 4: Inspeção bruto vs parseado (dev only) ── */}
       {!isProd && (
         <section>
           <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
