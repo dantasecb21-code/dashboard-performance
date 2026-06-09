@@ -99,16 +99,25 @@ export default function CancelamentosPage() {
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <KpiCard title="Cancelamento Médio (Maio)" value={fmtPct(kpis.cancelMedio)}
-          subtitle="meta ≤ 5%" color={colorMap[cor]} icon={XCircle} />
-        <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon={CalendarDays} />
+          subtitle="meta ≤ 5%" color={colorMap[cor]} icon={XCircle}
+          tooltip="Taxa média de pedidos cancelados no mês de maio. Meta: ≤ 5%. Acima de 7% é considerado crítico pelo app e impacta o ranking das lojas." />
+        <KpiCard title="Cancelamento Médio (Abril)" value={fmtPct(kpis.cancelAbrilMedio)} icon={CalendarDays}
+          tooltip="Taxa média de cancelamentos no mês de abril, usada como base de comparação com maio." />
         <KpiCard title="Variação Abr × Mai" value={fmtPct(kpis.variacao)}
-          color={kpis.variacao <= 0 ? 'green' : 'red'} icon={BarChart2} />
-        <KpiCard title="Valor Cancelado Total" value={fmtBRL(kpis.valorTotal)} color="red" icon={DollarSign} />
-        <KpiCard title="Cancelado por Cliente" value={fmtBRL(kpis.valorCliente)} icon={User} />
-        <KpiCard title="Cancelado pela Loja" value={fmtBRL(kpis.valorLoja)} icon={Store} />
-        <KpiCard title="Cancelado por Entregador" value={fmtBRL(kpis.valorEntregador)} icon={Bike} />
-        <KpiCard title="Lojas com Aumento" value={kpis.lojasAumento} color="red" icon={TrendingUp} />
-        <KpiCard title="Lojas com Redução" value={kpis.lojasReducao} color="green" icon={TrendingDown} />
+          color={kpis.variacao <= 0 ? 'green' : 'red'} icon={BarChart2}
+          tooltip="Variação percentual entre abril e maio. Negativo (verde) = melhora, positivo (vermelho) = piora." />
+        <KpiCard title="Valor Cancelado Total" value={fmtBRL(kpis.valorTotal)} color="red" icon={DollarSign}
+          tooltip="Soma em R$ de toda a receita perdida por cancelamentos no período." />
+        <KpiCard title="Cancelado por Cliente" value={fmtBRL(kpis.valorCliente)} icon={User}
+          tooltip="Valor dos pedidos cancelados por iniciativa do próprio cliente (desistência, demora percebida, etc.)." />
+        <KpiCard title="Cancelado pela Loja" value={fmtBRL(kpis.valorLoja)} icon={Store}
+          tooltip="Valor dos pedidos cancelados pela loja (estoque esgotado, encerramento antecipado, sobrecarga, etc.). É o tipo mais controlável." />
+        <KpiCard title="Cancelado por Entregador" value={fmtBRL(kpis.valorEntregador)} icon={Bike}
+          tooltip="Valor dos pedidos cancelados por falha na entrega (entregador não encontrou o endereço, recusou o pedido, etc.)." />
+        <KpiCard title="Lojas com Aumento" value={kpis.lojasAumento} color="red" icon={TrendingUp}
+          tooltip="Quantidade de lojas cuja taxa de cancelamento aumentou em relação ao mês de abril." />
+        <KpiCard title="Lojas com Redução" value={kpis.lojasReducao} color="green" icon={TrendingDown}
+          tooltip="Quantidade de lojas que reduziram a taxa de cancelamento em relação ao mês de abril." />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

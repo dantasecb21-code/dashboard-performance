@@ -95,16 +95,24 @@ export default function PerdaVendaPage() {
       </div>
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon={TrendingDown} />
-        <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon={XCircle} />
-        <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon={Package} />
-        <KpiCard title="Perda por Tempo Online" value={fmtBRL(kpis.perdaTOn)} icon={Clock} />
-        <KpiCard title="Maior Loja (Perda)" value={kpis.maiorLoja?.nomeLoja ?? '—'} subtitle={fmtBRL(kpis.maiorLoja?.perdaVendaTotal ?? null)} icon={Store} />
-        <KpiCard title="Maior Região (Perda)" value={kpis.maiorRegiao?.[0] ?? '—'} subtitle={fmtBRL(kpis.maiorRegiao?.[1] ?? null)} icon={MapPin} />
+        <KpiCard title="Perda Total" value={fmtBRL(kpis.perdaTotal)} color="red" icon={TrendingDown}
+          tooltip="Receita total estimada perdida, somando cancelamentos + ruptura de itens + períodos offline. É o principal indicador de oportunidade de melhoria." />
+        <KpiCard title="Perda por Cancelamento" value={fmtBRL(kpis.perdaCancel)} icon={XCircle}
+          tooltip="Parcela da perda total gerada por pedidos cancelados. Reduzir cancelamentos é a forma mais rápida de recuperar receita." />
+        <KpiCard title="Perda por Ruptura" value={fmtBRL(kpis.perdaRup)} icon={Package}
+          tooltip="Receita perdida por itens do cardápio que estavam indisponíveis. Clientes visualizaram, mas não conseguiram pedir." />
+        <KpiCard title="Perda por Tempo Online" value={fmtBRL(kpis.perdaTOn)} icon={Clock}
+          tooltip="Receita estimada perdida por períodos em que a loja ficou offline ou pausada no app." />
+        <KpiCard title="Maior Loja (Perda)" value={kpis.maiorLoja?.nomeLoja ?? '—'} subtitle={fmtBRL(kpis.maiorLoja?.perdaVendaTotal ?? null)} icon={Store}
+          tooltip="A loja com maior valor absoluto de perda de venda no período. Prioridade máxima de intervenção." />
+        <KpiCard title="Maior Região (Perda)" value={kpis.maiorRegiao?.[0] ?? '—'} subtitle={fmtBRL(kpis.maiorRegiao?.[1] ?? null)} icon={MapPin}
+          tooltip="A região (diretor regional) com maior perda de venda acumulada no período." />
         <KpiCard title="% Perda / Faturamento"
           value={kpis.fatTotal > 0 ? fmtPct((kpis.perdaTotal / kpis.fatTotal) * 100) : '—'}
-          color="red" icon={BarChart2} />
-        <KpiCard title="Potencial de Recuperação" value={fmtBRL(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon={Lightbulb} />
+          color="red" icon={BarChart2}
+          tooltip="Percentual que a perda representa sobre o faturamento total. Indica o impacto relativo — 5% significa que 1 em cada 20 reais foi perdido." />
+        <KpiCard title="Potencial de Recuperação" value={fmtBRL(kpis.perdaTotal)} subtitle="reduzindo ao mínimo" color="blue" icon={Lightbulb}
+          tooltip="Estimativa do quanto poderia ser recuperado em receita se cancelamentos, ruptura e tempo offline fossem reduzidos ao mínimo possível." />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

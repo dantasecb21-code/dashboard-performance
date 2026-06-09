@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { TrendingUp, TrendingDown, Minus, type LucideIcon } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Info, type LucideIcon } from 'lucide-react'
 
 interface Props {
   title: string
@@ -9,6 +9,7 @@ interface Props {
   icon?: LucideIcon
   color?: 'default' | 'green' | 'red' | 'yellow' | 'blue'
   size?: 'sm' | 'md'
+  tooltip?: string
 }
 
 const COLOR_MAP = {
@@ -52,7 +53,7 @@ function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
   return size === 'sm' ? 'text-lg' : 'text-xl'
 }
 
-export default function KpiCard({ title, value, subtitle, delta, icon: Icon, color = 'default', size = 'md' }: Props) {
+export default function KpiCard({ title, value, subtitle, delta, icon: Icon, color = 'default', size = 'md', tooltip }: Props) {
   const isPositiveDelta = delta !== null && delta !== undefined && delta > 0
   const isNegativeDelta = delta !== null && delta !== undefined && delta < 0
   const colors = COLOR_MAP[color]
@@ -71,9 +72,21 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
 
       <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-tight">
-            {title}
-          </span>
+          <div className="flex items-center gap-1 min-w-0">
+            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-tight">
+              {title}
+            </span>
+            {tooltip && (
+              <div className="relative group/tip flex-shrink-0">
+                <Info className="w-3 h-3 text-slate-300 hover:text-slate-500 cursor-help transition-colors" />
+                <div className="absolute bottom-full left-0 mb-2 z-50 w-56 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed p-3 shadow-xl
+                  opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-normal font-normal normal-case tracking-normal">
+                  {tooltip}
+                  <span className="absolute top-full left-3 border-4 border-transparent border-t-slate-900 block w-0 h-0" />
+                </div>
+              </div>
+            )}
+          </div>
           {Icon && (
             <div className={clsx('w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0', colors.icon)}>
               <Icon className="w-3.5 h-3.5" />
