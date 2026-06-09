@@ -106,17 +106,17 @@ export default function GlassSelect({
           'group flex items-center justify-between gap-2 text-xs rounded-lg px-2.5 py-1.5 w-full',
           'border backdrop-blur-sm transition-all duration-150 cursor-pointer',
           isActive
-            ? 'bg-brand-50/80 border-brand-300 text-brand-700 font-semibold shadow-sm'
-            : 'bg-white/[0.06] border-white/10 text-muted-foreground hover:border-white/20 hover:bg-white/[0.10]',
-          open && !isActive && 'border-brand-300 ring-2 ring-brand-500/20',
-          open && isActive && 'ring-2 ring-brand-500/20'
+            ? 'bg-[hsl(177_100%_41%/0.10)] border-[hsl(177_100%_41%/0.35)] text-[hsl(177_100%_60%)] font-semibold'
+            : 'bg-white/[0.04] border-[hsl(220_40%_16%)] text-[hsl(218_18%_48%)] hover:border-[hsl(220_40%_22%)] hover:bg-white/[0.07]',
+          open && !isActive && 'border-[hsl(177_100%_41%/0.35)] ring-2 ring-[hsl(177_100%_41%/0.12)]',
+          open && isActive && 'ring-2 ring-[hsl(177_100%_41%/0.18)]'
         )}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
         <ChevronDown
           className={clsx(
             'w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200',
-            open ? 'rotate-180 text-brand-500' : 'text-muted-foreground group-hover:text-muted-foreground'
+            open ? 'rotate-180 text-[hsl(177_100%_55%)]' : 'text-[hsl(218_18%_40%)] group-hover:text-[hsl(218_18%_55%)]'
           )}
         />
       </button>
@@ -125,7 +125,7 @@ export default function GlassSelect({
         <div
           ref={menuRef}
           style={{ position: 'fixed', top: coords.top, left: coords.left, width: coords.width, zIndex: 60 }}
-          className="origin-top animate-glass-pop rounded-xl border border-white/15 bg-[hsl(265_22%_14%)] backdrop-blur-xl shadow-glass overflow-hidden"
+          className="origin-top animate-glass-pop rounded-xl border border-[hsl(220_40%_17%)] bg-[hsl(220_52%_7%)] backdrop-blur-xl shadow-[0_20px_50px_-10px_hsl(220_80%_2%/0.85)] overflow-hidden"
         >
           {autoSearch && (
             <div className="p-2 border-b border-white/[0.06]/80">
@@ -153,7 +153,7 @@ export default function GlassSelect({
               )}
             >
               <span>{placeholder}</span>
-              {value === '' && <Check className="w-3.5 h-3.5 text-brand-600" />}
+              {value === '' && <Check className="w-3.5 h-3.5 text-[hsl(177_100%_55%)]" />}
             </button>
 
             {filtered.length === 0 && (
@@ -173,7 +173,7 @@ export default function GlassSelect({
                   )}
                 >
                   <span className="truncate">{opt.label}</span>
-                  {active && <Check className="w-3.5 h-3.5 text-brand-600 flex-shrink-0" />}
+                  {active && <Check className="w-3.5 h-3.5 text-[hsl(177_100%_55%)] flex-shrink-0" />}
                 </button>
               )
             })}

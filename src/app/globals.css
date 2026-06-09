@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,27 +6,29 @@
 
 * { box-sizing: border-box; }
 
-/* ── Variáveis do tema escuro ────────────────────────────────────────── */
+/* ── Tema: Obsidian Command ──────────────────────────────────────────── */
 :root {
-  --background:         20 22%  6%;   /* charcoal quente quase preto */
-  --card:               20 18% 11%;   /* card escuro subtom quente */
-  --card-foreground:    30 20% 96%;   /* branco quente */
-  --foreground:         30 20% 96%;
-  --muted-foreground:   25 12% 52%;   /* cinza quente */
-  --border:             20 15% 18%;
+  /* Fundos — navy ultra-escuro com leve matiz fria */
+  --background:         222 58% 3.5%;   /* #050A17 quase preto azul */
+  --card:               220 52% 7%;     /* #0B1323 card escuro navy */
+  --card-foreground:    210 22% 96%;
+  --foreground:         210 22% 96%;
+  --muted-foreground:   218 18% 50%;    /* cinza azulado */
+  --border:             220 40% 13%;    /* #111D35 linha sutil */
 
-  --primary:            32 95% 58%;   /* âmbar/saffron — energia, performance */
-  --accent:            174 75% 48%;   /* teal elétrico — complementar ao âmbar */
-  --success:           145 65% 46%;   /* verde floresta */
-  --warning:            40 90% 55%;   /* laranja */
-  --destructive:         4 80% 58%;   /* vermelho quente */
-  --info:              200 82% 60%;   /* azul céu */
+  /* Cores de ação */
+  --primary:            177 100% 41%;   /* #00D1C4 ciano elétrico */
+  --accent:             74  100% 50%;   /* #BEFF00 lime elétrico — apenas highlights */
+  --success:            143  78% 46%;   /* #16D461 verde neon */
+  --warning:            26  100% 58%;   /* #FF7A28 laranja */
+  --destructive:        349 100% 61%;   /* #FF3B5C vermelho quente */
+  --info:               207  90% 63%;   /* #3DB8F5 azul céu */
 
   --sidebar-width: 220px;
 }
 
 body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   -webkit-font-smoothing: antialiased;
@@ -34,48 +36,69 @@ body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
-/* ── Padrão de grid no fundo ─────────────────────────────────────────── */
+/* ── Grid de fundo — linhas mais finas e sutis ───────────────────────── */
 .bg-grid {
   background-image:
-    linear-gradient(hsl(0 0% 100% / 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(0 0% 100% / 0.025) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(hsl(0 0% 100% / 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(0 0% 100% / 0.018) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-/* ── Radial glow no canto ────────────────────────────────────────────── */
+/* ── Radial glow — ciano no canto + detalhe no rodapé ───────────────── */
 .bg-radial-glow {
-  background: radial-gradient(
-    ellipse 80% 60% at 10% 0%,
-    hsl(var(--primary) / 0.12) 0%,
-    transparent 60%
-  );
+  background:
+    radial-gradient(ellipse 85% 55% at 8% -5%,
+      hsl(177 100% 41% / 0.13) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 45% at 95% 105%,
+      hsl(220 80% 35% / 0.07) 0%, transparent 58%);
 }
 
 /* ── Glass card ──────────────────────────────────────────────────────── */
 .glass-card {
-  background: linear-gradient(145deg, hsl(32 70% 60% / 0.08), hsl(174 65% 50% / 0.04));
-  border: 1px solid hsl(32 60% 70% / 0.12);
-  backdrop-filter: blur(36px) saturate(180%);
+  position: relative;
+  background: linear-gradient(
+    148deg,
+    hsl(177 100% 50% / 0.055),
+    hsl(220 52% 8% / 0.0)
+  );
+  border: 1px solid hsl(220 40% 20% / 0.7);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
   box-shadow:
-    0 24px 60px -20px hsl(20 40% 3% / 0.75),
-    inset 0 1px 0 hsl(0 0% 100% / 0.10),
-    inset 0 0 0 1px hsl(32 60% 70% / 0.04);
-  border-radius: 1rem;
+    0 20px 50px -15px hsl(220 80% 2% / 0.85),
+    inset 0 1px 0 hsl(177 100% 80% / 0.06);
+  border-radius: 0.875rem;
+  overflow: hidden;
 }
 
-/* ── Stat glow (valores dos KPIs) ────────────────────────────────────── */
+/* Linha de accent no topo do card */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(177 100% 60% / 0.45),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* ── Stat glow — ciano ───────────────────────────────────────────────── */
 .stat-glow {
-  text-shadow: 0 0 20px hsl(var(--primary) / 0.35);
+  text-shadow: 0 0 22px hsl(177 100% 41% / 0.4);
 }
 
-/* ── Font heading ────────────────────────────────────────────────────── */
+/* ── Font heading — Syne: geométrica, arquitetônica ─────────────────── */
 .font-heading {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Syne', sans-serif;
 }
 
 /* ── Animações ───────────────────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -84,40 +107,70 @@ body {
   to   { opacity: 1; }
 }
 
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
 .animate-fade-in-up {
-  animation: fadeInUp 0.25s ease-out forwards;
+  animation: fadeInUp 0.22s ease-out forwards;
 }
 
 /* Entrada escalonada para grids de KPI */
-.kpi-grid > *:nth-child(1)    { animation: fadeInUp 0.25s ease-out 0.00s both; }
-.kpi-grid > *:nth-child(2)    { animation: fadeInUp 0.25s ease-out 0.05s both; }
-.kpi-grid > *:nth-child(3)    { animation: fadeInUp 0.25s ease-out 0.10s both; }
-.kpi-grid > *:nth-child(4)    { animation: fadeInUp 0.25s ease-out 0.15s both; }
-.kpi-grid > *:nth-child(5)    { animation: fadeInUp 0.25s ease-out 0.20s both; }
-.kpi-grid > *:nth-child(6)    { animation: fadeInUp 0.25s ease-out 0.25s both; }
-.kpi-grid > *:nth-child(7)    { animation: fadeInUp 0.25s ease-out 0.28s both; }
-.kpi-grid > *:nth-child(8)    { animation: fadeInUp 0.25s ease-out 0.31s both; }
-.kpi-grid > *:nth-child(9)    { animation: fadeInUp 0.25s ease-out 0.34s both; }
-.kpi-grid > *:nth-child(10)   { animation: fadeInUp 0.25s ease-out 0.37s both; }
-.kpi-grid > *:nth-child(n+11) { animation: fadeInUp 0.25s ease-out 0.40s both; }
+.kpi-grid > *:nth-child(1)    { animation: fadeInUp 0.22s ease-out 0.00s both; }
+.kpi-grid > *:nth-child(2)    { animation: fadeInUp 0.22s ease-out 0.05s both; }
+.kpi-grid > *:nth-child(3)    { animation: fadeInUp 0.22s ease-out 0.09s both; }
+.kpi-grid > *:nth-child(4)    { animation: fadeInUp 0.22s ease-out 0.13s both; }
+.kpi-grid > *:nth-child(5)    { animation: fadeInUp 0.22s ease-out 0.17s both; }
+.kpi-grid > *:nth-child(6)    { animation: fadeInUp 0.22s ease-out 0.21s both; }
+.kpi-grid > *:nth-child(7)    { animation: fadeInUp 0.22s ease-out 0.24s both; }
+.kpi-grid > *:nth-child(8)    { animation: fadeInUp 0.22s ease-out 0.27s both; }
+.kpi-grid > *:nth-child(9)    { animation: fadeInUp 0.22s ease-out 0.30s both; }
+.kpi-grid > *:nth-child(10)   { animation: fadeInUp 0.22s ease-out 0.33s both; }
+.kpi-grid > *:nth-child(n+11) { animation: fadeInUp 0.22s ease-out 0.36s both; }
 
-/* ── Scrollbar escura ────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+/* ── Scrollbar fina ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+::-webkit-scrollbar-thumb {
+  background: hsl(220 40% 18%);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(177 100% 41% / 0.5);
+}
 
 /* ── Focus ring acessível ───────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid hsl(var(--primary));
+  outline: 2px solid hsl(177 100% 41%);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Tabular nums ────────────────────────────────────────────────────── */
+/* ── Números monospace ───────────────────────────────────────────────── */
 .font-mono, .tabular-nums {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Label de seção ──────────────────────────────────────────────────── */
+.section-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: hsl(218 18% 40%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, hsl(220 40% 18%), transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
