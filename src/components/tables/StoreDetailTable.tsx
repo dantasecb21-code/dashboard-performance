@@ -12,7 +12,7 @@ type SortDir = 'asc' | 'desc'
 const CELL_INDICADOR = (val: number | null, ind: Parameters<typeof statusIndicador>[0], cls?: string) => {
   const cor = statusIndicador(ind, val)
   const colorCls = {
-    verde: 'text-green-700', amarelo: 'text-yellow-700', vermelho: 'text-destructive', neutro: 'text-gray-400'
+    verde: 'text-success', amarelo: 'text-warning', vermelho: 'text-destructive', neutro: 'text-muted-foreground'
   }[cor]
   return <td className={clsx('px-3 py-2 text-right text-xs font-medium', colorCls, cls)}>{val !== null ? fmtPct(val) : '—'}</td>
 }
@@ -52,7 +52,7 @@ export default function StoreDetailTable({ lojas }: Props) {
   // cls = classes de visibilidade responsiva opcionais
   const th = (label: string, k: SortKey, cls?: string) => (
     <th key={k} onClick={() => handleSort(k)}
-      className={clsx('px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-foreground/80 select-none whitespace-nowrap', cls)}>
+      className={clsx('px-3 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wide cursor-pointer hover:text-foreground/80 select-none whitespace-nowrap', cls)}>
       {label}{sortKey === k ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}
     </th>
   )
@@ -77,16 +77,16 @@ export default function StoreDetailTable({ lojas }: Props) {
         <div className="flex items-center gap-2">
           <input type="text" placeholder="Buscar loja..." value={search}
             onChange={e => { setSearch(e.target.value); setPage(0) }}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-36 sm:w-44" />
-          <span className="text-xs text-gray-400">{sorted.length} lojas</span>
+            className="text-sm border border-border rounded-lg px-3 py-1.5 bg-white/[0.06] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 w-36 sm:w-44" />
+          <span className="text-xs text-muted-foreground">{sorted.length} lojas</span>
         </div>
-        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-muted-foreground hover:bg-gray-50 transition cursor-pointer">
+        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-white/[0.04] transition cursor-pointer">
           Exportar CSV
         </button>
       </div>
       <div className="overflow-auto">
         <table className="w-full text-xs min-w-[480px]">
-          <thead className="bg-gray-50 border-b border-white/[0.06]">
+          <thead className="bg-card border-b border-border">
             <tr>
               {th('Código',   'codigoLoja',          'hidden sm:table-cell')}
               {th('Nome',     'nomeLoja')}
@@ -111,16 +111,16 @@ export default function StoreDetailTable({ lojas }: Props) {
               {th('Tempo On', 'tempoOnline',         'hidden lg:table-cell')}
               {th('Perda',    'perdaVendaTotal',     'hidden lg:table-cell')}
               {th('Score',    'scoreSaude',          'hidden sm:table-cell')}
-              <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase">Status</th>
+              <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase">Status</th>
             </tr>
           </thead>
           <tbody>
             {pageData.map(l => (
-              <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50">
+              <tr key={l.id} className="border-b border-border hover:bg-white/[0.04]">
                 <td className="px-3 py-2 font-mono text-muted-foreground hidden sm:table-cell">{l.codigoLoja}</td>
                 <td className="px-3 py-2">
                   <p className="font-medium text-foreground/80 whitespace-nowrap">{l.nomeLoja}</p>
-                  <p className="text-[10px] text-gray-400 sm:hidden">{l.uf} · {fmtBRL(l.venda)}</p>
+                  <p className="text-[10px] text-muted-foreground sm:hidden">{l.uf} · {fmtBRL(l.venda)}</p>
                 </td>
                 <td className="px-3 py-2 text-muted-foreground hidden md:table-cell">{l.uf}</td>
                 <td className="px-3 py-2 text-muted-foreground hidden lg:table-cell">{l.cidade}</td>
@@ -132,13 +132,13 @@ export default function StoreDetailTable({ lojas }: Props) {
                 <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoAbril)}</td>
                 <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoMaio)}</td>
                 <td className="px-3 py-2 text-right text-foreground/80 hidden lg:table-cell">{fmtBRL(l.meta)}</td>
-                <td className="px-3 py-2 text-right font-semibold text-gray-900">{fmtBRL(l.venda)}</td>
+                <td className="px-3 py-2 text-right font-semibold text-foreground">{fmtBRL(l.venda)}</td>
                 <td className={clsx('px-3 py-2 text-right font-semibold hidden sm:table-cell',
-                  l.desvio === null ? 'text-gray-400' : l.desvio >= 0 ? 'text-green-700' : 'text-destructive')}>
+                  l.desvio === null ? 'text-muted-foreground' : l.desvio >= 0 ? 'text-success' : 'text-destructive')}>
                   {fmtBRL(l.desvio)}
                 </td>
                 <td className={clsx('px-3 py-2 text-right hidden md:table-cell',
-                  l.crescimento === null ? 'text-gray-400' : l.crescimento >= 0 ? 'text-green-700' : 'text-destructive')}>
+                  l.crescimento === null ? 'text-muted-foreground' : l.crescimento >= 0 ? 'text-success' : 'text-destructive')}>
                   {l.crescimento !== null ? fmtPct(l.crescimento) : '—'}
                 </td>
                 <td className="px-3 py-2 text-right text-foreground/80 hidden lg:table-cell">{fmtBRL(l.ticketMedio)}</td>
@@ -157,12 +157,12 @@ export default function StoreDetailTable({ lojas }: Props) {
       </div>
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.06]">
-          <span className="text-xs text-gray-400">Pág. {page + 1}/{totalPages}</span>
+          <span className="text-xs text-muted-foreground">Pág. {page + 1}/{totalPages}</span>
           <div className="flex gap-2">
             <button disabled={page === 0} onClick={() => setPage(p => p - 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 cursor-pointer">← Ant.</button>
+              className="text-xs px-3 py-1.5 rounded-lg border border-border disabled:opacity-40 hover:bg-white/[0.04] cursor-pointer">← Ant.</button>
             <button disabled={page === totalPages - 1} onClick={() => setPage(p => p + 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50 cursor-pointer">Próx. →</button>
+              className="text-xs px-3 py-1.5 rounded-lg border border-border disabled:opacity-40 hover:bg-white/[0.04] cursor-pointer">Próx. →</button>
           </div>
         </div>
       )}

@@ -6,8 +6,8 @@ import { fmtPct } from '@/lib/formatters'
 const COR: Record<string, string> = {
   verde:    'bg-success/15 text-success',
   amarelo:  'bg-warning/15 text-warning',
-  vermelho: 'bg-red-100 text-destructive',
-  neutro:   'bg-white/[0.06] text-gray-400',
+  vermelho: 'bg-destructive/15 text-destructive',
+  neutro:   'bg-white/[0.06] text-muted-foreground',
 }
 
 function Cell({ valor, indicador, className }: { valor: number | null; indicador: Parameters<typeof statusIndicador>[0]; className?: string }) {
@@ -27,7 +27,7 @@ export default function OperationalHeatmap({ lojas }: Props) {
     <div className="glass-card rounded-xl border border-white/[0.06] shadow-sm overflow-auto">
       <table className="w-full text-xs min-w-[480px]">
         <thead>
-          <tr className="border-b border-white/[0.06] text-gray-400">
+          <tr className="border-b border-border text-muted-foreground">
             <th className="text-left px-3 sm:px-4 py-2.5">Loja</th>
             <th className="text-left px-2 py-2.5 hidden md:table-cell">Cidade/UF</th>
             <th className="text-center px-2 py-2.5">Cancel.</th>
@@ -41,10 +41,10 @@ export default function OperationalHeatmap({ lojas }: Props) {
         </thead>
         <tbody>
           {lojas.map(l => (
-            <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50">
+            <tr key={l.id} className="border-b border-border hover:bg-white/[0.04]">
               <td className="px-3 sm:px-4 py-2">
                 <p className="font-medium text-foreground/80 leading-tight">{l.nomeLoja}</p>
-                <p className="text-[10px] text-gray-400 md:hidden">{l.cidade}/{l.uf}</p>
+                <p className="text-[10px] text-muted-foreground md:hidden">{l.cidade}/{l.uf}</p>
               </td>
               <td className="px-2 py-2 text-muted-foreground hidden md:table-cell">{l.cidade}/{l.uf}</td>
               <Cell valor={l.cancelamentoTotal} indicador="cancelamento_total" />

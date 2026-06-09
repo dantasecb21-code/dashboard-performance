@@ -23,7 +23,7 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
   if (!sorted.length) return (
     <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
-      <p className="text-sm text-gray-400">Sem dados suficientes.</p>
+      <p className="text-sm text-muted-foreground">Sem dados suficientes.</p>
     </div>
   )
 
@@ -32,7 +32,7 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
       <table className="w-full text-xs">
         <thead>
-          <tr className="text-gray-400 border-b border-white/[0.06]">
+          <tr className="text-muted-foreground border-b border-border">
             <th className="text-left pb-2 w-6">#</th>
             <th className="text-left pb-2">Loja</th>
             <th className="text-left pb-2 hidden sm:table-cell">Cidade/UF</th>
@@ -43,15 +43,15 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
         </thead>
         <tbody>
           {sorted.map((l, i) => (
-            <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50 transition">
-              <td className="py-2 font-bold text-gray-400">{i + 1}</td>
+            <tr key={l.id} className="border-b border-border hover:bg-white/[0.04] transition">
+              <td className="py-2 font-bold text-muted-foreground">{i + 1}</td>
               <td className="py-2">
                 <p className="font-medium text-foreground/80">{l.nomeLoja}</p>
                 {l.projetoOlimpo && <span className="text-[9px] text-blue-500 font-semibold">OLIMPO</span>}
               </td>
               <td className="py-2 text-muted-foreground hidden sm:table-cell">{l.cidade}/{l.uf}</td>
               <td className="py-2 text-muted-foreground hidden md:table-cell">{l.gerenteRegional}</td>
-              <td className="py-2 text-right font-semibold text-gray-900">{formatter(l[valueKey] as number)}</td>
+              <td className="py-2 text-right font-semibold text-foreground">{formatter(l[valueKey] as number)}</td>
               <td className="py-2 text-right"><StatusBadge status={l.statusLoja} size="sm" /></td>
             </tr>
           ))}
