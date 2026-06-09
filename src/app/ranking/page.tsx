@@ -5,6 +5,8 @@ import { fmtBRL, fmtPct } from '@/lib/formatters'
 import RankingTable from '@/components/tables/RankingTable'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 
 export default function RankingPage() {
   const { loading, error, refresh } = useData()
@@ -13,11 +15,16 @@ export default function RankingPage() {
   if (loading) return <LoadingSpinner />
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
+  const exp = getExportConfig('ranking', lojasFiltered)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-foreground">Ranking de Lojas</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas · Top 10 por indicador</p>
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Ranking de Lojas</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas · Top 10 por indicador</p>
+        </div>
+        <ExportMenu title={exp.title} columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="ranking-lojas" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

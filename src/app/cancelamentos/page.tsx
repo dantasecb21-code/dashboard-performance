@@ -3,6 +3,8 @@ import { useMemo } from 'react'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
 import { avg, sum } from '@/lib/calculations'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 import { fmtBRL, fmtBRLCompact, fmtPct } from '@/lib/formatters'
 import KpiCard from '@/components/cards/KpiCard'
 import StackedBarChart from '@/components/charts/StackedBarChart'
@@ -90,11 +92,16 @@ export default function CancelamentosPage() {
   const cor = statusCancelamento(kpis.cancelMedio)
   const colorMap = { verde: 'green', amarelo: 'yellow', vermelho: 'red', neutro: 'default' } as const
 
+  const exp = getExportConfig('cancelamentos', lojasFiltered)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-foreground">Cancelamentos</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Cancelamentos</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
+        </div>
+        <ExportMenu title={exp.title} columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="cancelamentos" />
       </div>
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">

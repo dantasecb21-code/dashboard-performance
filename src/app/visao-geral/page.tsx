@@ -11,6 +11,8 @@ import BarChartGoalVsSales from '@/components/charts/BarChartGoalVsSales'
 import RankingTable from '@/components/tables/RankingTable'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 import {
   DollarSign, Target, BarChart2, TrendingUp,
   Receipt, XCircle, TrendingDown, Wifi,
@@ -74,9 +76,12 @@ export default function VisaoGeral() {
           <h2 className="text-xl font-bold text-foreground">Visão Geral Executiva</h2>
           <p className="text-sm text-muted-foreground mt-0.5">{resumo.totalLojas} lojas</p>
         </div>
-        <span className="rounded-full bg-primary/15 text-primary text-xs font-semibold px-3 py-1.5 border border-primary/30 flex-shrink-0">
-          {mesAtual}
-        </span>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className="rounded-full bg-primary/15 text-primary text-xs font-semibold px-3 py-1.5 border border-primary/30">
+            {mesAtual}
+          </span>
+          {(() => { const exp = getExportConfig('visaoGeral', lojasFiltered); return <ExportMenu title="Visão Geral" subtitle={mesAtual} columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="visao-geral" /> })()}
+        </div>
       </div>
 
       {/* KPIs principais */}

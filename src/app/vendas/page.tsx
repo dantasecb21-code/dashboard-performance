@@ -10,6 +10,8 @@ import BarChartGoalVsSales from '@/components/charts/BarChartGoalVsSales'
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import ErrorState from '@/components/common/ErrorState'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 import { DollarSign, Target, BarChart2, TrendingUp, Receipt, Percent, CalendarDays } from 'lucide-react'
 
 type Visao = 'diaria' | 'acumulada' | 'anual'
@@ -86,10 +88,13 @@ export default function VendasPage() {
           <h2 className="text-xl font-bold text-foreground">Vendas e Metas</h2>
           <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
         </div>
-        <div className="flex gap-2">
-          <button className={TAB_CLS('diaria')}    onClick={() => setVisao('diaria')}>Diária</button>
-          <button className={TAB_CLS('acumulada')} onClick={() => setVisao('acumulada')}>Acumulada</button>
-          <button className={TAB_CLS('anual')}     onClick={() => setVisao('anual')}>Anual</button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex gap-2">
+            <button className={TAB_CLS('diaria')}    onClick={() => setVisao('diaria')}>Diária</button>
+            <button className={TAB_CLS('acumulada')} onClick={() => setVisao('acumulada')}>Acumulada</button>
+            <button className={TAB_CLS('anual')}     onClick={() => setVisao('anual')}>Anual</button>
+          </div>
+          {(() => { const exp = getExportConfig('vendas', lojasFiltered); return <ExportMenu title="Vendas e Metas" columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="vendas" /> })()}
         </div>
       </div>
 

@@ -3,6 +3,8 @@ import { useMemo } from 'react'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
 import { avg } from '@/lib/calculations'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 import { fmtPct } from '@/lib/formatters'
 import KpiCard from '@/components/cards/KpiCard'
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart'
@@ -53,11 +55,16 @@ export default function IndicadoresPage() {
     return { verde: 'green', amarelo: 'yellow', vermelho: 'red', neutro: 'default' }[c] as 'green' | 'yellow' | 'red' | 'default'
   }
 
+  const exp = getExportConfig('indicadores', lojasFiltered)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-foreground">Indicadores Operacionais</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Indicadores Operacionais</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
+        </div>
+        <ExportMenu title={exp.title} columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="indicadores" />
       </div>
 
       {/* KPI Cards */}

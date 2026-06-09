@@ -3,6 +3,8 @@ import { useMemo } from 'react'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
 import { sum } from '@/lib/calculations'
+import ExportMenu from '@/components/common/ExportMenu'
+import { getExportConfig } from '@/lib/usePageExport'
 import { fmtBRL, fmtBRLCompact, fmtPct } from '@/lib/formatters'
 import KpiCard from '@/components/cards/KpiCard'
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart'
@@ -87,11 +89,16 @@ export default function PerdaVendaPage() {
   if (loading) return <LoadingSpinner />
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
+  const exp = getExportConfig('perdaVenda', lojasFiltered)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-foreground">Perda de Venda</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Perda de Venda</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
+        </div>
+        <ExportMenu title={exp.title} columns={exp.columns} rows={exp.rows} defaultSelected={exp.defaultSelected} filename="perda-venda" />
       </div>
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
