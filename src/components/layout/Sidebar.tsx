@@ -12,18 +12,16 @@ import {
   Table2,
   Zap,
   X,
-  ShieldCheck,
 } from 'lucide-react'
 
 const MENU = [
-  { href: '/visao-geral',   label: 'Visão Geral',       icon: LayoutDashboard },
-  { href: '/vendas',        label: 'Vendas e Metas',     icon: TrendingUp },
-  { href: '/ranking',       label: 'Ranking de Lojas',   icon: Trophy },
-  { href: '/cancelamentos', label: 'Cancelamentos',      icon: XCircle },
-  { href: '/indicadores',   label: 'Indicadores',        icon: Activity },
-  { href: '/perda-venda',   label: 'Perda de Venda',     icon: TrendingDown },
-  { href: '/tabela',        label: 'Tabela Detalhada',   icon: Table2 },
-  { href: '/auditoria',     label: 'Auditoria de Dados', icon: ShieldCheck },
+  { href: '/visao-geral',   label: 'Visão Geral',      icon: LayoutDashboard },
+  { href: '/vendas',        label: 'Vendas e Metas',    icon: TrendingUp },
+  { href: '/ranking',       label: 'Ranking de Lojas',  icon: Trophy },
+  { href: '/cancelamentos', label: 'Cancelamentos',     icon: XCircle },
+  { href: '/indicadores',   label: 'Indicadores',       icon: Activity },
+  { href: '/perda-venda',   label: 'Perda de Venda',    icon: TrendingDown },
+  { href: '/tabela',        label: 'Tabela Detalhada',  icon: Table2 },
 ]
 
 interface Props {
