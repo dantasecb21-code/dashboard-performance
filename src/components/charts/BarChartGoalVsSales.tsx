@@ -25,7 +25,7 @@ export default function BarChartGoalVsSales({ data, title, maxItems = 15 }: Prop
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis dataKey="nome" tick={{ fontSize: 9, fill: CHART_THEME.tick }} angle={-40} textAnchor="end" interval={0} />
           <YAxis tickFormatter={fmtBRLCompact} tick={{ fontSize: 11, fill: CHART_THEME.tick }} width={70} />
-          <Tooltip formatter={(v: number) => fmtBRL(v)} />
+          <Tooltip formatter={(v: number) => fmtBRL(v)} contentStyle={CHART_THEME.tooltip.contentStyle} itemStyle={CHART_THEME.tooltip.itemStyle} labelStyle={CHART_THEME.tooltip.labelStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
           <Legend verticalAlign="top" />
           <Bar dataKey="meta"  name="Meta"  fill={CHART_THEME.colors.muted} radius={[3,3,0,0]} />
           <Bar dataKey="venda" name="Venda" radius={[3,3,0,0]}>

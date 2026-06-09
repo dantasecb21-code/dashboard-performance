@@ -20,7 +20,7 @@ export default function StackedBarChart({ data, keys, title, xKey = 'nome', form
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
           <XAxis dataKey={xKey} tick={{ fontSize: 9, fill: CHART_THEME.tick }} angle={-40} textAnchor="end" interval={0} />
           <YAxis tickFormatter={formatter} tick={{ fontSize: 10, fill: CHART_THEME.tick }} />
-          <Tooltip formatter={(v: number) => formatter(v)} />
+          <Tooltip formatter={(v: number) => formatter(v)} contentStyle={CHART_THEME.tooltip.contentStyle} itemStyle={CHART_THEME.tooltip.itemStyle} labelStyle={CHART_THEME.tooltip.labelStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
           <Legend verticalAlign="top" />
           {keys.map(k => (
             <Bar key={k.dataKey} dataKey={k.dataKey} name={k.name} fill={k.color} stackId="a" radius={[0,0,0,0]} />

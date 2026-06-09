@@ -35,8 +35,8 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
               if (!payload?.length) return null
               const d = payload[0].payload
               return (
-                <div className="glass-card border border-white/10 rounded-lg p-2 text-xs shadow">
-                  <p className="font-semibold">{d.nome}</p>
+                <div style={{ background: 'hsl(220 52% 7%)', border: '1px solid hsl(220 40% 20%)', borderRadius: 10, padding: '8px 12px', fontSize: 12, color: 'hsl(210 22% 96%)' }}>
+                  <p style={{ fontWeight: 600, marginBottom: 2 }}>{d.nome}</p>
                   <p>Venda: {fmtBRL(d.x)}</p>
                   <p>Perda: {fmtBRL(d.y)}</p>
                 </div>

@@ -26,7 +26,7 @@ export default function HorizontalBarChart({ data, title, formatter = String, to
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} horizontal={false} />
           <XAxis type="number" tickFormatter={formatter} tick={{ fontSize: 10, fill: CHART_THEME.tick }} />
           <YAxis type="category" dataKey="nome" tick={{ fontSize: 10, fill: CHART_THEME.tick }} width={130} />
-          <Tooltip formatter={(v: number) => tipFmt(v)} />
+          <Tooltip formatter={(v: number) => tipFmt(v)} contentStyle={CHART_THEME.tooltip.contentStyle} itemStyle={CHART_THEME.tooltip.itemStyle} labelStyle={CHART_THEME.tooltip.labelStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
           <Bar dataKey="valor" radius={[0,3,3,0]}>
             {data.map((entry, i) => <Cell key={i} fill={entry.cor ?? '#4f6ef7'} />)}
           </Bar>

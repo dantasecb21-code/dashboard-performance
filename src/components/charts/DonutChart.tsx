@@ -17,7 +17,7 @@ export default function DonutChart({ data, title }: Props) {
             labelLine={false}>
             {data.map((entry, i) => <Cell key={i} fill={entry.color} />)}
           </Pie>
-          <Tooltip formatter={(v: number) => fmtPct(v)} />
+          <Tooltip formatter={(v: number) => fmtPct(v)} contentStyle={CHART_THEME.tooltip.contentStyle} itemStyle={CHART_THEME.tooltip.itemStyle} labelStyle={CHART_THEME.tooltip.labelStyle} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>

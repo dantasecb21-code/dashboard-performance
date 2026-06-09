@@ -68,7 +68,6 @@ body {
     0 20px 50px -15px hsl(220 80% 2% / 0.85),
     inset 0 1px 0 hsl(177 100% 80% / 0.06);
   border-radius: 0.875rem;
-  overflow: hidden;
 }
 
 /* Linha de accent no topo do card */
