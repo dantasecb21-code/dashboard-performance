@@ -34,94 +34,114 @@ function col(row: Row, h: HMap, name: string, fallback: number): string {
 }
 
 // ── Aba: indicadores ────────────────────────────────────────────────
-// Fallback posicional (linha 3 da planilha como referência):
-// A=dirDiv B=dirOp C=ger D=cod E=nome F=cidade G=uf
-// H=jan(7) I=feb(8) J=skip(9) K=mar(10) L=skip(11) M=abr(12) N=skip(13)
-// O=meta(14) P=cresc%(15) Q=vendaAcum(16) R=desvio(17) S=particip%(18) T=ticket(19)
-// U=skip(20) V=cancel%(21) W=cancelDesvio%(22) X=perdaCancel(23)
-// Y=ruptura%(24) Z=rupturaDesvio%(25) AA=perdaRuptura(26) AB=tempoOff%(27) AC=perdaTOn(28)
+// Nova estrutura (jun/2026):
+// A-G: identificação | H=janFat(7) I=fevFat(8) J=fevDesemp(9)
+// K=marFat(10) L=marDesemp(11) M=abrFat(12) N=abrDesemp(13)
+// O=maiFat(14) P=maiDesemp(15)
+// Q=junMeta(16) R=junVenda(17) S=junDesvio(18) T=junCresc(19) U=junPartic(20) V=ticket(21)
+// W=perdaVendaTotal(22) X=cancel%(23) Y=cancelDesvio(24) Z=perdaCancel(25)
+// AA=ruptura%(26) AB=rupturaDesvio(27) AC=perdaRuptura(28) AD=tempoOff%(29) AE=tempoOffDesvio(30) AF=perdaTempo(31)
 function parseIndicadores(row: Row, h: HMap = {}): Partial<Loja> | null {
-  if (!row || !col(row, h, 'Loja', 4)?.trim()) return null
+  if (!row || !col(row, h, 'nomeLoja', 4)?.trim()) return null
   return {
-    diretorDivisional: col(row, h, 'Diretor Divisional', 0) || '',
-    diretorRegional:   col(row, h, 'Diretor Regional', 1) || '',
-    gerenteRegional:   col(row, h, 'Gerente Regional', 2) || '',
-    codigoLoja:        col(row, h, 'Código', 3).trim(),
-    nomeLoja:          col(row, h, 'Loja', 4).trim(),
-    cidade:            col(row, h, 'Cidade', 5).trim(),
-    uf:                col(row, h, 'UF', 6).trim(),
+    diretorDivisional: col(row, h, 'diretorDivisional', 0) || '',
+    diretorRegional:   col(row, h, 'diretorRegional', 1) || '',
+    gerenteRegional:   col(row, h, 'gerenteRegional', 2) || '',
+    codigoLoja:        col(row, h, 'lojaId', 3).trim(),
+    nomeLoja:          col(row, h, 'nomeLoja', 4).trim(),
+    cidade:            col(row, h, 'cidade', 5).trim(),
+    uf:                col(row, h, 'uf', 6).trim(),
 
-    faturamentoJaneiro:   parseBRL(col(row, h, 'Janeiro', 7)),
-    faturamentoFevereiro: parseBRL(col(row, h, 'Fevereiro', 8)),
-    faturamentoMarco:     parseBRL(col(row, h, 'Março', 10)),
-    faturamentoAbril:     parseBRL(col(row, h, 'Abril', 12)),
-    meta:        parseBRL(col(row, h, 'Meta', 14)),
-    crescimento: parsePct(col(row, h, 'Crescimento', 15)),
-    venda:       parseBRL(col(row, h, 'Venda', 16)),
-    faturamentoMaio: parseBRL(col(row, h, 'Venda', 16)),
-    desvio:      parseBRL(col(row, h, 'Desvio', 17)),
-    participacao: parsePct(col(row, h, 'Participação', 18)),
-    ticketMedio:  parseBRL(col(row, h, 'Ticket Médio', 19)),
+    faturamentoJaneiro:   parseBRL(col(row, h, 'janFaturamento', 7)),
+    faturamentoFevereiro: parseBRL(col(row, h, 'fevFaturamento', 8)),
+    faturamentoMarco:     parseBRL(col(row, h, 'marFaturamento', 10)),
+    faturamentoAbril:     parseBRL(col(row, h, 'abrFaturamento', 12)),
+    faturamentoMaio:      parseBRL(col(row, h, 'maiFaturamento', 14)),
 
-    cancelamentoTotal:  parsePct(col(row, h, 'Cancelamento', 21)),
-    cancelamentoDesvio: parsePct(col(row, h, 'Desvio Cancelamento', 22)),
-    perdaCancelamento:  parseBRL(col(row, h, 'Perda Cancelamento', 23)),
-    rupturaItem:        parsePct(col(row, h, 'Ruptura', 24)),
-    perdaRuptura:       parseBRL(col(row, h, 'Perda Ruptura', 26)),
-    // Coluna armazena % offline (downtime); uptime = 100 - downtime
-    tempoOnline: (() => { const v = parsePct(col(row, h, 'Tempo Offline', 27)); return v !== null ? 100 - v : null })(),
-    perdaTempoOnline: parseBRL(col(row, h, 'Perda Offline', 28)),
+    meta:         parseBRL(col(row, h, 'junMeta', 16)),
+    venda:        parseBRL(col(row, h, 'junVenda', 17)),
+    desvio:       parseBRL(col(row, h, 'junDesvioMeta', 18)),
+    crescimento:  parsePct(col(row, h, 'junCrescimento', 19)),
+    participacao: parsePct(col(row, h, 'junParticipacao', 20)),
+    ticketMedio:  parseBRL(col(row, h, 'ticketMedio', 21)),
+
+    perdaVendaTotal:    parseBRL(col(row, h, 'perdaVendaTotal', 22)),
+    cancelamentoTotal:  parsePct(col(row, h, 'cancelamentoTotalMeta5', 23)),
+    cancelamentoDesvio: parsePct(col(row, h, 'cancelamentoDesvioMeta', 24)),
+    perdaCancelamento:  parseBRL(col(row, h, 'cancelamentoPerdaVenda', 25)),
+    rupturaItem:        parsePct(col(row, h, 'rupturaItemMeta5', 26)),
+    perdaRuptura:       parseBRL(col(row, h, 'rupturaPerdaVenda', 28)),
+    tempoOnline: (() => { const v = parsePct(col(row, h, 'tempoOnMeta95', 29)); return v !== null ? 100 - v : null })(),
+    perdaTempoOnline:   parseBRL(col(row, h, 'tempoOnPerdaVenda', 31)),
   }
 }
 
 // ── Aba: vendas diarias e mensais ────────────────────────────────────
+// Nova estrutura: H=diaMeta(7) I=diaVenda(8) J=diaDesvio(9) K=diaCresc(10) L=diaPartic(11)
+// M=acumMeta(12) N=acumVenda(13) O=acumDesvio(14) P=acumCresc(15) Q=acumPartic(16) R=ticket(17)
+// S=junCancelTotal%(18) T=ontemCancel%(19) U=ontemCancelClientes(20) V=ontemCancelLoja(21) W=ontemCancelEntregador(22)
+// X=junSlaPreparo(23) Y=ontemSlaPreparo(24) Z=junNsu(25) AA=ontemNsu(26) AB=junRuptura(27) AC=ontemRuptura(28)
 function parseVendasDiarias(row: Row, h: HMap = {}): Partial<Loja> | null {
-  if (!row || !col(row, h, 'Loja', 4)?.trim()) return null
+  if (!row || !col(row, h, 'nomeLoja', 4)?.trim()) return null
   return {
-    codigoLoja: col(row, h, 'Código', 3).trim(),
-    metaDia:    parseBRL(col(row, h, 'Meta Dia', 7)),
-    vendaDia:   parseBRL(col(row, h, 'Venda Dia', 8)),
-    desvioDia:  parseBRL(col(row, h, 'Desvio Dia', 9)),
-    crescimentoDia: parsePct(col(row, h, 'Crescimento Dia', 10)),
+    codigoLoja:     col(row, h, 'lojaId', 3).trim(),
+    metaDia:        parseBRL(col(row, h, 'diaMeta', 7)),
+    vendaDia:       parseBRL(col(row, h, 'diaVenda', 8)),
+    desvioDia:      parseBRL(col(row, h, 'diaDesvioMeta', 9)),
+    crescimentoDia: parsePct(col(row, h, 'diaCrescimento', 10)),
 
-    metaAcumulada:        parseBRL(col(row, h, 'Meta Acumulada', 12)),
-    vendaAcumulada:       parseBRL(col(row, h, 'Venda Acumulada', 13)),
-    desvioAcumulado:      parseBRL(col(row, h, 'Desvio Acumulado', 14)),
-    crescimentoAcumulado: parsePct(col(row, h, 'Crescimento Acumulado', 15)),
-    participacaoAcumulada: parsePct(col(row, h, 'Participação Acumulada', 16)),
-    ticketMedioDiario:    parseBRL(col(row, h, 'Ticket Médio', 17)),
+    metaAcumulada:         parseBRL(col(row, h, 'acumuladoMeta', 12)),
+    vendaAcumulada:        parseBRL(col(row, h, 'acumuladoVenda', 13)),
+    desvioAcumulado:       parseBRL(col(row, h, 'acumuladoDesvioMeta', 14)),
+    crescimentoAcumulado:  parsePct(col(row, h, 'acumuladoCrescimento', 15)),
+    participacaoAcumulada: parsePct(col(row, h, 'acumuladoParticipacao', 16)),
+    ticketMedioDiario:     parseBRL(col(row, h, 'ticketMedio', 17)),
 
-    cancelamentoTotal: parsePct(col(row, h, 'Cancelamento', 18)),
-    slaEntrega:  parsePct(col(row, h, 'SLA Entrega', 25)),
-    slaPreparo:  parsePct(col(row, h, 'SLA Preparo', 26)),
-    nsu:         parsePct(col(row, h, 'NSU', 27)),
+    cancelamentoTotal: parsePct(col(row, h, 'junhoCancelamentoTotalMeta5', 18)),
+    slaPreparo:        parsePct(col(row, h, 'junhoSlaPreparoMeta85', 23)),
+    nsu:               parsePct(col(row, h, 'junhoNsuMeta12', 25)),
+    rupturaItem:       parsePct(col(row, h, 'junhoRupturaItemMeta5', 27)),
   }
 }
 
 // ── Aba: vendas anuais ───────────────────────────────────────────────
+// Nova estrutura: H-P = faturamentos mensais com desempenho intercalado
+// Q=junMeta(16) R=junVenda(17) S=junDesvio(18) T=junDesemp(19) U=junPartic(20) V=junTicket(21)
+// W=cancel%(22) X=slaPreparo%(23) Y=nsu%(24) Z=ruptura%(25) AA=slaEntrega%(26) AB=tempoOff%(27)
 function parseVendasAnuais(row: Row, h: HMap = {}): Partial<Loja> | null {
-  if (!row || !col(row, h, 'Código', 3)?.trim()) return null
+  if (!row || !col(row, h, 'lojaId', 3)?.trim()) return null
   return {
-    codigoLoja:       col(row, h, 'Código', 3).trim(),
-    faturamentoJunho: parseBRL(col(row, h, 'Junho', 13)),
-    slaPreparo:       parsePct(col(row, h, 'SLA Preparo', 23)),
-    nsu:              parsePct(col(row, h, 'NSU', 24)),
+    codigoLoja:       col(row, h, 'lojaId', 3).trim(),
+    faturamentoJunho: parseBRL(col(row, h, 'junVenda', 17)),
+    slaPreparo:       parsePct(col(row, h, 'slaPreparoMeta85', 23)),
+    nsu:              parsePct(col(row, h, 'nsuMeta12', 24)),
+    rupturaItem:      parsePct(col(row, h, 'rupturaItemMeta5', 25)),
+    slaEntrega:       parsePct(col(row, h, 'slaEntregaMeta85', 26)),
   }
 }
 
 // ── Aba: cancelamento ────────────────────────────────────────────────
+// Nova estrutura (usando dados de Maio — coluna mais recente):
+// H=capFatAbril(7) I=capFatMaio(8) J=capFatDesvio(9)
+// K=pedidosCancelAbril(10) L=pedidosCancelMaio(11) M=pedidosCancelDesvio(12)
+// N=clientesAbril%(13) O=clientesMaio%(14) P=clientesDesvio(15)
+// Q=lojaAbril%(16) R=lojaMaio%(17) S=lojaDesvio(18)
+// T=entregadoresAbril%(19) U=entregadoresMaio%(20) V=entregadoresDesvio(21)
+// W=totalReaisAbril(22) X=totalReaisMaio(23) Y=totalReaisDesvio(24)
+// Z=clientesReaisAbril(25) AA=clientesReaisMaio(26) AB=clientesReaisDesvio(27)
+// AC=lojaReaisAbril(28) AD=lojaReaisMaio(29) AE=lojaReaisDesvio(30)
+// AF=entregadorReaisAbril(31) AG=entregadorReaisMaio(32) AH=entregadorReaisDesvio(33)
 function parseCancelamento(row: Row, h: HMap = {}): Partial<Loja> | null {
-  if (!row || !col(row, h, 'Código', 3)?.trim()) return null
+  if (!row || !col(row, h, 'lojaId', 3)?.trim()) return null
   return {
-    codigoLoja:              col(row, h, 'Código', 3).trim(),
-    cancelamentoAbril:       parsePct(col(row, h, 'Cancelamento Abril', 9)),
-    cancelamentoCliente:     parsePct(col(row, h, 'Cancelamento Cliente', 14)),
-    cancelamentoLoja:        parsePct(col(row, h, 'Cancelamento Loja', 17)),
-    cancelamentoEntregador:  parsePct(col(row, h, 'Cancelamento Entregador', 20)),
-    cancelamentoTotalR:      parseBRL(col(row, h, 'Total R$', 23)),
-    cancelamentoClienteR:    parseBRL(col(row, h, 'Cliente R$', 24)),
-    cancelamentoLojaR:       parseBRL(col(row, h, 'Loja R$', 25)),
-    cancelamentoEntregadorR: parseBRL(col(row, h, 'Entregador R$', 26)),
+    codigoLoja:              col(row, h, 'lojaId', 3).trim(),
+    cancelamentoCliente:     parsePct(col(row, h, 'canceladosClientesMaio', 14)),
+    cancelamentoLoja:        parsePct(col(row, h, 'canceladosLojaMaio', 17)),
+    cancelamentoEntregador:  parsePct(col(row, h, 'canceladosEntregadoresMaio', 20)),
+    cancelamentoTotalR:      parseBRL(col(row, h, 'canceladosTotalReaisMaio', 23)),
+    cancelamentoClienteR:    parseBRL(col(row, h, 'canceladosClientesReaisMaio', 26)),
+    cancelamentoLojaR:       parseBRL(col(row, h, 'canceladosLojaReaisMaio', 29)),
+    cancelamentoEntregadorR: parseBRL(col(row, h, 'canceladosEntregadorReaisMaio', 32)),
   }
 }
 
@@ -149,10 +169,10 @@ export async function fetchDebugData(): Promise<DebugData> {
   const sheets = google.sheets({ version: 'v4', auth })
 
   const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A1:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A1:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A1:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A1:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A1:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A1:AC200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A1:AB200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A1:AH200" }),
   ])
 
   function splitSheet(res: typeof indRes, name: string): RawSheetInfo {
@@ -197,6 +217,8 @@ export async function fetchDebugData(): Promise<DebugData> {
     const merged: Partial<Loja> = { ...p, ...base }
     merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
     merged.nsu = base.nsu ?? p.nsu ?? null
+    merged.rupturaItem = base.rupturaItem ?? p.rupturaItem ?? null
+    merged.slaEntrega = base.slaEntrega ?? p.slaEntrega ?? null
     merged.faturamentoJunho = p.faturamentoJunho ?? base.faturamentoJunho ?? null
     baseMap.set(p.codigoLoja, merged)
   }
@@ -278,10 +300,10 @@ export async function fetchLojas(): Promise<Loja[]> {
 
   // A3 = inclui linha 3 (headers renomeados pelo usuário) além dos dados
   const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A3:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A3:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A3:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A3:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A3:AF200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A3:AC200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A3:AB200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A3:AH200" }),
   ])
 
   const getRows = (res: typeof indRes) => (res.data.values as Row[] | null) ?? []
@@ -324,6 +346,8 @@ export async function fetchLojas(): Promise<Loja[]> {
     const merged: Partial<Loja> = { ...p, ...base }
     merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
     merged.nsu = base.nsu ?? p.nsu ?? null
+    merged.rupturaItem = base.rupturaItem ?? p.rupturaItem ?? null
+    merged.slaEntrega = base.slaEntrega ?? p.slaEntrega ?? null
     merged.faturamentoJunho = p.faturamentoJunho ?? base.faturamentoJunho ?? null
     baseMap.set(p.codigoLoja, merged)
   }
