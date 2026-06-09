@@ -71,17 +71,17 @@ export default function VisaoGeral() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Visão Geral Executiva</h2>
-          <p className="text-sm text-slate-400 mt-0.5">{resumo.totalLojas} lojas</p>
+          <h2 className="text-xl font-bold text-foreground">Visão Geral Executiva</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{resumo.totalLojas} lojas</p>
         </div>
-        <span className="rounded-full bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1.5 border border-blue-200 flex-shrink-0">
+        <span className="rounded-full bg-primary/15 text-primary text-xs font-semibold px-3 py-1.5 border border-primary/30 flex-shrink-0">
           {mesAtual}
         </span>
       </div>
 
       {/* KPIs principais */}
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-slate-400">
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           Faturamento — {mesAtual}
         </p>
         <KpiCard title="Faturamento Acumulado" subtitle={mesAtual} value={fmtBRL(resumo.faturamentoTotal)} icon={DollarSign}
@@ -106,7 +106,7 @@ export default function VisaoGeral() {
         <KpiCard title="Ticket Médio" value={fmtBRL(resumo.ticketMedioGeral)} icon={Receipt}
           tooltip="Valor médio por pedido considerando todas as lojas do período selecionado." />
 
-        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-slate-400 pt-1">
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-1">
           Qualidade Operacional
         </p>
         <KpiCard
@@ -133,7 +133,7 @@ export default function VisaoGeral() {
           tooltip="Percentual médio de tempo em que as lojas ficaram disponíveis no app. Meta: ≥ 95%. Abaixo disso, clientes não encontram a loja e a receita cai."
         />
 
-        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-slate-400 pt-1">
+        <p className="col-span-full text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-1">
           Status das Lojas
         </p>
         <KpiCard title="Lojas Acima da Meta" value={resumo.lojasAcimaMeta} color="green" icon={CheckCircle}

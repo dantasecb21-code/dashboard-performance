@@ -9,6 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        /* ── Semântico (CSS vars) ── */
+        background:          'hsl(var(--background))',
+        foreground:          'hsl(var(--foreground))',
+        card:                'hsl(var(--card))',
+        'card-foreground':   'hsl(var(--card-foreground))',
+        'muted-foreground':  'hsl(var(--muted-foreground))',
+        border:              'hsl(var(--border))',
+        primary:             'hsl(var(--primary))',
+        accent:              'hsl(var(--accent))',
+        success:             'hsl(var(--success))',
+        warning:             'hsl(var(--warning))',
+        destructive:         'hsl(var(--destructive))',
+        info:                'hsl(var(--info))',
+
+        /* ── Mantidos para compat ── */
         brand: {
           50:  '#eff6ff',
           100: '#dbeafe',
@@ -22,31 +37,27 @@ const config: Config = {
           900: '#1e3a8a',
         },
         sidebar: {
-          bg:     '#0f172a',
-          hover:  '#1e293b',
-          active: '#1d4ed8',
-          border: '#1e293b',
-          text:   '#94a3b8',
+          bg:         '#0f172a',
+          hover:      '#1e293b',
+          active:     '#1d4ed8',
+          border:     '#1e293b',
+          text:       '#94a3b8',
           textActive: '#ffffff',
         },
-        success: { DEFAULT: '#16a34a', light: '#f0fdf4', text: '#15803d', border: '#bbf7d0' },
-        warning: { DEFAULT: '#d97706', light: '#fffbeb', text: '#92400e', border: '#fde68a' },
-        danger:  { DEFAULT: '#dc2626', light: '#fef2f2', text: '#991b1b', border: '#fecaca' },
-        neutral: { DEFAULT: '#64748b', light: '#f8fafc', text: '#334155' },
-        amber:   { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        heading: ['Plus Jakarta Sans', 'sans-serif'],
+        sans:    ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       boxShadow: {
-        'card':  '0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
+        'card':       '0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
         'card-hover': '0 6px 16px 0 rgb(0 0 0 / 0.12), 0 2px 6px -1px rgb(0 0 0 / 0.06)',
-        'glass': '0 8px 30px -4px rgb(15 23 42 / 0.18), 0 2px 8px -2px rgb(15 23 42 / 0.10)',
-        'sidebar': '1px 0 0 0 #1e293b',
+        'glass':      '0 8px 30px -4px rgb(15 23 42 / 0.18), 0 2px 8px -2px rgb(15 23 42 / 0.10)',
+        'sidebar':    '1px 0 0 0 #1e293b',
       },
       borderRadius: {
-        'xl': '12px',
+        'xl':  '12px',
         '2xl': '16px',
       },
     },

@@ -16,8 +16,8 @@ export default function TabelaPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Tabela Detalhada</h2>
-        <p className="text-sm text-slate-400 mt-0.5">Todos os indicadores por loja · ordenável · exportável</p>
+        <h2 className="text-xl font-bold text-foreground">Tabela Detalhada</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Todos os indicadores por loja · ordenável · exportável</p>
       </div>
 
       {lojasFiltered.length === 0

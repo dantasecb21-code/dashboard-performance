@@ -56,8 +56,8 @@ export default function IndicadoresPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Indicadores Operacionais</h2>
-        <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-foreground">Indicadores Operacionais</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
       {/* KPI Cards */}
@@ -104,7 +104,7 @@ export default function IndicadoresPage() {
 
       {/* Heatmap semáforo */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Tabela Semáforo por Loja</h3>
+        <h3 className="text-sm font-semibold text-foreground/80 mb-3">Tabela Semáforo por Loja</h3>
         <OperationalHeatmap lojas={lojasFiltered} />
       </div>
     </div>

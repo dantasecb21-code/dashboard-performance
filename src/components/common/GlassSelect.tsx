@@ -94,7 +94,7 @@ export default function GlassSelect({
 
   return (
     <div className={clsx('flex flex-col gap-1', className)}>
-      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">
+      <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest pl-0.5">
         {label}
       </label>
 
@@ -107,7 +107,7 @@ export default function GlassSelect({
           'border backdrop-blur-sm transition-all duration-150 cursor-pointer',
           isActive
             ? 'bg-brand-50/80 border-brand-300 text-brand-700 font-semibold shadow-sm'
-            : 'bg-white/70 border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-white',
+            : 'bg-white/[0.06] border-white/10 text-muted-foreground hover:border-white/20 hover:bg-white/[0.10]',
           open && !isActive && 'border-brand-300 ring-2 ring-brand-500/20',
           open && isActive && 'ring-2 ring-brand-500/20'
         )}
@@ -116,7 +116,7 @@ export default function GlassSelect({
         <ChevronDown
           className={clsx(
             'w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200',
-            open ? 'rotate-180 text-brand-500' : 'text-slate-400 group-hover:text-slate-500'
+            open ? 'rotate-180 text-brand-500' : 'text-muted-foreground group-hover:text-muted-foreground'
           )}
         />
       </button>
@@ -125,18 +125,18 @@ export default function GlassSelect({
         <div
           ref={menuRef}
           style={{ position: 'fixed', top: coords.top, left: coords.left, width: coords.width, zIndex: 60 }}
-          className="origin-top animate-glass-pop rounded-xl border border-white/70 bg-white/85 backdrop-blur-xl shadow-glass overflow-hidden"
+          className="origin-top animate-glass-pop rounded-xl border border-white/15 bg-[hsl(265_22%_14%)] backdrop-blur-xl shadow-glass overflow-hidden"
         >
           {autoSearch && (
-            <div className="p-2 border-b border-slate-100/80">
+            <div className="p-2 border-b border-white/[0.06]/80">
               <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
                 <input
                   autoFocus
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Buscar..."
-                  className="w-full text-xs bg-white/80 border border-slate-200 rounded-lg pl-6 pr-2 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400"
+                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg pl-6 pr-2 py-1.5 text-foreground/80 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60"
                 />
               </div>
             </div>
@@ -149,7 +149,7 @@ export default function GlassSelect({
               onClick={() => pick('')}
               className={clsx(
                 'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer',
-                value === '' ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-100/80'
+                value === '' ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:bg-white/[0.06]'
               )}
             >
               <span>{placeholder}</span>
@@ -157,7 +157,7 @@ export default function GlassSelect({
             </button>
 
             {filtered.length === 0 && (
-              <p className="text-[11px] text-slate-400 text-center py-3">Nenhum resultado</p>
+              <p className="text-[11px] text-muted-foreground text-center py-3">Nenhum resultado</p>
             )}
 
             {filtered.map(opt => {
@@ -169,7 +169,7 @@ export default function GlassSelect({
                   onClick={() => pick(opt.value)}
                   className={clsx(
                     'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer text-left',
-                    active ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-100/80'
+                    active ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:bg-white/[0.06]'
                   )}
                 >
                   <span className="truncate">{opt.label}</span>

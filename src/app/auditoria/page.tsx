@@ -205,8 +205,8 @@ export default function AuditoriaPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-3 text-slate-400">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-brand-500" />
+      <div className="flex flex-col items-center gap-3 text-muted-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-brand-500" />
         <p className="text-sm">Carregando dados da auditoria...</p>
       </div>
     </div>
@@ -214,11 +214,11 @@ export default function AuditoriaPage() {
 
   if (error || !data) return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="rounded-xl border border-red-100 bg-red-50 p-8 max-w-lg text-center shadow-card">
+      <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-8 max-w-lg text-center shadow-card">
         <AlertTriangle className="w-8 h-8 text-red-400 mx-auto mb-3" />
-        <p className="text-sm text-red-700 font-semibold mb-1">Erro ao carregar auditoria</p>
-        <p className="text-xs text-red-500 font-mono break-all">{error}</p>
-        <p className="text-xs text-slate-400 mt-3">
+        <p className="text-sm text-destructive font-semibold mb-1">Erro ao carregar auditoria</p>
+        <p className="text-xs text-destructive font-mono break-all">{error}</p>
+        <p className="text-xs text-muted-foreground mt-3">
           Verifique se as credenciais do Google estão configuradas (<code>credentials.json</code> ou <code>GOOGLE_CREDENTIALS</code>).
         </p>
         <button onClick={load} className="mt-4 text-xs px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium cursor-pointer">
@@ -251,11 +251,11 @@ export default function AuditoriaPage() {
       {/* Header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-brand-500" />
             Auditoria de Dados
           </h2>
-          <p className="text-sm text-slate-400 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Verifique se os dados da planilha estão sendo lidos e parseados corretamente
             {' · '}Atualizado: {new Date(data.updatedAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
           </p>
@@ -271,11 +271,11 @@ export default function AuditoriaPage() {
 
       {/* Banner produção ── */}
       {isProd && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+        <div className="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 flex items-start gap-3">
           <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm text-amber-800 font-semibold">Modo produção — dados brutos indisponíveis</p>
-            <p className="text-xs text-amber-600 mt-0.5">
+            <p className="text-sm text-warning font-semibold">Modo produção — dados brutos indisponíveis</p>
+            <p className="text-xs text-warning mt-0.5">
               A inspeção coluna-a-coluna requer <code className="bg-amber-100 px-1 rounded">npm run dev</code> com as credenciais configuradas.
               Os campos críticos (nulos) funcionam normalmente.
             </p>
@@ -285,7 +285,7 @@ export default function AuditoriaPage() {
 
       {/* ── Seção 1: KPIs de leitura ── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
           <Database className="w-3.5 h-3.5" />
           Linhas lidas por aba da planilha
         </h3>
@@ -310,10 +310,10 @@ export default function AuditoriaPage() {
 
       {/* ── Seção 2: Campos críticos nulos ── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
           <AlertTriangle className="w-3.5 h-3.5" />
           Campos críticos com valor nulo
-          <span className="font-normal normal-case text-slate-300">— vermelho = dado ausente da planilha (provavelmente coluna errada)</span>
+          <span className="font-normal normal-case text-muted-foreground/50">— vermelho = dado ausente da planilha (provavelmente coluna errada)</span>
         </h3>
 
         <div className="kpi-grid grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-4">
@@ -333,30 +333,30 @@ export default function AuditoriaPage() {
         </div>
 
         {lojasNulas.length > 0 && (
-          <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-x-auto">
-            <div className="px-4 py-3 border-b border-slate-100">
-              <p className="text-sm font-semibold text-slate-700">
+          <div className="rounded-xl border border-white/10 bg-card shadow-card overflow-x-auto">
+            <div className="px-4 py-3 border-b border-white/[0.06]">
+              <p className="text-sm font-semibold text-foreground/80">
                 {lojasNulas.length} {lojasNulas.length === 1 ? 'loja com campo nulo' : 'lojas com campos nulos'}
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">Células em vermelho indicam dado ausente — verifique a coluna correspondente na planilha</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Células em vermelho indicam dado ausente — verifique a coluna correspondente na planilha</p>
             </div>
             <table className="w-full text-xs">
-              <thead className="bg-slate-50 border-b border-slate-100">
+              <thead className="bg-white/[0.04] border-b border-white/[0.06]">
                 <tr>
-                  <th className="px-4 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide">Loja</th>
+                  <th className="px-4 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide">Loja</th>
                   {CAMPOS.map(c => (
-                    <th key={String(c.key)} className="px-3 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide whitespace-nowrap">
+                    <th key={String(c.key)} className="px-3 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide whitespace-nowrap">
                       {c.label}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-white/[0.04]">
                 {lojasNulas.map(loja => (
-                  <tr key={loja.codigoLoja} className="hover:bg-slate-50 transition-colors">
+                  <tr key={loja.codigoLoja} className="hover:bg-white/[0.04] transition-colors">
                     <td className="px-4 py-2.5">
-                      <span className="text-slate-400 mr-1.5 font-mono text-[10px]">{loja.codigoLoja}</span>
-                      <span className="font-medium text-slate-800">
+                      <span className="text-muted-foreground mr-1.5 font-mono text-[10px]">{loja.codigoLoja}</span>
+                      <span className="font-medium text-foreground/90">
                         {loja.nomeLoja.replace(' (Projeto Olimpo)', '').slice(0, 28)}
                       </span>
                     </td>
@@ -366,11 +366,11 @@ export default function AuditoriaPage() {
                       return (
                         <td key={String(c.key)} className="px-3 py-2.5 whitespace-nowrap">
                           {isNull ? (
-                            <span className="inline-flex items-center gap-1 bg-red-50 text-red-600 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+                            <span className="inline-flex items-center gap-1 bg-destructive/10 text-destructive text-[11px] font-semibold px-2 py-0.5 rounded-full">
                               <AlertTriangle className="w-2.5 h-2.5" /> NULL
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[11px] font-medium px-2 py-0.5 rounded-full">
+                            <span className="inline-flex items-center gap-1 bg-success/10 text-success text-[11px] font-medium px-2 py-0.5 rounded-full">
                               <CheckCircle className="w-2.5 h-2.5" /> {c.fmt(val)}
                             </span>
                           )}
@@ -385,11 +385,11 @@ export default function AuditoriaPage() {
         )}
 
         {lojasNulas.length === 0 && (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-5 py-4 flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+          <div className="rounded-xl border border-success/20 bg-success/10 px-5 py-4 flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
             <div>
-              <p className="text-sm font-semibold text-emerald-800">Todos os campos críticos estão preenchidos</p>
-              <p className="text-xs text-emerald-600 mt-0.5">Nenhuma loja com valor nulo nos KPIs principais.</p>
+              <p className="text-sm font-semibold text-success">Todos os campos críticos estão preenchidos</p>
+              <p className="text-xs text-success mt-0.5">Nenhuma loja com valor nulo nos KPIs principais.</p>
             </div>
           </div>
         )}
@@ -397,10 +397,10 @@ export default function AuditoriaPage() {
 
       {/* ── Seção 3: Mapeamento de colunas ── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
           <Table2 className="w-3.5 h-3.5" />
           Mapeamento de colunas assumido pelo parser
-          <span className="font-normal normal-case text-slate-300">— abra a planilha lado a lado e confirme que as letras batem</span>
+          <span className="font-normal normal-case text-muted-foreground/50">— abra a planilha lado a lado e confirme que as letras batem</span>
         </h3>
 
         <div className="flex gap-1 flex-wrap mb-3">
@@ -411,7 +411,7 @@ export default function AuditoriaPage() {
               className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mapSheet === key
                   ? 'bg-brand-600 text-white shadow-sm'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'
+                  : 'glass-card border border-white/10 text-muted-foreground hover:border-slate-300'
               }`}
             >
               {label}
@@ -419,31 +419,31 @@ export default function AuditoriaPage() {
           ))}
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-x-auto">
+        <div className="rounded-xl border border-white/10 bg-card shadow-card overflow-x-auto">
           <table className="w-full text-xs">
-            <thead className="bg-slate-50 border-b border-slate-100">
+            <thead className="bg-white/[0.04] border-b border-white/[0.06]">
               <tr>
-                <th className="px-4 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide w-16">Letra</th>
-                <th className="px-3 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide w-12">Índice</th>
-                <th className="px-3 py-2.5 text-left text-slate-500 font-semibold uppercase tracking-wide">Campo no Dashboard</th>
-                <th className="px-3 py-2.5 text-left text-slate-400 font-semibold uppercase tracking-wide">Descrição</th>
+                <th className="px-4 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide w-16">Letra</th>
+                <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide w-12">Índice</th>
+                <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide">Campo no Dashboard</th>
+                <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold uppercase tracking-wide">Descrição</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-white/[0.04]">
               {COLUMN_MAP[mapSheet].map(({ idx, letra, campo, descricao }) => {
                 const isSkip = campo === '—'
                 return (
-                  <tr key={idx} className={`hover:bg-slate-50 transition-colors ${isSkip ? 'opacity-40' : ''}`}>
+                  <tr key={idx} className={`hover:bg-white/[0.04] transition-colors ${isSkip ? 'opacity-40' : ''}`}>
                     <td className="px-4 py-2 font-mono font-bold text-brand-700">{letra}</td>
-                    <td className="px-3 py-2 font-mono text-slate-400">{idx}</td>
+                    <td className="px-3 py-2 font-mono text-muted-foreground">{idx}</td>
                     <td className="px-3 py-2">
                       {isSkip ? (
-                        <span className="text-slate-300 italic">coluna ignorada</span>
+                        <span className="text-muted-foreground/50 italic">coluna ignorada</span>
                       ) : (
-                        <code className="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[11px] font-mono">{campo}</code>
+                        <code className="bg-slate-100 text-foreground/80 px-1.5 py-0.5 rounded text-[11px] font-mono">{campo}</code>
                       )}
                     </td>
-                    <td className="px-3 py-2 text-slate-500">{descricao}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{descricao}</td>
                   </tr>
                 )
               })}
@@ -455,26 +455,26 @@ export default function AuditoriaPage() {
       {/* ── Seção 4: Inspeção bruto vs parseado (dev only) ── */}
       {!isProd && (
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
             <Eye className="w-3.5 h-3.5" />
             Inspeção coluna a coluna — bruto vs parseado
           </h3>
 
           <div className="flex flex-wrap gap-2 mb-4">
             <div className="relative flex-1 min-w-[180px] max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Buscar loja..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 bg-white outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-100"
+                className="w-full pl-8 pr-3 py-2 rounded-lg border border-white/10 text-sm text-foreground/90 placeholder:text-muted-foreground bg-card outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-100"
               />
             </div>
             <select
               value={selectedLoja}
               onChange={e => setSelectedLoja(e.target.value)}
-              className="rounded-lg border border-slate-200 bg-white text-sm text-slate-700 px-3 py-2 outline-none focus:border-brand-400 flex-1 min-w-[200px] max-w-sm"
+              className="rounded-lg border border-white/10 bg-card text-sm text-foreground/80 px-3 py-2 outline-none focus:border-brand-400 flex-1 min-w-[200px] max-w-sm"
             >
               <option value="">-- Selecionar loja --</option>
               {lojasVisiveis.map(l => (
@@ -491,7 +491,7 @@ export default function AuditoriaPage() {
                   className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                     activeSheet === key
                       ? 'bg-brand-600 text-white shadow-sm'
-                      : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'
+                      : 'glass-card border border-white/10 text-muted-foreground hover:border-slate-300'
                   }`}
                 >
                   {label}
@@ -501,12 +501,12 @@ export default function AuditoriaPage() {
           </div>
 
           {selectedLoja && lojaInspecionada ? (
-            <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-x-auto">
-              <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-800">
+            <div className="rounded-xl border border-white/10 bg-card shadow-card overflow-x-auto">
+              <div className="px-4 py-3 border-b border-white/[0.06] bg-white/[0.04]">
+                <p className="text-sm font-semibold text-foreground/90">
                   {lojaInspecionada.codigoLoja} — {lojaInspecionada.nomeLoja.replace(' (Projeto Olimpo)', '')}
                 </p>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Aba: <span className="text-brand-600 font-medium">{SHEET_LABELS[activeSheet]}</span>
                   {rawLoja
                     ? ` · ${rawLoja.values.length} colunas`
@@ -515,26 +515,26 @@ export default function AuditoriaPage() {
               </div>
               {rawLoja ? (
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100">
+                  <thead className="bg-white/[0.04] border-b border-white/[0.06]">
                     <tr>
-                      <th className="px-4 py-2.5 text-left text-slate-500 font-semibold w-10">#</th>
-                      <th className="px-3 py-2.5 text-left text-slate-500 font-semibold">Cabeçalho (L1)</th>
-                      <th className="px-3 py-2.5 text-left text-slate-400 font-semibold">Cabeçalho (L2)</th>
-                      <th className="px-3 py-2.5 text-left text-slate-500 font-semibold">Valor bruto da planilha</th>
+                      <th className="px-4 py-2.5 text-left text-muted-foreground font-semibold w-10">#</th>
+                      <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold">Cabeçalho (L1)</th>
+                      <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold">Cabeçalho (L2)</th>
+                      <th className="px-3 py-2.5 text-left text-muted-foreground font-semibold">Valor bruto da planilha</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-50">
+                  <tbody className="divide-y divide-white/[0.04]">
                     {rawLoja.values.map((cell, i) => {
                       const h1 = headers[0]?.[i] ?? ''
                       const h2 = headers[1]?.[i] ?? ''
                       const hasValue = cell !== '' && cell !== null && cell !== undefined
                       return (
-                        <tr key={i} className={`hover:bg-blue-50/30 transition-colors ${!hasValue ? 'opacity-40' : ''}`}>
-                          <td className="px-4 py-2 font-mono text-slate-300">{i}</td>
-                          <td className="px-3 py-2 text-slate-700 font-medium">{h1}</td>
-                          <td className="px-3 py-2 text-slate-400">{h2}</td>
+                        <tr key={i} className={`hover:bg-info/10/30 transition-colors ${!hasValue ? 'opacity-40' : ''}`}>
+                          <td className="px-4 py-2 font-mono text-muted-foreground/50">{i}</td>
+                          <td className="px-3 py-2 text-foreground/80 font-medium">{h1}</td>
+                          <td className="px-3 py-2 text-muted-foreground">{h2}</td>
                           <td className="px-3 py-2 font-mono text-brand-700 font-semibold">
-                            {hasValue ? cell : <span className="text-slate-300 italic font-sans font-normal">vazio</span>}
+                            {hasValue ? cell : <span className="text-muted-foreground/50 italic font-sans font-normal">vazio</span>}
                           </td>
                         </tr>
                       )
@@ -542,15 +542,15 @@ export default function AuditoriaPage() {
                   </tbody>
                 </table>
               ) : (
-                <p className="px-4 py-8 text-center text-sm text-slate-400">
+                <p className="px-4 py-8 text-center text-sm text-muted-foreground">
                   Loja não encontrada na aba <strong>{SHEET_LABELS[activeSheet]}</strong>.
                 </p>
               )}
             </div>
           ) : !selectedLoja ? (
-            <div className="rounded-xl border border-slate-200 border-dashed px-6 py-10 text-center">
-              <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-              <p className="text-sm text-slate-400">Selecione uma loja para inspecionar os dados brutos coluna a coluna</p>
+            <div className="rounded-xl border border-white/10 border-dashed px-6 py-10 text-center">
+              <Search className="w-8 h-8 text-muted-foreground/50 mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Selecione uma loja para inspecionar os dados brutos coluna a coluna</p>
             </div>
           ) : null}
         </section>

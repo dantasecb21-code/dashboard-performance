@@ -26,10 +26,10 @@ function quadrante(loja: Loja, medVenda: number, medPerda: number): Quadrante {
 }
 
 const Q_COLOR: Record<Quadrante, string> = {
-  'Prioridade Máxima': 'bg-red-100 border-red-200 text-red-800',
-  'Saudável':           'bg-green-100 border-green-200 text-green-800',
-  'Atenção':            'bg-yellow-100 border-yellow-200 text-yellow-800',
-  'Baixa Prioridade':   'bg-gray-100 border-gray-200 text-gray-600',
+  'Prioridade Máxima': 'bg-red-100 border-destructive/30 text-destructive',
+  'Saudável':           'bg-success/15 border-success/30 text-success',
+  'Atenção':            'bg-warning/15 border-warning/30 text-warning',
+  'Baixa Prioridade':   'bg-white/[0.06] border-gray-200 text-muted-foreground',
 }
 
 export default function PerdaVendaPage() {
@@ -90,8 +90,8 @@ export default function PerdaVendaPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Perda de Venda</h2>
-        <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-foreground">Perda de Venda</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
       </div>
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -126,8 +126,8 @@ export default function PerdaVendaPage() {
       </div>
 
       {/* Matriz de prioridade */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Matriz de Prioridade</h3>
+      <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+        <h3 className="text-sm font-semibold text-foreground/80 mb-4">Matriz de Prioridade</h3>
         <div className="kpi-grid grid grid-cols-2 gap-3">
           {(Object.entries(matrizData.por) as [Quadrante, number][]).map(([q, count]) => (
             <div key={q} className={`rounded-lg border p-3 ${Q_COLOR[q]}`}>

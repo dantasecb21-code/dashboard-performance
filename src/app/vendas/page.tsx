@@ -77,14 +77,14 @@ export default function VendasPage() {
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
   const TAB_CLS = (v: Visao) =>
-    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`
+    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-muted-foreground border border-white/10 hover:bg-white/[0.04]'}`
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Vendas e Metas</h2>
-          <p className="text-sm text-slate-400 mt-0.5">{lojasFiltered.length} lojas</p>
+          <h2 className="text-xl font-bold text-foreground">Vendas e Metas</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{lojasFiltered.length} lojas</p>
         </div>
         <div className="flex gap-2">
           <button className={TAB_CLS('diaria')}    onClick={() => setVisao('diaria')}>Diária</button>

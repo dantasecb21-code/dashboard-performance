@@ -12,7 +12,7 @@ type SortDir = 'asc' | 'desc'
 const CELL_INDICADOR = (val: number | null, ind: Parameters<typeof statusIndicador>[0], cls?: string) => {
   const cor = statusIndicador(ind, val)
   const colorCls = {
-    verde: 'text-green-700', amarelo: 'text-yellow-700', vermelho: 'text-red-700', neutro: 'text-gray-400'
+    verde: 'text-green-700', amarelo: 'text-yellow-700', vermelho: 'text-destructive', neutro: 'text-gray-400'
   }[cor]
   return <td className={clsx('px-3 py-2 text-right text-xs font-medium', colorCls, cls)}>{val !== null ? fmtPct(val) : '—'}</td>
 }
@@ -52,7 +52,7 @@ export default function StoreDetailTable({ lojas }: Props) {
   // cls = classes de visibilidade responsiva opcionais
   const th = (label: string, k: SortKey, cls?: string) => (
     <th key={k} onClick={() => handleSort(k)}
-      className={clsx('px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-700 select-none whitespace-nowrap', cls)}>
+      className={clsx('px-3 py-2.5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-foreground/80 select-none whitespace-nowrap', cls)}>
       {label}{sortKey === k ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}
     </th>
   )
@@ -72,21 +72,21 @@ export default function StoreDetailTable({ lojas }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-wrap gap-2">
+    <div className="glass-card rounded-xl border border-white/[0.06] shadow-sm">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <input type="text" placeholder="Buscar loja..." value={search}
             onChange={e => { setSearch(e.target.value); setPage(0) }}
             className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-36 sm:w-44" />
           <span className="text-xs text-gray-400">{sorted.length} lojas</span>
         </div>
-        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition cursor-pointer">
+        <button onClick={exportCSV} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-muted-foreground hover:bg-gray-50 transition cursor-pointer">
           Exportar CSV
         </button>
       </div>
       <div className="overflow-auto">
         <table className="w-full text-xs min-w-[480px]">
-          <thead className="bg-gray-50 border-b border-gray-100">
+          <thead className="bg-gray-50 border-b border-white/[0.06]">
             <tr>
               {th('Código',   'codigoLoja',          'hidden sm:table-cell')}
               {th('Nome',     'nomeLoja')}
@@ -117,38 +117,38 @@ export default function StoreDetailTable({ lojas }: Props) {
           <tbody>
             {pageData.map(l => (
               <tr key={l.id} className="border-b border-gray-50 hover:bg-gray-50">
-                <td className="px-3 py-2 font-mono text-gray-500 hidden sm:table-cell">{l.codigoLoja}</td>
+                <td className="px-3 py-2 font-mono text-muted-foreground hidden sm:table-cell">{l.codigoLoja}</td>
                 <td className="px-3 py-2">
-                  <p className="font-medium text-gray-800 whitespace-nowrap">{l.nomeLoja}</p>
+                  <p className="font-medium text-foreground/80 whitespace-nowrap">{l.nomeLoja}</p>
                   <p className="text-[10px] text-gray-400 sm:hidden">{l.uf} · {fmtBRL(l.venda)}</p>
                 </td>
-                <td className="px-3 py-2 text-gray-500 hidden md:table-cell">{l.uf}</td>
-                <td className="px-3 py-2 text-gray-500 hidden lg:table-cell">{l.cidade}</td>
-                <td className="px-3 py-2 text-gray-500 whitespace-nowrap hidden xl:table-cell">{l.diretorRegional}</td>
-                <td className="px-3 py-2 text-gray-500 whitespace-nowrap hidden xl:table-cell">{l.gerenteRegional}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoJaneiro)}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoFevereiro)}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoMarco)}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoAbril)}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden xl:table-cell">{fmtBRL(l.faturamentoMaio)}</td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden lg:table-cell">{fmtBRL(l.meta)}</td>
+                <td className="px-3 py-2 text-muted-foreground hidden md:table-cell">{l.uf}</td>
+                <td className="px-3 py-2 text-muted-foreground hidden lg:table-cell">{l.cidade}</td>
+                <td className="px-3 py-2 text-muted-foreground whitespace-nowrap hidden xl:table-cell">{l.diretorRegional}</td>
+                <td className="px-3 py-2 text-muted-foreground whitespace-nowrap hidden xl:table-cell">{l.gerenteRegional}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoJaneiro)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoFevereiro)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoMarco)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoAbril)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden xl:table-cell">{fmtBRL(l.faturamentoMaio)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden lg:table-cell">{fmtBRL(l.meta)}</td>
                 <td className="px-3 py-2 text-right font-semibold text-gray-900">{fmtBRL(l.venda)}</td>
                 <td className={clsx('px-3 py-2 text-right font-semibold hidden sm:table-cell',
-                  l.desvio === null ? 'text-gray-400' : l.desvio >= 0 ? 'text-green-700' : 'text-red-700')}>
+                  l.desvio === null ? 'text-gray-400' : l.desvio >= 0 ? 'text-green-700' : 'text-destructive')}>
                   {fmtBRL(l.desvio)}
                 </td>
                 <td className={clsx('px-3 py-2 text-right hidden md:table-cell',
-                  l.crescimento === null ? 'text-gray-400' : l.crescimento >= 0 ? 'text-green-700' : 'text-red-700')}>
+                  l.crescimento === null ? 'text-gray-400' : l.crescimento >= 0 ? 'text-green-700' : 'text-destructive')}>
                   {l.crescimento !== null ? fmtPct(l.crescimento) : '—'}
                 </td>
-                <td className="px-3 py-2 text-right text-gray-700 hidden lg:table-cell">{fmtBRL(l.ticketMedio)}</td>
+                <td className="px-3 py-2 text-right text-foreground/80 hidden lg:table-cell">{fmtBRL(l.ticketMedio)}</td>
                 {CELL_INDICADOR(l.cancelamentoTotal, 'cancelamento_total', 'hidden md:table-cell')}
                 {CELL_INDICADOR(l.slaPreparo,        'sla_preparo',        'hidden xl:table-cell')}
                 {CELL_INDICADOR(l.nsu,               'nsu',                'hidden xl:table-cell')}
                 {CELL_INDICADOR(l.rupturaItem,       'ruptura_item',       'hidden xl:table-cell')}
                 {CELL_INDICADOR(l.tempoOnline,       'tempo_online',       'hidden lg:table-cell')}
-                <td className="px-3 py-2 text-right text-red-600 font-medium hidden lg:table-cell">{fmtBRL(l.perdaVendaTotal)}</td>
-                <td className="px-3 py-2 text-center font-bold text-gray-700 hidden sm:table-cell">{l.scoreSaude}</td>
+                <td className="px-3 py-2 text-right text-destructive font-medium hidden lg:table-cell">{fmtBRL(l.perdaVendaTotal)}</td>
+                <td className="px-3 py-2 text-center font-bold text-foreground/80 hidden sm:table-cell">{l.scoreSaude}</td>
                 <td className="px-3 py-2"><StatusBadge status={l.statusLoja} size="sm" /></td>
               </tr>
             ))}
@@ -156,7 +156,7 @@ export default function StoreDetailTable({ lojas }: Props) {
         </table>
       </div>
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.06]">
           <span className="text-xs text-gray-400">Pág. {page + 1}/{totalPages}</span>
           <div className="flex gap-2">
             <button disabled={page === 0} onClick={() => setPage(p => p - 1)}

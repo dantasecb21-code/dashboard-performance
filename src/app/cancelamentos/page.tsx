@@ -93,8 +93,8 @@ export default function CancelamentosPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Cancelamentos</h2>
-        <p className="text-sm text-slate-400 mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
+        <h2 className="text-xl font-bold text-foreground">Cancelamentos</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Meta ≤ 5% · {lojasFiltered.length} lojas</p>
       </div>
 
       <div className="kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">

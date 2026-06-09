@@ -12,37 +12,20 @@ interface Props {
   tooltip?: string
 }
 
-const COLOR_MAP = {
-  default: {
-    border: 'border-slate-200',
-    accent: 'bg-slate-300',
-    icon:   'bg-slate-100 text-slate-500',
-    value:  'text-slate-900',
-  },
-  green: {
-    border: 'border-emerald-100',
-    accent: 'bg-emerald-500',
-    icon:   'bg-emerald-50 text-emerald-600',
-    value:  'text-emerald-900',
-  },
-  red: {
-    border: 'border-red-100',
-    accent: 'bg-red-500',
-    icon:   'bg-red-50 text-red-600',
-    value:  'text-red-900',
-  },
-  yellow: {
-    border: 'border-amber-100',
-    accent: 'bg-amber-400',
-    icon:   'bg-amber-50 text-amber-600',
-    value:  'text-amber-900',
-  },
-  blue: {
-    border: 'border-blue-100',
-    accent: 'bg-blue-500',
-    icon:   'bg-blue-50 text-blue-600',
-    value:  'text-blue-900',
-  },
+const ICON_VARIANT: Record<NonNullable<Props['color']>, string> = {
+  default: 'bg-primary/15 text-primary',
+  green:   'bg-success/15 text-success',
+  red:     'bg-destructive/15 text-destructive',
+  yellow:  'bg-warning/15 text-warning',
+  blue:    'bg-info/15 text-info',
+}
+
+const GLOW_COLOR: Record<NonNullable<Props['color']>, string> = {
+  default: 'bg-primary/20',
+  green:   'bg-success/20',
+  red:     'bg-destructive/20',
+  yellow:  'bg-warning/20',
+  blue:    'bg-info/20',
 }
 
 function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
@@ -54,74 +37,93 @@ function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
 }
 
 export default function KpiCard({ title, value, subtitle, delta, icon: Icon, color = 'default', size = 'md', tooltip }: Props) {
+  const isEmpty = value === null || value === undefined || value === ''
   const isPositiveDelta = delta !== null && delta !== undefined && delta > 0
   const isNegativeDelta = delta !== null && delta !== undefined && delta < 0
-  const colors = COLOR_MAP[color]
   const DeltaIcon = isPositiveDelta ? TrendingUp : isNegativeDelta ? TrendingDown : Minus
   const valueFontSize = adaptiveFontSize(value, size)
+  const iconClass = ICON_VARIANT[color]
+  const glowClass = GLOW_COLOR[color]
 
   return (
     <div className={clsx(
-      'relative rounded-xl border bg-white flex flex-col overflow-hidden',
-      'transition-all duration-200 cursor-default group',
-      'hover:shadow-card-hover hover:-translate-y-0.5 shadow-card',
-      colors.border
+      'glass-card group relative overflow-hidden cursor-default',
+      'p-3 sm:p-4 lg:p-5',
+      'transition-all duration-500',
+      'hover:-translate-y-0.5 hover:border-primary/40',
+      'hover:shadow-[0_24px_60px_-20px_hsl(var(--primary)/0.45)]',
     )}>
-      {/* Accent strip */}
-      <div className={clsx('h-[3px] w-full flex-shrink-0', colors.accent)} />
+      {/* Sheen no hover */}
+      <div className="pointer-events-none absolute -inset-px rounded-2xl
+        bg-[radial-gradient(120%_80%_at_0%_0%,hsl(var(--primary)/0.18),transparent_55%)]
+        opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-1 min-w-0">
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-tight">
-              {title}
-            </span>
-            {tooltip && (
-              <div className="relative group/tip flex-shrink-0">
-                <Info className="w-3 h-3 text-slate-300 hover:text-slate-500 cursor-help transition-colors" />
-                <div className="absolute bottom-full left-0 mb-2 z-50 w-56 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed p-3 shadow-xl
-                  opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-normal font-normal normal-case tracking-normal">
-                  {tooltip}
-                  <span className="absolute top-full left-3 border-4 border-transparent border-t-slate-900 block w-0 h-0" />
-                </div>
+      {/* Corner glow permanente */}
+      <div className={clsx(
+        'pointer-events-none absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-50',
+        glowClass
+      )} />
+
+      {/* Cabeçalho: label + tooltip + ícone */}
+      <div className="relative flex items-start justify-between gap-1">
+        <div className="flex items-center gap-1 min-w-0">
+          <p className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground leading-tight line-clamp-2">
+            {title}
+          </p>
+          {tooltip && (
+            <div className="relative group/tip flex-shrink-0">
+              <Info className="w-3 h-3 text-muted-foreground/40 hover:text-muted-foreground cursor-help transition-colors" />
+              <div className="absolute bottom-full left-0 mb-2 z-50 w-56 rounded-xl
+                bg-card border border-white/10 text-foreground text-[11px] leading-relaxed p-3 shadow-2xl
+                opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150
+                whitespace-normal font-normal normal-case tracking-normal">
+                {tooltip}
+                <span className="absolute top-full left-3 border-4 border-transparent border-t-card block w-0 h-0" />
               </div>
-            )}
-          </div>
-          {Icon && (
-            <div className={clsx('w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0', colors.icon)}>
-              <Icon className="w-3.5 h-3.5" />
             </div>
           )}
         </div>
+        {Icon && (
+          <div className={clsx(
+            'relative p-1.5 sm:p-2 rounded-xl border border-white/10 backdrop-blur-md shrink-0',
+            'shadow-[inset_0_1px_0_hsl(0_0%_100%/0.12)]',
+            iconClass
+          )}>
+            <Icon className="w-3.5 h-3.5" strokeWidth={2} />
+          </div>
+        )}
+      </div>
 
-        <div className={clsx(
-          'font-bold tabular-nums leading-tight min-w-0 break-words',
-          valueFontSize,
-          colors.value
-        )}>
-          {value === null || value === undefined || value === '' ? (
-            <span className="text-slate-300 text-xl">—</span>
-          ) : value}
-        </div>
+      {/* Valor */}
+      <div className={clsx(
+        'relative font-heading font-extrabold text-foreground stat-glow',
+        'leading-[1.05] tracking-tight tabular-nums mt-2 min-w-0 break-words',
+        valueFontSize,
+      )}>
+        {isEmpty ? <span className="text-muted-foreground/40 text-xl">—</span> : value}
+      </div>
 
-        <div className="flex items-center gap-2 min-h-[18px] mt-auto">
-          {subtitle && (
-            <span className="text-[11px] text-slate-400">{subtitle}</span>
-          )}
-          {delta !== null && delta !== undefined && (
-            <span className={clsx(
-              'flex items-center gap-0.5 text-[11px] font-semibold px-1.5 py-0.5 rounded-full',
-              isPositiveDelta
-                ? 'bg-emerald-50 text-emerald-700'
-                : isNegativeDelta
-                ? 'bg-red-50 text-red-600'
-                : 'bg-slate-100 text-slate-400'
-            )}>
-              <DeltaIcon className="w-3 h-3" />
-              {Math.abs(delta).toFixed(1)}%
-            </span>
-          )}
-        </div>
+      {/* Subtitle / delta */}
+      <div className="relative flex items-center gap-2 mt-1.5 min-h-[18px]">
+        {subtitle && (
+          <p className="text-[9px] sm:text-[11px] text-muted-foreground flex items-center gap-1 truncate">
+            <span className="w-1 h-1 rounded-full bg-primary/70 shadow-[0_0_6px_hsl(var(--primary))] shrink-0" />
+            <span className="truncate">{subtitle}</span>
+          </p>
+        )}
+        {delta !== null && delta !== undefined && (
+          <span className={clsx(
+            'flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0',
+            isPositiveDelta
+              ? 'bg-success/15 text-success'
+              : isNegativeDelta
+              ? 'bg-destructive/15 text-destructive'
+              : 'bg-muted-foreground/10 text-muted-foreground'
+          )}>
+            <DeltaIcon className="w-3 h-3" />
+            {Math.abs(delta).toFixed(1)}%
+          </span>
+        )}
       </div>
     </div>
   )
