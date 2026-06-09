@@ -19,12 +19,18 @@ function getAuth() {
 
 type Row = string[]
 
-// ── Aba: indicadores ────────────────────────────────────────────────
-// A=dirDiv B=dirOp C=ger D=cod E=nome F=cidade G=uf
-// H=jan(7) I=feb(8) J=skip(9) K=mar(10) L=skip(11) M=abr(12) N=skip(13)
-// O=meta(14) P=cresc%(15) Q=vendaAcum(16) R=desvio(17) S=particip%(18) T=ticket(19)
-// U=skip(20) V=cancel%(21) W=cancelDesvio%(22) X=perdaCancel(23)
-// Y=ruptura%(24) Z=rupturaDesvio%(25) AA=perdaRuptura(26) AB=tempoOn%(27) AC=perdaTOn(28)
+// ── Aba 4: indicadores ───────────────────────────────────────────────────────
+// [0-6] hierarquia: dirDiv, dirReg, gerReg, cod, nome, cidade, uf
+// [7]  JAN FATURAMENTO   [8]  FEV FATURAMENTO  [9]  FEV DESEMPENHO
+// [10] MAR FATURAMENTO   [11] MAR DESEMPENHO
+// [12] ABR FATURAMENTO   [13] ABR DESEMPENHO
+// [14] MAI FATURAMENTO   [15] MAI DESEMPENHO
+// [16] Meta (JUN)        [17] Venda (JUN)      [18] Desvio vs Meta (JUN)
+// [19] % Cresc (JUN)     [20] % Participação   [21] Ticket Medio
+// [22] PERDA DE VENDA TOTAL
+// [23] CANCELAMENTO TOTAL %  [24] DESVIO META cancel  [25] PERDA VENDA cancel
+// [26] RUPTURA ITEM %        [27] DESVIO META ruptura  [28] PERDA VENDA ruptura
+// [29] TEMPO ON %            [30] DESVIO META tempo on [31] PERDA VENDA tempo on
 function parseIndicadores(row: Row): Partial<Loja> | null {
   if (!row || !row[4]?.trim()) return null
   return {
@@ -36,89 +42,124 @@ function parseIndicadores(row: Row): Partial<Loja> | null {
     cidade:            (row[5] || '').trim(),
     uf:                (row[6] || '').trim(),
 
-    faturamentoJaneiro:  parseBRL(row[7]),
+    faturamentoJaneiro:   parseBRL(row[7]),
     faturamentoFevereiro: parseBRL(row[8]),
-    faturamentoMarco:    parseBRL(row[10]),
-    faturamentoAbril:    parseBRL(row[12]),
-    meta:        parseBRL(row[14]),
-    crescimento: parsePct(row[15]),   // col P = crescimento %
-    venda:       parseBRL(row[16]),   // col Q = venda acumulada no mês
-    faturamentoMaio: parseBRL(row[16]),
-    desvio:      parseBRL(row[17]),   // col R = desvio vs meta
-    participacao: parsePct(row[18]),
-    ticketMedio:  parseBRL(row[19]),
+    faturamentoMarco:     parseBRL(row[10]),
+    faturamentoAbril:     parseBRL(row[12]),
+    faturamentoMaio:      parseBRL(row[14]),
 
-    cancelamentoTotal:  parsePct(row[21]),
-    cancelamentoDesvio: parsePct(row[22]),
-    perdaCancelamento:  parseBRL(row[23]),
-    rupturaItem:        parsePct(row[24]),
-    perdaRuptura:       parseBRL(row[26]),
-    // Col 27 armazena % downtime (tempo offline); uptime = 100 - downtime
-    tempoOnline: (() => { const v = parsePct(row[27]); return v !== null ? 100 - v : null })(),
-    perdaTempoOnline: parseBRL(row[28]),
+    meta:        parseBRL(row[16]),
+    venda:       parseBRL(row[17]),
+    faturamentoJunho: parseBRL(row[17]),
+    desvio:      parseBRL(row[18]),
+    crescimento: parsePct(row[19]),
+    participacao: parsePct(row[20]),
+    ticketMedio:  parseBRL(row[21]),
+
+    perdaVendaTotal:    parseBRL(row[22]),
+    cancelamentoTotal:  parsePct(row[23]),
+    cancelamentoDesvio: parsePct(row[24]),
+    perdaCancelamento:  parseBRL(row[25]),
+    rupturaItem:        parsePct(row[26]),
+    perdaRuptura:       parseBRL(row[28]),
+    tempoOnline:        parsePct(row[29]),  // já é % ON, sem inversão
+    perdaTempoOnline:   parseBRL(row[31]),
   }
 }
 
-// ── Aba: vendas diarias e mensais ────────────────────────────────────
-// Estrutura igual ao indicadores nas primeiras 7 colunas
-// H=metaDia I=vendaDia J=desvioDia K=crescDia L=participDia
-// M=metaAcum N=vendaAcum O=desvioAcum P=crescAcum Q=participAcum R=ticketDiario
-// S=cancelMes T=cancelOntem U..X=outros Y=slaPreparoMes Z=slaPreparoOntem AA=nsu
-function parseVendasDiarias(row: Row): Partial<Loja> | null {
-  if (!row || !row[4]?.trim()) return null
-  return {
-    codigoLoja: (row[3] || '').trim(),
-    metaDia:    parseBRL(row[7]),
-    vendaDia:   parseBRL(row[8]),
-    desvioDia:  parseBRL(row[9]),
-    crescimentoDia: parsePct(row[10]),
-
-    metaAcumulada:        parseBRL(row[12]),
-    vendaAcumulada:       parseBRL(row[13]),
-    desvioAcumulado:      parseBRL(row[14]),
-    crescimentoAcumulado: parsePct(row[15]),
-    participacaoAcumulada: parsePct(row[16]),
-    ticketMedioDiario:    parseBRL(row[17]),
-
-    cancelamentoTotal: parsePct(row[18]),  // cancelamento acumulado no mês
-    slaEntrega:  parsePct(row[25]),
-    slaPreparo:  parsePct(row[26]),
-    nsu:         parsePct(row[27]),
-  }
-}
-
-// ── Aba: vendas anuais ───────────────────────────────────────────────
-// A-G hierarquia, H=jan I=feb J=mar K=abr L=mai M=metaJun N=vendaJun
-// O=desvio P=cresc Q=particip R=ticket ... X=slaPreparo Y=nsu
+// ── Aba 1: vendas anuais ─────────────────────────────────────────────────────
+// [0-6] hierarquia
+// [7]  JAN FATURAMENTO   [8]  FEV FATURAMENTO  [9]  FEV DESEMPENHO
+// [10] MAR FATURAMENTO   [11] MAR DESEMPENHO
+// [12] ABR FATURAMENTO   [13] ABR DESEMPENHO
+// [14] MAI FATURAMENTO   [15] MAI DESEMPENHO
+// [16] JUN Meta          [17] JUN Venda        [18] JUN Desvio
+// [19] JUN % Cresc       [20] JUN % Participação [21] JUN Ticket Medio
+// [22] CANCELAMENTO TOTAL %  [23] SLA PREPARO  [24] NSU
+// [25] RUPTURA ITEM %        [26] SLA ENTREGA  [27] TEMPO ON %
 function parseVendasAnuais(row: Row): Partial<Loja> | null {
   if (!row || !row[3]?.trim()) return null
   return {
-    codigoLoja:        (row[3] || '').trim(),
-    faturamentoJunho:  parseBRL(row[13]),   // venda junho (quando disponível)
+    codigoLoja:           (row[3] || '').trim(),
+
+    faturamentoJaneiro:   parseBRL(row[7]),
+    faturamentoFevereiro: parseBRL(row[8]),
+    faturamentoMarco:     parseBRL(row[10]),
+    faturamentoAbril:     parseBRL(row[12]),
+    faturamentoMaio:      parseBRL(row[14]),
+    meta:                 parseBRL(row[16]),
+    venda:                parseBRL(row[17]),
+    faturamentoJunho:     parseBRL(row[17]),
+    desvio:               parseBRL(row[18]),
+    crescimento:          parsePct(row[19]),
+    participacao:         parsePct(row[20]),
+    ticketMedio:          parseBRL(row[21]),
+
+    cancelamentoTotal: parsePct(row[22]),
     slaPreparo:        parsePct(row[23]),
     nsu:               parsePct(row[24]),
+    rupturaItem:       parsePct(row[25]),
+    slaEntrega:        parsePct(row[26]),
+    tempoOnline:       parsePct(row[27]),
   }
 }
 
-// ── Aba: cancelamento ────────────────────────────────────────────────
-// A-G hierarquia
-// col 7-9: totais abril, col 10-12: totais maio, col 13: variacao
-// col 14: cancelCliente% (maio), col 15: cancelCliente% (abril), col 16: desvio
-// col 17: cancelLoja% (maio),    col 18: cancelLoja% (abril),    col 19: desvio
-// col 20: cancelEntregador% (maio), col 21: abril, col 22: desvio
-// col 23+: valores em R$
+// ── Aba 2: vendas diarias e mensais ─────────────────────────────────────────
+// [0-6] hierarquia
+// DIA:       [7] Meta  [8] Venda  [9] Desvio  [10] % Cresc  [11] % Participação
+// ACUMULADO: [12] Meta [13] Venda [14] Desvio [15] % Cresc  [16] % Participação [17] Ticket
+// [18] CANCELAMENTO TOTAL Junho  [19] CANCELAMENTO TOTAL Ontem
+// [20] Cancel Clientes Ontem     [21] Cancel Loja Ontem  [22] Cancel Entregadores Ontem
+// [23] SLA PREPARO Junho         [24] SLA PREPARO Ontem
+// [25] NSU Junho                 [26] NSU Ontem
+// [27] RUPTURA ITEM Junho        [28] RUPTURA ITEM Ontem
+function parseVendasDiarias(row: Row): Partial<Loja> | null {
+  if (!row || !row[4]?.trim()) return null
+  return {
+    codigoLoja:      (row[3] || '').trim(),
+    metaDia:         parseBRL(row[7]),
+    vendaDia:        parseBRL(row[8]),
+    desvioDia:       parseBRL(row[9]),
+    crescimentoDia:  parsePct(row[10]),
+
+    metaAcumulada:         parseBRL(row[12]),
+    vendaAcumulada:        parseBRL(row[13]),
+    desvioAcumulado:       parseBRL(row[14]),
+    crescimentoAcumulado:  parsePct(row[15]),
+    participacaoAcumulada: parsePct(row[16]),
+    ticketMedioDiario:     parseBRL(row[17]),
+
+    cancelamentoTotal: parsePct(row[18]),  // acumulado do mês
+    slaPreparo:        parsePct(row[23]),
+    nsu:               parsePct(row[25]),
+    rupturaItem:       parsePct(row[27]),
+  }
+}
+
+// ── Aba 3: cancelamento ──────────────────────────────────────────────────────
+// [0-6] hierarquia
+// Cap/Fat:        [7] Abril  [8] Maio   [9] Desvio
+// Total Cancel%:  [10] Abril [11] Maio  [12] Desvio
+// Cancel Clientes%:[13] Abril [14] Maio [15] Desvio
+// Cancel Loja%:   [16] Abril [17] Maio  [18] Desvio
+// Cancel Entregadores%: [19] Abril [20] Maio [21] Desvio
+// Total R$:       [22] Abril [23] Maio  [24] Desvio
+// Clientes R$:    [25] Abril [26] Maio  [27] Desvio
+// Loja R$:        [28] Abril [29] Maio  [30] Desvio
+// Entregador R$:  [31] Abril [32] Maio  [33] Desvio
 function parseCancelamento(row: Row): Partial<Loja> | null {
   if (!row || !row[3]?.trim()) return null
   return {
     codigoLoja:              (row[3] || '').trim(),
-    cancelamentoAbril:       parsePct(row[9]),   // % abril total
-    cancelamentoCliente:     parsePct(row[14]),
-    cancelamentoLoja:        parsePct(row[17]),
-    cancelamentoEntregador:  parsePct(row[20]),
-    cancelamentoTotalR:      parseBRL(row[23]),
-    cancelamentoClienteR:    parseBRL(row[24]),
-    cancelamentoLojaR:       parseBRL(row[25]),
-    cancelamentoEntregadorR: parseBRL(row[26]),
+    cancelamentoAbril:       parsePct(row[10]),  // total % Abril
+    cancelamentoTotal:       parsePct(row[11]),  // total % Maio (mês atual)
+    cancelamentoCliente:     parsePct(row[14]),  // Maio
+    cancelamentoLoja:        parsePct(row[17]),  // Maio
+    cancelamentoEntregador:  parsePct(row[20]),  // Maio
+    cancelamentoTotalR:      parseBRL(row[23]),  // Maio
+    cancelamentoClienteR:    parseBRL(row[26]),  // Maio
+    cancelamentoLojaR:       parseBRL(row[29]),  // Maio
+    cancelamentoEntregadorR: parseBRL(row[32]),  // Maio
   }
 }
 
@@ -131,54 +172,65 @@ export async function fetchLojas(): Promise<Loja[]> {
   const auth = getAuth()
   const sheets = google.sheets({ version: 'v4', auth })
 
-  const [indRes, diarRes, anuaisRes, cancelRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A4:AE200" }),
-    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A4:AF200" }),
+  const [anuaisRes, diarRes, cancelRes, indRes] = await Promise.all([
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas anuais'!A4:AB200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'vendas diarias e mensais'!A4:AC200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'cancelamento'!A4:AH200" }),
+    sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: "'indicadores'!A4:AF200" }),
   ])
 
   const rows = (res: typeof indRes) => (res.data.values as Row[] | null) ?? []
 
-  // Base: indicadores
+  // Base: indicadores (fonte mais completa — perdas, cancelamentos, KPIs mês atual)
   const baseMap = new Map<string, Partial<Loja>>()
   for (const row of rows(indRes)) {
     const parsed = parseIndicadores(row)
     if (parsed?.codigoLoja) baseMap.set(parsed.codigoLoja, parsed)
   }
 
-  // Merge vendas diárias — não sobrescreve campos já presentes em indicadores
-  for (const row of rows(diarRes)) {
-    const p = parseVendasDiarias(row)
-    if (!p?.codigoLoja) continue
-    const base = baseMap.get(p.codigoLoja) ?? {}
-    const merged = { ...p, ...base }  // base tem prioridade
-    // Exceções: cancelamentoTotal de diárias só se indicadores não trouxe
-    if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined) {
-      merged.cancelamentoTotal = p.cancelamentoTotal ?? null
-    }
-    baseMap.set(p.codigoLoja, merged)
-  }
-
-  // Merge vendas anuais
+  // Vendas anuais — preenche slaEntrega (único lugar) e campos ainda nulos
   for (const row of rows(anuaisRes)) {
     const p = parseVendasAnuais(row)
     if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
-    // Só sobrescreve slaPreparo/nsu se indicadores não trouxe
-    const merged: Partial<Loja> = { ...p, ...base }
-    merged.slaPreparo = base.slaPreparo ?? p.slaPreparo ?? null
-    merged.nsu = base.nsu ?? p.nsu ?? null
-    merged.faturamentoJunho = p.faturamentoJunho ?? base.faturamentoJunho ?? null
+    const merged: Partial<Loja> = { ...p, ...base }  // indicadores tem prioridade
+    // slaEntrega só existe aqui
+    merged.slaEntrega = base.slaEntrega ?? p.slaEntrega ?? null
+    // slaPreparo/nsu/tempoOnline: indicadores não tem, então vendas anuais preenche
+    merged.slaPreparo  = base.slaPreparo  ?? p.slaPreparo  ?? null
+    merged.nsu         = base.nsu         ?? p.nsu         ?? null
+    merged.tempoOnline = base.tempoOnline ?? p.tempoOnline ?? null
     baseMap.set(p.codigoLoja, merged)
   }
 
-  // Merge cancelamento
+  // Vendas diárias — adiciona dados de dia/acumulado; não sobrescreve indicadores
+  for (const row of rows(diarRes)) {
+    const p = parseVendasDiarias(row)
+    if (!p?.codigoLoja) continue
+    const base = baseMap.get(p.codigoLoja) ?? {}
+    const merged: Partial<Loja> = { ...p, ...base }  // base tem prioridade
+    // cancelamentoTotal de diárias só se não veio de indicadores
+    if (base.cancelamentoTotal === null || base.cancelamentoTotal === undefined) {
+      merged.cancelamentoTotal = p.cancelamentoTotal ?? null
+    }
+    // slaPreparo/nsu/rupturaItem de diárias preenchem lacunas
+    merged.slaPreparo  = base.slaPreparo  ?? p.slaPreparo  ?? null
+    merged.nsu         = base.nsu         ?? p.nsu         ?? null
+    merged.rupturaItem = base.rupturaItem ?? p.rupturaItem ?? null
+    baseMap.set(p.codigoLoja, merged)
+  }
+
+  // Cancelamento — breakdown por responsável e em R$
   for (const row of rows(cancelRes)) {
     const p = parseCancelamento(row)
     if (!p?.codigoLoja) continue
     const base = baseMap.get(p.codigoLoja) ?? {}
-    baseMap.set(p.codigoLoja, { ...base, ...p })
+    const merged: Partial<Loja> = { ...base, ...p }
+    // cancelamentoTotal de cancelamentos só se indicadores não trouxe
+    if (base.cancelamentoTotal !== null && base.cancelamentoTotal !== undefined) {
+      merged.cancelamentoTotal = base.cancelamentoTotal
+    }
+    baseMap.set(p.codigoLoja, merged)
   }
 
   // Montar objetos Loja com defaults
@@ -198,56 +250,56 @@ export async function fetchLojas(): Promise<Loja[]> {
         projetoOlimpo: (l.nomeLoja ?? '').toLowerCase().includes('projeto olimpo') ||
                        (l.nomeLoja ?? '').toLowerCase().includes('olimpo'),
 
-        faturamentoJaneiro:  l.faturamentoJaneiro  ?? null,
-        faturamentoFevereiro: l.faturamentoFevereiro ?? null,
-        faturamentoMarco:    l.faturamentoMarco    ?? null,
-        faturamentoAbril:    l.faturamentoAbril    ?? null,
-        faturamentoMaio:     l.faturamentoMaio     ?? null,
-        faturamentoJunho:    l.faturamentoJunho    ?? null,
+        faturamentoJaneiro:   l.faturamentoJaneiro   ?? null,
+        faturamentoFevereiro: l.faturamentoFevereiro  ?? null,
+        faturamentoMarco:     l.faturamentoMarco      ?? null,
+        faturamentoAbril:     l.faturamentoAbril      ?? null,
+        faturamentoMaio:      l.faturamentoMaio       ?? null,
+        faturamentoJunho:     l.faturamentoJunho      ?? null,
 
-        meta: l.meta ?? null,
-        venda: l.venda ?? null,
-        desvio: l.desvio ?? null,
+        meta:        l.meta        ?? null,
+        venda:       l.venda       ?? null,
+        desvio:      l.desvio      ?? null,
         crescimento: l.crescimento ?? null,
         participacao: l.participacao ?? null,
-        ticketMedio: l.ticketMedio ?? null,
+        ticketMedio:  l.ticketMedio  ?? null,
 
-        metaDia: l.metaDia ?? null,
-        vendaDia: l.vendaDia ?? null,
-        desvioDia: l.desvioDia ?? null,
+        metaDia:        l.metaDia        ?? null,
+        vendaDia:       l.vendaDia       ?? null,
+        desvioDia:      l.desvioDia      ?? null,
         crescimentoDia: l.crescimentoDia ?? null,
 
-        metaAcumulada: l.metaAcumulada ?? null,
-        vendaAcumulada: l.vendaAcumulada ?? null,
-        desvioAcumulado: l.desvioAcumulado ?? null,
-        crescimentoAcumulado: l.crescimentoAcumulado ?? null,
-        participacaoAcumulada: l.participacaoAcumulada ?? null,
-        ticketMedioDiario: l.ticketMedioDiario ?? null,
+        metaAcumulada:         l.metaAcumulada         ?? null,
+        vendaAcumulada:        l.vendaAcumulada         ?? null,
+        desvioAcumulado:       l.desvioAcumulado        ?? null,
+        crescimentoAcumulado:  l.crescimentoAcumulado   ?? null,
+        participacaoAcumulada: l.participacaoAcumulada  ?? null,
+        ticketMedioDiario:     l.ticketMedioDiario      ?? null,
 
         cancelamentoTotal: l.cancelamentoTotal
-        ?? (l.cancelamentoCliente !== null && l.cancelamentoLoja !== null && l.cancelamentoEntregador !== null
-            ? (l.cancelamentoCliente ?? 0) + (l.cancelamentoLoja ?? 0) + (l.cancelamentoEntregador ?? 0)
-            : null),
-        cancelamentoCliente: l.cancelamentoCliente ?? null,
-        cancelamentoLoja: l.cancelamentoLoja ?? null,
-        cancelamentoEntregador: l.cancelamentoEntregador ?? null,
-        cancelamentoAbril: l.cancelamentoAbril ?? null,
-        cancelamentoDesvio: l.cancelamentoDesvio ?? null,
-        cancelamentoTotalR: l.cancelamentoTotalR ?? null,
-        cancelamentoClienteR: l.cancelamentoClienteR ?? null,
-        cancelamentoLojaR: l.cancelamentoLojaR ?? null,
+          ?? (l.cancelamentoCliente !== null && l.cancelamentoLoja !== null && l.cancelamentoEntregador !== null
+              ? (l.cancelamentoCliente ?? 0) + (l.cancelamentoLoja ?? 0) + (l.cancelamentoEntregador ?? 0)
+              : null),
+        cancelamentoCliente:     l.cancelamentoCliente     ?? null,
+        cancelamentoLoja:        l.cancelamentoLoja        ?? null,
+        cancelamentoEntregador:  l.cancelamentoEntregador  ?? null,
+        cancelamentoAbril:       l.cancelamentoAbril       ?? null,
+        cancelamentoDesvio:      l.cancelamentoDesvio      ?? null,
+        cancelamentoTotalR:      l.cancelamentoTotalR      ?? null,
+        cancelamentoClienteR:    l.cancelamentoClienteR    ?? null,
+        cancelamentoLojaR:       l.cancelamentoLojaR       ?? null,
         cancelamentoEntregadorR: l.cancelamentoEntregadorR ?? null,
 
-        slaPreparo: l.slaPreparo ?? null,
-        slaEntrega: l.slaEntrega ?? null,
-        nsu: l.nsu ?? null,
+        slaPreparo:  l.slaPreparo  ?? null,
+        slaEntrega:  l.slaEntrega  ?? null,
+        nsu:         l.nsu         ?? null,
         rupturaItem: l.rupturaItem ?? null,
         tempoOnline: l.tempoOnline ?? null,
 
-        perdaVendaTotal: perdaTotal > 0 ? perdaTotal : (l.perdaVendaTotal ?? null),
+        perdaVendaTotal:   l.perdaVendaTotal ?? (perdaTotal > 0 ? perdaTotal : null),
         perdaCancelamento: l.perdaCancelamento ?? null,
-        perdaRuptura: l.perdaRuptura ?? null,
-        perdaTempoOnline: l.perdaTempoOnline ?? null,
+        perdaRuptura:      l.perdaRuptura      ?? null,
+        perdaTempoOnline:  l.perdaTempoOnline  ?? null,
 
         scoreSaude: 0,
         statusLoja: 'Crítica',
