@@ -129,7 +129,7 @@ async function main() {
       perdaCancelamento:  parseBRL(col(row, indH, 'cancelamentoPerdaVenda', 25)),
       rupturaItem:        parsePct(col(row, indH, 'rupturaItemMeta5', 26)),
       perdaRuptura:       parseBRL(col(row, indH, 'rupturaPerdaVenda', 28)),
-      tempoOnline: (() => { const v = parsePct(col(row, indH, 'tempoOnMeta95', 29)); return v !== null ? 100 - v : null })(),
+      tempoOnline: parsePct(col(row, indH, 'tempoOnMeta95', 29)),
       perdaTempoOnline: parseBRL(col(row, indH, 'tempoOnPerdaVenda', 31)),
     })
   }
