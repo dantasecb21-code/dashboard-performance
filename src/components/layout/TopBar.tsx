@@ -11,7 +11,7 @@ interface Props {
 
 export default function TopBar({ onMenuToggle }: Props) {
   const [showFilters, setShowFilters] = useState(false)
-  const { updatedAt, refresh, loading } = useData()
+  const { updatedAt, refresh, refreshing } = useData()
   const { filtros, lojasFiltered, resetFiltros } = useFilters()
 
   const activeCount = Object.values(filtros).filter(v => v !== '').length
@@ -90,14 +90,14 @@ export default function TopBar({ onMenuToggle }: Props) {
           {/* Botão refresh */}
           <button
             onClick={refresh}
-            disabled={loading}
+            disabled={refreshing}
             className="flex items-center gap-1.5 text-[11px] px-2.5 sm:px-3 py-1.5 rounded-lg font-semibold cursor-pointer transition-all duration-200 disabled:opacity-50
               bg-[hsl(177_100%_41%/0.12)] border border-[hsl(177_100%_41%/0.3)] text-[hsl(177_100%_60%)]
               hover:bg-[hsl(177_100%_41%/0.2)] hover:border-[hsl(177_100%_41%/0.5)]
               shadow-[0_0_14px_-4px_hsl(177_100%_41%/0.25)]"
           >
-            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">Atualizar</span>
+            <RefreshCw className={`w-3 h-3 ${refreshing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{refreshing ? 'Atualizando...' : 'Atualizar'}</span>
           </button>
         </div>
       </div>
