@@ -1,3 +1,5 @@
+'use client'
+import { useState, useRef, useCallback } from 'react'
 import clsx from 'clsx'
 import { TrendingUp, TrendingDown, Minus, Info, type LucideIcon } from 'lucide-react'
 
@@ -52,16 +54,55 @@ function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
   return size === 'sm' ? 'text-lg' : 'text-xl'
 }
 
+function Tooltip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false)
+  const [alignRight, setAlignRight] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const show = useCallback(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      // 232 = tooltip width (w-58 ~232px) + small buffer
+      setAlignRight(rect.left + 232 > window.innerWidth - 8)
+    }
+    setOpen(true)
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className="relative flex-shrink-0"
+      onMouseEnter={show}
+      onMouseLeave={() => setOpen(false)}
+      onTouchStart={e => { e.stopPropagation(); open ? setOpen(false) : show() }}
+    >
+      <Info className="w-3 h-3 text-[hsl(218_18%_36%)] hover:text-[hsl(218_18%_55%)] cursor-help transition-colors" />
+
+      {open && (
+        <div className={clsx(
+          'absolute bottom-full mb-2 z-[9999] w-56 rounded-xl pointer-events-none',
+          'bg-[hsl(220_52%_9%)] border border-[hsl(220_40%_18%)]',
+          'text-foreground text-[11px] leading-relaxed p-3 shadow-2xl',
+          'whitespace-normal font-normal normal-case tracking-normal',
+          alignRight ? 'right-0' : 'left-0',
+        )}>
+          {text}
+          <span className={clsx(
+            'absolute top-full border-4 border-transparent border-t-[hsl(220_52%_9%)] block w-0 h-0',
+            alignRight ? 'right-3' : 'left-3',
+          )} />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function KpiCard({ title, value, subtitle, delta, icon: Icon, color = 'default', size = 'md', tooltip }: Props) {
   const isEmpty = value === null || value === undefined || value === ''
   const isPositiveDelta = delta !== null && delta !== undefined && delta > 0
   const isNegativeDelta = delta !== null && delta !== undefined && delta < 0
   const DeltaIcon = isPositiveDelta ? TrendingUp : isNegativeDelta ? TrendingDown : Minus
   const valueFontSize = adaptiveFontSize(value, size)
-  const iconClass = ICON_VARIANT[color]
-  const glowClass = GLOW_COLOR[color]
-  const hoverShadow = HOVER_SHADOW[color]
-  const valueColor = VALUE_COLOR[color]
 
   return (
     <div className={clsx(
@@ -69,7 +110,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       'p-3 sm:p-4 lg:p-5',
       'transition-all duration-400',
       'hover:-translate-y-0.5 hover:border-[hsl(177_100%_41%/0.3)]',
-      hoverShadow,
+      HOVER_SHADOW[color],
     )}>
       {/* Sheen no hover */}
       <div className="pointer-events-none absolute -inset-px rounded-[0.875rem]
@@ -79,7 +120,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       {/* Corner glow */}
       <div className={clsx(
         'pointer-events-none absolute -top-8 -right-8 w-28 h-28 rounded-full blur-3xl opacity-40',
-        glowClass
+        GLOW_COLOR[color],
       )} />
 
       {/* Cabeçalho */}
@@ -88,24 +129,13 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
           <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-[hsl(218_18%_46%)] leading-tight line-clamp-2">
             {title}
           </p>
-          {tooltip && (
-            <div className="relative group/tip flex-shrink-0">
-              <Info className="w-3 h-3 text-[hsl(218_18%_36%)] hover:text-[hsl(218_18%_55%)] cursor-help transition-colors" />
-              <div className="absolute bottom-full right-0 sm:right-auto sm:left-0 mb-2 z-50 w-40 sm:w-56 rounded-xl
-                bg-[hsl(220_52%_9%)] border border-[hsl(220_40%_18%)] text-foreground text-[11px] leading-relaxed p-3 shadow-2xl
-                opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150
-                whitespace-normal font-normal normal-case tracking-normal">
-                {tooltip}
-                <span className="absolute top-full right-3 sm:right-auto sm:left-3 border-4 border-transparent border-t-[hsl(220_52%_9%)] block w-0 h-0" />
-              </div>
-            </div>
-          )}
+          {tooltip && <Tooltip text={tooltip} />}
         </div>
         {Icon && (
           <div className={clsx(
             'relative p-1.5 sm:p-2 rounded-xl border border-white/[0.08] backdrop-blur-md shrink-0',
             'shadow-[inset_0_1px_0_hsl(0_0%_100%/0.08)]',
-            iconClass
+            ICON_VARIANT[color],
           )}>
             <Icon className="w-3.5 h-3.5" strokeWidth={2} />
           </div>
@@ -117,7 +147,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
         'relative font-heading font-extrabold leading-[1.05] tracking-tight tabular-nums mt-2.5 min-w-0 break-words',
         color === 'default' ? 'stat-glow' : '',
         valueFontSize,
-        valueColor,
+        VALUE_COLOR[color],
       )}>
         {isEmpty ? <span className="text-[hsl(218_18%_30%)] text-xl">—</span> : value}
       </div>
