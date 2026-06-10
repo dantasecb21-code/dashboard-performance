@@ -91,12 +91,12 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
           {tooltip && (
             <div className="relative group/tip flex-shrink-0">
               <Info className="w-3 h-3 text-[hsl(218_18%_36%)] hover:text-[hsl(218_18%_55%)] cursor-help transition-colors" />
-              <div className="absolute bottom-full left-0 mb-2 z-50 w-56 rounded-xl
+              <div className="absolute bottom-full right-0 sm:right-auto sm:left-0 mb-2 z-50 w-40 sm:w-56 rounded-xl
                 bg-[hsl(220_52%_9%)] border border-[hsl(220_40%_18%)] text-foreground text-[11px] leading-relaxed p-3 shadow-2xl
                 opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150
                 whitespace-normal font-normal normal-case tracking-normal">
                 {tooltip}
-                <span className="absolute top-full left-3 border-4 border-transparent border-t-[hsl(220_52%_9%)] block w-0 h-0" />
+                <span className="absolute top-full right-3 sm:right-auto sm:left-3 border-4 border-transparent border-t-[hsl(220_52%_9%)] block w-0 h-0" />
               </div>
             </div>
           )}

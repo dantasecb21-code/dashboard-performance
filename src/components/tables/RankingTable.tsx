@@ -21,42 +21,44 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
     .slice(0, max)
 
   if (!sorted.length) return (
-    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm overflow-hidden">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
       <p className="text-sm text-muted-foreground">Sem dados suficientes.</p>
     </div>
   )
 
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm overflow-hidden">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
-      <table className="w-full text-xs">
-        <thead>
-          <tr className="text-muted-foreground border-b border-border">
-            <th className="text-left pb-2 w-6">#</th>
-            <th className="text-left pb-2">Loja</th>
-            <th className="text-left pb-2 hidden sm:table-cell">Cidade/UF</th>
-            <th className="text-left pb-2 hidden md:table-cell">Gerente</th>
-            <th className="text-right pb-2">Valor</th>
-            <th className="text-right pb-2 w-20">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((l, i) => (
-            <tr key={l.id} className="border-b border-border hover:bg-white/[0.04] transition">
-              <td className="py-2 font-bold text-muted-foreground">{i + 1}</td>
-              <td className="py-2">
-                <p className="font-medium text-foreground/80">{l.nomeLoja}</p>
-                {l.projetoOlimpo && <span className="text-[9px] text-blue-500 font-semibold">OLIMPO</span>}
-              </td>
-              <td className="py-2 text-muted-foreground hidden sm:table-cell">{l.cidade}/{l.uf}</td>
-              <td className="py-2 text-muted-foreground hidden md:table-cell">{l.gerenteRegional}</td>
-              <td className="py-2 text-right font-semibold text-foreground">{formatter(l[valueKey] as number)}</td>
-              <td className="py-2 text-right"><StatusBadge status={l.statusLoja} size="sm" /></td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs min-w-[240px]">
+          <thead>
+            <tr className="text-muted-foreground border-b border-border">
+              <th className="text-left pb-2 w-5">#</th>
+              <th className="text-left pb-2">Loja</th>
+              <th className="text-left pb-2 hidden lg:table-cell">Cidade/UF</th>
+              <th className="text-left pb-2 hidden 2xl:table-cell">Gerente</th>
+              <th className="text-right pb-2">Valor</th>
+              <th className="text-right pb-2 w-16">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sorted.map((l, i) => (
+              <tr key={l.id} className="border-b border-border hover:bg-white/[0.04] transition">
+                <td className="py-2 font-bold text-muted-foreground">{i + 1}</td>
+                <td className="py-2 max-w-[120px]">
+                  <p className="font-medium text-foreground/80 truncate">{l.nomeLoja}</p>
+                  {l.projetoOlimpo && <span className="text-[9px] text-blue-500 font-semibold">OLIMPO</span>}
+                </td>
+                <td className="py-2 text-muted-foreground hidden lg:table-cell whitespace-nowrap">{l.cidade}/{l.uf}</td>
+                <td className="py-2 text-muted-foreground hidden 2xl:table-cell truncate max-w-[120px]">{l.gerenteRegional}</td>
+                <td className="py-2 text-right font-semibold text-foreground whitespace-nowrap">{formatter(l[valueKey] as number)}</td>
+                <td className="py-2 text-right"><StatusBadge status={l.statusLoja} size="sm" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
