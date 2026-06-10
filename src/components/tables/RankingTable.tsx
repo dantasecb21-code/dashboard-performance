@@ -30,20 +30,20 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
   return (
     <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
-      <table className="w-full text-xs table-fixed">
+      <table className="w-full text-xs">
         <thead>
           <tr className="text-muted-foreground border-b border-border">
-            <th className="text-left pb-2 w-6">#</th>
+            <th className="text-left pb-2 w-5">#</th>
             <th className="text-left pb-2">Loja</th>
-            <th className="text-right pb-2 w-14">Valor</th>
-            <th className="text-right pb-2 w-16">Status</th>
+            <th className="text-right pb-2 w-24 whitespace-nowrap">Valor</th>
+            <th className="text-right pb-2 w-20 whitespace-nowrap">Status</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((l, i) => (
             <tr key={l.id} className="border-b border-border hover:bg-white/[0.04] transition">
               <td className="py-2 font-bold text-muted-foreground align-top">{i + 1}</td>
-              <td className="py-2 pr-2">
+              <td className="py-2 pr-2 min-w-0 max-w-0">
                 <p className="font-medium text-foreground/80 truncate leading-tight">{l.nomeLoja}</p>
                 <p className="text-[10px] text-muted-foreground truncate mt-0.5">
                   {l.cidade}/{l.uf}
