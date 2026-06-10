@@ -97,7 +97,7 @@ export default function IndicadoresPage() {
           formatter={v => `${v} lojas`}
         />
 
-        <div className="kpi-grid grid grid-cols-2 gap-3">
+        <div className="kpi-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
           <RankingTable lojas={lojasFiltered} valueKey="cancelamentoTotal"
             formatter={v => fmtPct(v)} title="Pior Cancelamento" max={5} descending />
           <RankingTable lojas={lojasFiltered} valueKey="rupturaItem"

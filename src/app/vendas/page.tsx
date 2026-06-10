@@ -79,7 +79,7 @@ export default function VendasPage() {
   if (error) return <ErrorState message={error} onRetry={refresh} />
 
   const TAB_CLS = (v: Visao) =>
-    `px-4 py-2 text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white text-muted-foreground border border-white/10 hover:bg-white/[0.04]'}`
+    `px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-medium transition cursor-pointer ${visao === v ? 'bg-brand-600 text-white' : 'bg-white/[0.04] text-muted-foreground border border-white/10 hover:bg-white/[0.06]'}`
 
   return (
     <div className="space-y-6">

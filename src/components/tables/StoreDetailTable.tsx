@@ -149,12 +149,12 @@ export default function StoreDetailTable({ lojas }: Props) {
         />
 
         {/* Chips de mês */}
-        <div className="flex items-center gap-1">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mr-0.5 hidden sm:block">Mês:</span>
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-none flex-shrink-0">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mr-0.5 hidden sm:block flex-shrink-0">Mês:</span>
           {MESES.map(m => (
             <button key={m.id} onClick={() => selectMes(mesSelecionado === m.id ? null : m.id)}
               className={clsx(
-                'text-[11px] font-semibold px-2 py-1 rounded-md transition-all cursor-pointer',
+                'text-[11px] font-semibold px-2 py-1 rounded-md transition-all cursor-pointer flex-shrink-0',
                 mesSelecionado === m.id
                   ? 'bg-brand-600 text-white shadow-sm'
                   : 'text-muted-foreground hover:bg-white/[0.08] hover:text-foreground',

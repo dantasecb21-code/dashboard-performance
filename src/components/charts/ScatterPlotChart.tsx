@@ -1,5 +1,6 @@
 'use client'
 import { CHART_THEME } from '@/lib/chartTheme'
+import { useIsMobile } from '@/lib/useIsMobile'
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { fmtBRLCompact, fmtBRL } from '@/lib/formatters'
 import type { Loja } from '@/types/dashboard'
@@ -13,6 +14,7 @@ const STATUS_COLOR: Record<string, string> = {
 interface Props { lojas: Loja[]; title?: string }
 
 export default function ScatterPlotChart({ lojas, title }: Props) {
+  const isMobile = useIsMobile()
   const data = lojas
     .filter(l => l.venda !== null && l.perdaVendaTotal !== null)
     .map(l => ({
@@ -25,11 +27,11 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
   return (
     <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
       {title && <h3 className="text-sm font-semibold text-foreground/80 mb-4">{title}</h3>}
-      <ResponsiveContainer width="100%" height={300}>
-        <ScatterChart margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+        <ScatterChart margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
-          <XAxis type="number" dataKey="x" name="Venda" tickFormatter={fmtBRLCompact} tick={{ fontSize: 10, fill: CHART_THEME.tick }} />
-          <YAxis type="number" dataKey="y" name="Perda" tickFormatter={fmtBRLCompact} tick={{ fontSize: 10, fill: CHART_THEME.tick }} />
+          <XAxis type="number" dataKey="x" name="Venda" tickFormatter={fmtBRLCompact} tick={{ fontSize: isMobile ? 9 : 10, fill: CHART_THEME.tick }} width={isMobile ? 44 : 60} />
+          <YAxis type="number" dataKey="y" name="Perda" tickFormatter={fmtBRLCompact} tick={{ fontSize: isMobile ? 9 : 10, fill: CHART_THEME.tick }} width={isMobile ? 44 : 56} />
           <Tooltip
             content={({ payload }) => {
               if (!payload?.length) return null
@@ -50,7 +52,7 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
-      <div className="flex gap-4 justify-center mt-2">
+      <div className="flex gap-4 justify-center mt-2 flex-wrap">
         {Object.entries(STATUS_COLOR).map(([s, c]) => (
           <span key={s} className="flex items-center gap-1 text-xs text-muted-foreground">
             <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: c }} />{s}
