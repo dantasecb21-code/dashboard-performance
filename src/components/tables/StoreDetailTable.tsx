@@ -135,17 +135,17 @@ export default function StoreDetailTable({ lojas }: Props) {
   }
 
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] shadow-sm">
+    <div className="glass-card">
 
       {/* ── Cabeçalho ─────────────────────────────────────────────────────── */}
-      <div className="px-4 py-3 border-b border-white/[0.06] flex flex-wrap items-center gap-2">
+      <div className="px-4 py-3 border-b border-slate-200 dark:border-[hsl(215_28%_15%)] flex flex-wrap items-center gap-2">
         {/* Search */}
         <input
           type="text"
           placeholder="Buscar loja ou código..."
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(0) }}
-          className="text-sm border border-border rounded-lg px-3 py-1.5 bg-white/[0.06] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 w-44 sm:w-52"
+          className="text-sm border border-slate-200 dark:border-[hsl(215_28%_17%)] rounded-lg px-3 py-1.5 bg-white dark:bg-[hsl(217_25%_11%)] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 w-44 sm:w-52 transition-colors"
         />
 
         {/* Chips de mês */}
@@ -156,8 +156,8 @@ export default function StoreDetailTable({ lojas }: Props) {
               className={clsx(
                 'text-[11px] font-semibold px-2 py-1 rounded-md transition-all cursor-pointer flex-shrink-0',
                 mesSelecionado === m.id
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'text-muted-foreground hover:bg-white/[0.08] hover:text-foreground',
+                  ? 'bg-cyan-600 text-white shadow-sm'
+                  : 'text-muted-foreground hover:bg-slate-100 dark:hover:bg-[hsl(217_25%_14%)] hover:text-foreground',
               )}>
               {m.label}
             </button>
@@ -172,13 +172,13 @@ export default function StoreDetailTable({ lojas }: Props) {
             className={clsx(
               'flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border transition cursor-pointer',
               showFilters
-                ? 'border-brand-500/40 text-brand-400 bg-brand-500/10'
-                : 'border-border text-muted-foreground hover:bg-white/[0.04]',
+                ? 'border-cyan-300 dark:border-cyan-800 text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20'
+                : 'border-slate-200 dark:border-[hsl(215_28%_17%)] text-muted-foreground hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)]',
             )}>
             <SlidersHorizontal className="w-3 h-3" />
             <span className="hidden sm:inline">Filtros</span>
             {activeGlobalCount > 0 && (
-              <span className="bg-brand-600 text-white rounded-full text-[9px] font-bold w-4 h-4 flex items-center justify-center">
+              <span className="bg-cyan-600 text-white rounded-full text-[9px] font-bold w-4 h-4 flex items-center justify-center">
                 {activeGlobalCount}
               </span>
             )}
@@ -193,7 +193,7 @@ export default function StoreDetailTable({ lojas }: Props) {
           )}
 
           <button onClick={exportCSV}
-            className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-white/[0.04] transition cursor-pointer">
+            className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[hsl(215_28%_17%)] text-muted-foreground hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition cursor-pointer">
             <Download className="w-3 h-3" />
             <span className="hidden sm:inline">CSV</span>
           </button>
@@ -202,7 +202,7 @@ export default function StoreDetailTable({ lojas }: Props) {
 
       {/* ── Painel de filtros ─────────────────────────────────────────────── */}
       {showFilters && (
-        <div className="px-4 py-3 border-b border-white/[0.06] bg-white/[0.02] flex flex-wrap gap-2">
+        <div className="px-4 py-3 border-b border-slate-200 dark:border-[hsl(215_28%_15%)] bg-slate-50/60 dark:bg-[hsl(217_28%_8%/0.5)] flex flex-wrap gap-2">
           <GlassSelect
             label="Dir. Divisional"
             value={filtros.diretorDivisional}
@@ -300,7 +300,7 @@ export default function StoreDetailTable({ lojas }: Props) {
             {pageData.map(l => {
               const fatMes = mesFatKey ? (l[mesFatKey] as number | null) : null
               return (
-                <tr key={l.id} className="border-b border-border hover:bg-white/[0.04]">
+                <tr key={l.id} className="border-b border-border hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition-colors">
                   <td className="px-3 py-2 font-mono text-muted-foreground hidden sm:table-cell">{l.codigoLoja}</td>
                   <td className="px-3 py-2">
                     <p className="font-medium text-foreground/80 whitespace-nowrap">{l.nomeLoja}</p>
@@ -316,7 +316,7 @@ export default function StoreDetailTable({ lojas }: Props) {
                       className={clsx(
                         'px-3 py-2 text-right hidden xl:table-cell',
                         mesFatKey === m.key
-                          ? 'text-brand-400 font-bold bg-brand-500/5'
+                          ? 'text-cyan-600 dark:text-cyan-400 font-bold bg-cyan-50 dark:bg-cyan-900/10'
                           : 'text-foreground/80',
                       )}>
                       {fmtBRL(l[m.key] as number | null)}
@@ -325,7 +325,7 @@ export default function StoreDetailTable({ lojas }: Props) {
                   <td className="px-3 py-2 text-right text-foreground/80 hidden lg:table-cell">{fmtBRL(l.meta)}</td>
                   <td className="px-3 py-2 text-right font-semibold text-foreground">
                     {mesSelecionado && fatMes !== null
-                      ? <span className="text-brand-400">{fmtBRL(fatMes)}</span>
+                      ? <span className="text-cyan-600 dark:text-cyan-400">{fmtBRL(fatMes)}</span>
                       : fmtBRL(l.venda)}
                   </td>
                   <td className={clsx('px-3 py-2 text-right font-semibold hidden sm:table-cell',
@@ -354,15 +354,15 @@ export default function StoreDetailTable({ lojas }: Props) {
 
       {/* ── Paginação ─────────────────────────────────────────────────────── */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.06]">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 dark:border-[hsl(215_28%_15%)]">
           <span className="text-xs text-muted-foreground">Pág. {page + 1}/{totalPages} · {sorted.length} lojas</span>
           <div className="flex gap-2">
             <button disabled={page === 0} onClick={() => setPage(p => p - 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-border disabled:opacity-40 hover:bg-white/[0.04] cursor-pointer">
+              className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[hsl(215_28%_17%)] text-muted-foreground disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition-colors cursor-pointer">
               ← Ant.
             </button>
             <button disabled={page === totalPages - 1} onClick={() => setPage(p => p + 1)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-border disabled:opacity-40 hover:bg-white/[0.04] cursor-pointer">
+              className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[hsl(215_28%_17%)] text-muted-foreground disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition-colors cursor-pointer">
               Próx. →
             </button>
           </div>

@@ -21,14 +21,14 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
     .slice(0, max)
 
   if (!sorted.length) return (
-    <div className="glass-card rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div className="glass-card p-4">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
       <p className="text-sm text-muted-foreground">Sem dados suficientes.</p>
     </div>
   )
 
   return (
-    <div className="glass-card rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div className="glass-card p-4">
       <h3 className="text-sm font-semibold text-foreground/80 mb-3">{title}</h3>
       <table className="w-full text-xs">
         <thead>
@@ -41,7 +41,7 @@ export default function RankingTable({ lojas, valueKey, formatter, title, descen
         </thead>
         <tbody>
           {sorted.map((l, i) => (
-            <tr key={l.id} className="border-b border-border hover:bg-slate-50 transition">
+            <tr key={l.id} className="border-b border-border hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition">
               <td className="py-2 font-bold text-muted-foreground align-top">{i + 1}</td>
               <td className="py-2 pr-2 min-w-0 max-w-0">
                 <p className="font-medium text-foreground/80 truncate leading-tight">{l.nomeLoja}</p>

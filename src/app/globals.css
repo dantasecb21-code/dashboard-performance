@@ -27,14 +27,14 @@
   --sidebar-width: 220px;
 }
 
-/* ── Tema: Dark Mode ─────────────────────────────────────────────────── */
+/* ── Tema: Dark Mode — "Deep Ocean" ─────────────────────────────────── */
 .dark {
-  --background:       222 47% 8%;    /* #0D1117 */
-  --card:             222 47% 11%;   /* #111827 */
-  --card-foreground:  210 22% 94%;   /* #EEF2F7 */
-  --foreground:       210 22% 94%;   /* #EEF2F7 */
-  --muted-foreground: 215 16% 60%;   /* #8B96A7 */
-  --border:           214 32% 20%;   /* #283347 */
+  --background:       217 28% 7%;    /* #090E18 — fundo profundo, quase azul-noite */
+  --card:             217 25% 10%;   /* #0E1520 — card levemente elevado */
+  --card-foreground:  210 35% 96%;   /* #EEF2F8 — branco frio, não puro */
+  --foreground:       210 35% 96%;   /* #EEF2F8 */
+  --muted-foreground: 215 18% 58%;   /* #8896AA — cinza-azulado legível */
+  --border:           215 28% 17%;   /* #1D2A3D — borda visível mas discreta */
 }
 
 body {
@@ -102,52 +102,67 @@ body {
   );
 }
 
-/* ── Dark mode overrides para classes CSS custom ─────────────────────── */
+/* ── Dark mode overrides — "Deep Ocean" ─────────────────────────────── */
 .dark .glass-card {
-  background: hsl(222 47% 11%);
-  border-color: hsl(214 32% 20%);
+  background: linear-gradient(
+    160deg,
+    hsl(217 25% 11%) 0%,
+    hsl(217 25% 10%) 100%
+  );
+  border-color: hsl(215 28% 17%);
   box-shadow:
-    0 1px 3px hsl(222 47% 4% / 0.3),
-    0 4px 12px hsl(222 47% 4% / 0.2);
+    0 1px 0 hsl(0 0% 100% / 0.04) inset,
+    0 1px 3px hsl(217 40% 3% / 0.5),
+    0 6px 20px hsl(217 40% 3% / 0.3);
+}
+
+.dark .glass-card:hover {
+  border-color: hsl(215 28% 22%);
+  box-shadow:
+    0 1px 0 hsl(0 0% 100% / 0.06) inset,
+    0 2px 6px hsl(217 40% 3% / 0.5),
+    0 10px 28px hsl(217 40% 3% / 0.35);
 }
 
 .dark .glass-card:hover::before {
   background: linear-gradient(
     90deg,
     transparent,
-    hsl(192 91% 36% / 0.35),
+    hsl(192 91% 45% / 0.4),
     transparent
   );
 }
 
 .dark .bg-grid {
   background-image:
-    linear-gradient(hsl(214 32% 20% / 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(214 32% 20% / 0.5) 1px, transparent 1px);
+    linear-gradient(hsl(215 28% 17% / 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(215 28% 17% / 0.6) 1px, transparent 1px);
 }
 
 .dark .bg-radial-glow {
   background:
-    radial-gradient(ellipse 80% 50% at 10% 0%,
-      hsl(192 91% 36% / 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 100%,
-      hsl(217 91% 60% / 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 90% 55% at 5% 0%,
+      hsl(192 91% 36% / 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 95% 100%,
+      hsl(217 91% 60% / 0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 50% 50%,
+      hsl(192 91% 36% / 0.02) 0%, transparent 70%);
 }
 
 .dark .section-label {
-  color: hsl(215 16% 55%);
+  color: hsl(215 18% 50%);
 }
 
 .dark .section-label::after {
-  background: linear-gradient(90deg, hsl(214 32% 22%), transparent);
+  background: linear-gradient(90deg, hsl(215 28% 20%), transparent);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: hsl(214 32% 25%);
+  background: hsl(215 25% 22%);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: hsl(192 91% 36% / 0.5);
+  background: hsl(192 91% 40% / 0.55);
 }
 
 /* ── Stat value — sem glow, texto escuro nítido ─────────────────────── */

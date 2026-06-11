@@ -7,7 +7,7 @@ const COR: Record<string, string> = {
   verde:    'bg-success/15 text-success',
   amarelo:  'bg-warning/15 text-warning',
   vermelho: 'bg-destructive/15 text-destructive',
-  neutro:   'bg-white/[0.06] text-muted-foreground',
+  neutro:   'bg-slate-100 dark:bg-[hsl(217_25%_14%)] text-muted-foreground',
 }
 
 function Cell({ valor, indicador, className }: { valor: number | null; indicador: Parameters<typeof statusIndicador>[0]; className?: string }) {
@@ -24,7 +24,7 @@ interface Props { lojas: Loja[] }
 export default function OperationalHeatmap({ lojas }: Props) {
   if (!lojas.length) return null
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] shadow-sm overflow-auto">
+    <div className="glass-card overflow-auto">
       <table className="w-full text-xs min-w-[480px]">
         <thead>
           <tr className="border-b border-border text-muted-foreground">
@@ -41,7 +41,7 @@ export default function OperationalHeatmap({ lojas }: Props) {
         </thead>
         <tbody>
           {lojas.map(l => (
-            <tr key={l.id} className="border-b border-border hover:bg-white/[0.04]">
+            <tr key={l.id} className="border-b border-border hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition-colors">
               <td className="px-3 sm:px-4 py-2 max-w-[160px] sm:max-w-[220px]">
                 <p className="font-medium text-foreground/80 leading-tight truncate">{l.nomeLoja}</p>
                 <p className="text-[10px] text-muted-foreground md:hidden truncate">{l.cidade}/{l.uf}</p>

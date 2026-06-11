@@ -27,7 +27,7 @@ export default function TopBar({ onMenuToggle }: Props) {
   return (
     <div className="sticky top-0 z-20">
       {/* Barra principal */}
-      <div className="relative border-b border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white/90 dark:bg-[hsl(222_47%_8%/0.95)] backdrop-blur-xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 shadow-sm dark:shadow-[0_1px_0_hsl(214_32%_20%)]">
+      <div className="relative border-b border-slate-200 dark:border-[hsl(215_28%_15%)] bg-white/90 dark:bg-[hsl(217_28%_7%/0.96)] backdrop-blur-xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 shadow-sm dark:shadow-none">
 
         {/* Esquerda */}
         <div className="relative flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
@@ -82,7 +82,7 @@ export default function TopBar({ onMenuToggle }: Props) {
         {/* Direita */}
         <div className="relative flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
           {/* Timestamp */}
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[hsl(222_47%_13%)] border border-slate-200 dark:border-[hsl(214_32%_20%)] rounded-lg px-2.5 py-1.5">
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-[hsl(215_18%_58%)] bg-slate-50 dark:bg-[hsl(217_25%_11%)] border border-slate-200 dark:border-[hsl(215_28%_17%)] rounded-lg px-2.5 py-1.5">
             <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
             <span className="font-medium">{fmtDate(updatedAt)}</span>
           </div>
@@ -91,12 +91,15 @@ export default function TopBar({ onMenuToggle }: Props) {
           <button
             onClick={toggle}
             title={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-            className="p-1.5 rounded-lg border border-slate-200 dark:border-[hsl(214_32%_20%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] transition-colors cursor-pointer"
+            className="relative p-1.5 rounded-lg border border-slate-200 dark:border-[hsl(215_28%_17%)] text-slate-400 dark:text-[hsl(215_18%_58%)] hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-[hsl(215_28%_24%)] hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] transition-all duration-200 cursor-pointer overflow-hidden group"
+            aria-label={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
           >
-            {theme === 'dark'
-              ? <Sun className="w-3.5 h-3.5" />
-              : <Moon className="w-3.5 h-3.5" />
-            }
+            <span className={`block transition-all duration-300 ${theme === 'dark' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'}`}>
+              <Sun className="w-3.5 h-3.5" />
+            </span>
+            <span className={`block transition-all duration-300 ${theme === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'}`}>
+              <Moon className="w-3.5 h-3.5" />
+            </span>
           </button>
 
           {/* Botão refresh */}
@@ -118,7 +121,7 @@ export default function TopBar({ onMenuToggle }: Props) {
       <div className={`transition-all duration-200 ease-in-out ${
         showFilters ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
       }`}>
-        <div className="border-b border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white/95 dark:bg-[hsl(222_47%_9%/0.97)] backdrop-blur-xl px-4 sm:px-6 py-4">
+        <div className="border-b border-slate-200 dark:border-[hsl(215_28%_15%)] bg-white/95 dark:bg-[hsl(217_28%_8%/0.98)] backdrop-blur-xl px-4 sm:px-6 py-4">
           <GlobalFilters />
         </div>
       </div>

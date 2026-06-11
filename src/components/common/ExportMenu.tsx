@@ -104,7 +104,7 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
             'flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition cursor-pointer font-medium',
             open
               ? 'border-cyan-300 text-cyan-700 bg-cyan-50 dark:border-cyan-800 dark:text-cyan-400 dark:bg-cyan-900/20'
-              : 'border-slate-200 dark:border-[hsl(214_32%_20%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300',
+              : 'border-slate-200 dark:border-[hsl(215_28%_17%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300',
           )}>
           <Download className="w-3.5 h-3.5" />
           <span>Exportar</span>
@@ -112,28 +112,28 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
         </button>
 
         {open && (
-          <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white dark:bg-[hsl(222_47%_11%)] shadow-[0_8px_24px_-6px_rgba(15,23,42,0.12)] dark:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] overflow-hidden z-50">
+          <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-slate-200 dark:border-[hsl(215_28%_17%)] bg-white dark:bg-[hsl(217_25%_11%)] shadow-[0_8px_24px_-6px_rgba(15,23,42,0.12)] dark:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] overflow-hidden z-50">
             <div className="p-1">
               <button
                 disabled={!!loading}
                 onClick={() => doExport('xlsx')}
-                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer disabled:opacity-50">
+                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer disabled:opacity-50">
                 <FileSpreadsheet className="w-3.5 h-3.5 text-green-500" />
                 {loading === 'xlsx' ? 'Gerando…' : 'Excel (.xlsx)'}
               </button>
               <button
                 disabled={!!loading}
                 onClick={() => doExport('pdf')}
-                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer disabled:opacity-50">
+                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer disabled:opacity-50">
                 <FileText className="w-3.5 h-3.5 text-red-500" />
                 {loading === 'pdf' ? 'Gerando…' : 'PDF (.pdf)'}
               </button>
 
-              <div className="border-t border-slate-100 dark:border-[hsl(214_32%_18%)] my-1" />
+              <div className="border-t border-slate-100 dark:border-[hsl(215_28%_15%)] my-1" />
 
               <button
                 onClick={() => { setOpen(false); setModal(true) }}
-                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer">
+                className="flex items-center gap-2.5 w-full text-xs rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer">
                 <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 Personalizado…
               </button>
@@ -148,21 +148,21 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setModal(false)} />
 
-          <div className="relative w-full max-w-lg max-h-[85vh] flex flex-col rounded-2xl border border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white dark:bg-[hsl(222_47%_10%)] shadow-[0_24px_48px_-12px_rgba(15,23,42,0.18)] dark:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] overflow-hidden">
+          <div className="relative w-full max-w-lg max-h-[85vh] flex flex-col rounded-2xl border border-slate-200 dark:border-[hsl(215_28%_17%)] bg-white dark:bg-[hsl(217_25%_10%)] shadow-[0_24px_48px_-12px_rgba(15,23,42,0.18)] dark:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-[hsl(214_32%_18%)]">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-[hsl(215_28%_15%)]">
               <div>
                 <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Exportação Personalizada</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{selected.size} de {columns.length} colunas selecionadas</p>
               </div>
               <button onClick={() => setModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-[hsl(222_47%_14%)] hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer transition-colors">
+                className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-[hsl(217_25%_13%)] hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Formato */}
-            <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-[hsl(214_32%_18%)]">
+            <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-[hsl(215_28%_15%)]">
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Formato</p>
               <div className="flex gap-2">
                 {(['xlsx', 'pdf'] as const).map(f => (
@@ -171,7 +171,7 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
                       'flex items-center gap-2 text-xs px-3 py-2 rounded-lg border transition cursor-pointer flex-1',
                       modalFmt === f
                         ? 'border-cyan-300 bg-cyan-50 text-cyan-700 font-semibold dark:border-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400'
-                        : 'border-slate-200 dark:border-[hsl(214_32%_20%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] hover:border-slate-300',
+                        : 'border-slate-200 dark:border-[hsl(215_28%_17%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] hover:border-slate-300',
                     )}>
                     {f === 'xlsx'
                       ? <FileSpreadsheet className="w-4 h-4 text-green-500" />
@@ -200,12 +200,12 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
                     <div className="grid grid-cols-2 gap-1">
                       {cols.map(c => (
                         <label key={c.key}
-                          className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] cursor-pointer group">
+                          className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)] cursor-pointer group">
                           <div className={clsx(
                             'w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 transition',
                             selected.has(c.key)
                               ? 'bg-cyan-600 border-cyan-600'
-                              : 'border-slate-300 dark:border-[hsl(214_32%_28%)] group-hover:border-slate-400 dark:group-hover:border-[hsl(214_32%_38%)]',
+                              : 'border-slate-300 dark:border-[hsl(215_28%_22%)] group-hover:border-slate-400 dark:group-hover:border-[hsl(214_32%_38%)]',
                           )}>
                             {selected.has(c.key) && <Check className="w-2.5 h-2.5 text-white" />}
                           </div>
@@ -224,7 +224,7 @@ export default function ExportMenu({ title, subtitle, columns, rows, filename = 
             </div>
 
             {/* Footer */}
-            <div className="px-5 py-3 border-t border-slate-100 dark:border-[hsl(214_32%_18%)] flex items-center justify-between bg-slate-50/80 dark:bg-[hsl(222_47%_8%)]">
+            <div className="px-5 py-3 border-t border-slate-100 dark:border-[hsl(215_28%_15%)] flex items-center justify-between bg-slate-50/80 dark:bg-[hsl(217_28%_8%)]">
               <div className="flex gap-2">
                 <button onClick={() => setSelected(new Set(columns.map(c => c.key)))}
                   className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 cursor-pointer font-medium">

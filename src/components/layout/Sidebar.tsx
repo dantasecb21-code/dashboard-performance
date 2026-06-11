@@ -44,8 +44,8 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
       <aside className={clsx(
         'group flex flex-col overflow-hidden',
         'fixed top-0 left-0 h-full z-30',
-        'bg-white dark:bg-[hsl(222_47%_9%)] border-r border-slate-200 dark:border-[hsl(214_32%_18%)]',
-        'shadow-[2px_0_12px_-4px_hsl(215_25%_27%/0.08)] dark:shadow-[2px_0_12px_-4px_hsl(222_47%_4%/0.4)]',
+        'bg-white dark:bg-[hsl(217_28%_8%)] border-r border-slate-200 dark:border-[hsl(215_28%_15%)]',
+        'shadow-[2px_0_12px_-4px_hsl(215_25%_27%/0.08)] dark:shadow-[2px_0_20px_-4px_hsl(217_40%_3%/0.6)]',
         'w-[220px] transition-all duration-200 ease-in-out',
         isOpen ? 'translate-x-0' : '-translate-x-full',
         'md:translate-x-0 md:w-14 md:hover:w-[220px]'
@@ -55,7 +55,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(192_91%_36%/0.7)] to-transparent pointer-events-none" />
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-3 py-[18px] border-b border-slate-100 dark:border-[hsl(214_32%_18%)] min-h-[65px]">
+        <div className="flex items-center gap-3 px-3 py-[18px] border-b border-slate-100 dark:border-[hsl(215_28%_15%)] min-h-[65px]">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(192_91%_36%)] to-[hsl(192_91%_26%)] flex items-center justify-center flex-shrink-0 shadow-[0_4px_10px_-2px_hsl(192_91%_36%/0.35)]">
             <Zap className="w-4 h-4 text-white" />
           </div>
@@ -109,7 +109,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
                   'transition-all duration-200 overflow-hidden cursor-pointer group/item',
                   active
                     ? 'text-white'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)]'
+                    : 'text-slate-500 dark:text-[hsl(215_18%_58%)] hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)]'
                 )}
               >
                 {active && (
@@ -144,7 +144,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
         </nav>
 
         {/* Footer */}
-        <div className="px-3 py-4 border-t border-slate-100 dark:border-[hsl(214_32%_18%)]">
+        <div className="px-3 py-4 border-t border-slate-100 dark:border-[hsl(215_28%_15%)]">
           <div className="flex items-center gap-2">
             <div
               className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"

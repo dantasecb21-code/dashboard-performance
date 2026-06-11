@@ -75,7 +75,7 @@ export default function GlobalFilters() {
           <input
             type="text"
             placeholder="Loja ou código..."
-            className="text-xs border border-slate-200 dark:border-[hsl(214_32%_20%)] rounded-lg pl-6 pr-2.5 py-1.5 bg-white dark:bg-[hsl(222_47%_11%)] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900/40 focus:border-cyan-300 dark:focus:border-cyan-800 w-full sm:w-40 transition-colors hover:border-slate-300 dark:hover:border-[hsl(214_32%_28%)]"
+            className="text-xs border border-slate-200 dark:border-[hsl(215_28%_17%)] rounded-lg pl-6 pr-2.5 py-1.5 bg-white dark:bg-[hsl(217_25%_11%)] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900/40 focus:border-cyan-300 dark:focus:border-cyan-800 w-full sm:w-40 transition-colors hover:border-slate-300 dark:hover:border-[hsl(215_28%_22%)]"
             value={filtros.codigoLoja}
             onChange={e => setFiltro('codigoLoja', e.target.value)}
           />

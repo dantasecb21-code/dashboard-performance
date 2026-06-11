@@ -81,14 +81,14 @@ function Tooltip({ text }: { text: string }) {
       {open && (
         <div className={clsx(
           'absolute bottom-full mb-2 z-[9999] w-56 rounded-xl pointer-events-none',
-          'bg-white dark:bg-[hsl(222_47%_13%)] border border-slate-200 dark:border-[hsl(214_32%_22%)]',
+          'bg-white dark:bg-[hsl(217_25%_13%)] border border-slate-200 dark:border-[hsl(215_28%_18%)]',
           'text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed p-3 shadow-lg dark:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]',
           'whitespace-normal font-normal normal-case tracking-normal',
           alignRight ? 'right-0' : 'left-0',
         )}>
           {text}
           <span className={clsx(
-            'absolute top-full border-4 border-transparent border-t-white dark:border-t-[hsl(222_47%_13%)] block w-0 h-0',
+            'absolute top-full border-4 border-transparent border-t-white dark:border-t-[hsl(217_25%_13%)] block w-0 h-0',
             alignRight ? 'right-3' : 'left-3',
           )} />
         </div>
@@ -128,7 +128,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
         </div>
         {Icon && (
           <div className={clsx(
-            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(214_32%_20%)] shrink-0',
+            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(215_28%_17%)] shrink-0',
             ICON_VARIANT[color],
           )}>
             <Icon className="w-3.5 h-3.5" strokeWidth={2} />
@@ -158,10 +158,10 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
           <span className={clsx(
             'flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0',
             isPositiveDelta
-              ? 'bg-green-50 text-green-700'
+              ? 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-400'
               : isNegativeDelta
-              ? 'bg-red-50 text-red-600'
-              : 'bg-slate-100 text-slate-500'
+              ? 'bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400'
+              : 'bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400'
           )}>
             <DeltaIcon className="w-3 h-3" />
             {Math.abs(delta).toFixed(1)}%
