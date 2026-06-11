@@ -52,11 +52,11 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
       )}>
 
         {/* Linha teal no topo da sidebar */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(192_91%_36%/0.7)] to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(192_91%_36%/0.55)] dark:via-[hsl(192_91%_36%/0.30)] to-transparent pointer-events-none" />
 
         {/* Logo */}
         <div className="flex items-center gap-3 px-3 py-[18px] border-b border-slate-100 dark:border-[hsl(215_28%_15%)] min-h-[65px]">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(192_91%_36%)] to-[hsl(192_91%_26%)] flex items-center justify-center flex-shrink-0 shadow-[0_4px_10px_-2px_hsl(192_91%_36%/0.35)]">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(192_91%_36%)] to-[hsl(192_91%_26%)] flex items-center justify-center flex-shrink-0 shadow-[0_4px_10px_-2px_hsl(192_91%_36%/0.30)] dark:shadow-[0_4px_10px_-2px_hsl(192_91%_36%/0.12)]">
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-center justify-between flex-1 min-w-0 overflow-hidden">
@@ -114,8 +114,8 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
               >
                 {active && (
                   <>
-                    <span className="absolute inset-0 bg-gradient-to-r from-[hsl(192_91%_36%)] to-[hsl(192_91%_30%)] rounded-xl" />
-                    <span className="absolute inset-0 rounded-xl shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15),0_4px_14px_-4px_hsl(192_91%_36%/0.45)]" />
+                    <span className="absolute inset-0 bg-gradient-to-r from-[hsl(192_91%_34%)] to-[hsl(192_91%_28%)] dark:from-[hsl(192_80%_28%)] dark:to-[hsl(192_80%_22%)] rounded-xl" />
+                    <span className="absolute inset-0 rounded-xl shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15),0_4px_14px_-4px_hsl(192_91%_36%/0.30)] dark:shadow-[inset_0_1px_0_hsl(0_0%_100%/0.08),0_4px_14px_-4px_hsl(192_91%_36%/0.15)]" />
                   </>
                 )}
                 {!active && (
@@ -147,7 +147,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
         <div className="px-3 py-4 border-t border-slate-100 dark:border-[hsl(215_28%_15%)]">
           <div className="flex items-center gap-2">
             <div
-              className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"
+              className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-600 flex-shrink-0"
             />
             {/* Desktop */}
             <p className="text-[10px] text-slate-400 font-medium whitespace-nowrap hidden md:block

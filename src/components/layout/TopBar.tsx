@@ -45,8 +45,8 @@ export default function TopBar({ onMenuToggle }: Props) {
             onClick={() => setShowFilters(v => !v)}
             className={`flex items-center gap-1.5 text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 ${
               showFilters || activeCount > 0
-                ? 'bg-cyan-50 border-cyan-300 text-cyan-700'
-                : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700 hover:bg-slate-50'
+                ? 'bg-cyan-50 dark:bg-cyan-950/30 border-cyan-300 dark:border-cyan-800/70 text-cyan-700 dark:text-cyan-400'
+                : 'bg-white dark:bg-transparent border-slate-200 dark:border-[hsl(215_28%_17%)] text-slate-500 dark:text-[hsl(215_18%_58%)] hover:border-slate-300 dark:hover:border-[hsl(215_28%_22%)] hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-[hsl(217_25%_13%)]'
             }`}
           >
             {showFilters ? <X className="w-3.5 h-3.5" /> : <SlidersHorizontal className="w-3.5 h-3.5" />}
@@ -61,19 +61,19 @@ export default function TopBar({ onMenuToggle }: Props) {
           {/* Chips de filtros ativos */}
           {activeCount > 0 && (
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="text-[11px] text-cyan-700 bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
+              <span className="text-[11px] text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800/60 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
                 {activeCount} {activeCount === 1 ? 'filtro' : 'filtros'}
               </span>
               <button
                 onClick={resetFiltros}
-                className="text-[11px] text-slate-400 hover:text-slate-700 transition-colors cursor-pointer whitespace-nowrap"
+                className="text-[11px] text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
               >
                 Limpar
               </button>
             </div>
           )}
 
-          <span className="text-[11px] text-slate-500 font-medium whitespace-nowrap pl-1 border-l border-slate-200">
+          <span className="text-[11px] text-slate-500 dark:text-[hsl(215_18%_50%)] font-medium whitespace-nowrap pl-1 border-l border-slate-200 dark:border-[hsl(215_28%_17%)]">
             {lojasFiltered.length}{' '}
             <span className="text-slate-400 hidden sm:inline">lojas</span>
           </span>

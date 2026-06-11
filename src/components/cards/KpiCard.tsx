@@ -15,35 +15,35 @@ interface Props {
 }
 
 const ICON_VARIANT: Record<NonNullable<Props['color']>, string> = {
-  default: 'bg-cyan-50   text-cyan-600',
-  green:   'bg-green-50  text-green-600',
-  red:     'bg-red-50    text-red-600',
-  yellow:  'bg-amber-50  text-amber-600',
-  blue:    'bg-blue-50   text-blue-600',
+  default: 'bg-cyan-50   dark:bg-cyan-950/40  text-cyan-600   dark:text-cyan-400',
+  green:   'bg-green-50  dark:bg-green-950/40 text-green-600  dark:text-green-400',
+  red:     'bg-red-50    dark:bg-red-950/40   text-red-600    dark:text-red-400',
+  yellow:  'bg-amber-50  dark:bg-amber-950/40 text-amber-600  dark:text-amber-400',
+  blue:    'bg-blue-50   dark:bg-blue-950/40  text-blue-600   dark:text-blue-400',
 }
 
 const GLOW_COLOR: Record<NonNullable<Props['color']>, string> = {
-  default: 'bg-cyan-100/60',
-  green:   'bg-green-100/60',
-  red:     'bg-red-100/60',
-  yellow:  'bg-amber-100/60',
-  blue:    'bg-blue-100/60',
+  default: 'bg-cyan-100/50   dark:bg-cyan-400/4',
+  green:   'bg-green-100/50  dark:bg-green-400/4',
+  red:     'bg-red-100/50    dark:bg-red-400/4',
+  yellow:  'bg-amber-100/50  dark:bg-amber-400/4',
+  blue:    'bg-blue-100/50   dark:bg-blue-400/4',
 }
 
 const HOVER_SHADOW: Record<NonNullable<Props['color']>, string> = {
-  default: 'hover:shadow-[0_8px_24px_-6px_hsl(192_91%_36%/0.18)] hover:border-cyan-200',
-  green:   'hover:shadow-[0_8px_24px_-6px_hsl(142_72%_29%/0.18)] hover:border-green-200',
-  red:     'hover:shadow-[0_8px_24px_-6px_hsl(0_72%_51%/0.15)]   hover:border-red-200',
-  yellow:  'hover:shadow-[0_8px_24px_-6px_hsl(32_95%_44%/0.15)]  hover:border-amber-200',
-  blue:    'hover:shadow-[0_8px_24px_-6px_hsl(217_91%_60%/0.15)] hover:border-blue-200',
+  default: 'hover:shadow-[0_8px_24px_-6px_hsl(192_91%_36%/0.15)] hover:border-cyan-200  dark:hover:shadow-[0_8px_20px_-6px_hsl(192_91%_36%/0.12)] dark:hover:border-[hsl(215_28%_22%)]',
+  green:   'hover:shadow-[0_8px_24px_-6px_hsl(142_72%_29%/0.15)] hover:border-green-200 dark:hover:shadow-[0_8px_20px_-6px_hsl(142_72%_29%/0.12)] dark:hover:border-[hsl(142_25%_20%)]',
+  red:     'hover:shadow-[0_8px_24px_-6px_hsl(0_72%_51%/0.12)]   hover:border-red-200   dark:hover:shadow-[0_8px_20px_-6px_hsl(0_72%_51%/0.10)]   dark:hover:border-[hsl(0_25%_20%)]',
+  yellow:  'hover:shadow-[0_8px_24px_-6px_hsl(32_95%_44%/0.12)]  hover:border-amber-200 dark:hover:shadow-[0_8px_20px_-6px_hsl(32_95%_44%/0.10)]  dark:hover:border-[hsl(32_25%_20%)]',
+  blue:    'hover:shadow-[0_8px_24px_-6px_hsl(217_91%_60%/0.12)] hover:border-blue-200  dark:hover:shadow-[0_8px_20px_-6px_hsl(217_91%_60%/0.10)] dark:hover:border-[hsl(217_25%_20%)]',
 }
 
 const VALUE_COLOR: Record<NonNullable<Props['color']>, string> = {
-  default: 'text-slate-900',
-  green:   'text-green-700',
-  red:     'text-red-600',
-  yellow:  'text-amber-700',
-  blue:    'text-blue-700',
+  default: 'text-slate-900 dark:text-slate-50',
+  green:   'text-green-700 dark:text-green-400',
+  red:     'text-red-600   dark:text-red-400',
+  yellow:  'text-amber-700 dark:text-amber-400',
+  blue:    'text-blue-700  dark:text-blue-400',
 }
 
 function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
@@ -112,9 +112,9 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       'hover:-translate-y-0.5',
       HOVER_SHADOW[color],
     )}>
-      {/* Corner accent — muito suave */}
+      {/* Corner accent */}
       <div className={clsx(
-        'pointer-events-none absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-50',
+        'pointer-events-none absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-60 dark:opacity-100',
         GLOW_COLOR[color],
       )} />
 
