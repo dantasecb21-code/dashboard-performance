@@ -121,7 +121,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       {/* Cabeçalho */}
       <div className="relative flex items-start justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
-          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 leading-tight line-clamp-2">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 leading-tight line-clamp-2">
             {title}
           </p>
           {tooltip && <Tooltip text={tooltip} />}
@@ -149,7 +149,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       {/* Subtitle / delta */}
       <div className="relative flex items-center gap-2 mt-1.5 min-h-[18px]">
         {subtitle && (
-          <p className="text-[9px] sm:text-[11px] text-slate-400 flex items-center gap-1 truncate">
+          <p className="text-[9px] sm:text-[11px] text-slate-500 flex items-center gap-1 truncate">
             <span className="w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
             <span className="truncate">{subtitle}</span>
           </p>

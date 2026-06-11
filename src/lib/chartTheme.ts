@@ -1,6 +1,6 @@
 export const CHART_THEME = {
   grid:  'rgba(0,0,0,0.06)',
-  tick:  '#94A3B8',
+  tick:  '#64748B',
   tooltip: {
     contentStyle: {
       background:   '#FFFFFF',
