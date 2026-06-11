@@ -31,7 +31,7 @@ export default function GlassSelect({
 }: Props) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
-  const [coords, setCoords] = useState<{ top: number; left: number; width: number } | null>(null)
+  const [coords, setCoords] = useState<{ top: number; left: number; width: number; maxH: number } | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -49,7 +49,10 @@ export default function GlassSelect({
     const el = triggerRef.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    setCoords({ top: r.bottom + 6, left: r.left, width: Math.max(r.width, 200) })
+    const w = Math.max(r.width, 200)
+    const left = Math.max(4, Math.min(r.left, window.innerWidth - w - 4))
+    const maxH = Math.max(120, window.innerHeight - r.bottom - 16)
+    setCoords({ top: r.bottom + 6, left, width: w, maxH })
   }
 
   useEffect(() => {
@@ -104,19 +107,19 @@ export default function GlassSelect({
         onClick={() => setOpen(o => !o)}
         className={clsx(
           'group flex items-center justify-between gap-2 text-xs rounded-lg px-2.5 py-1.5 w-full',
-          'border backdrop-blur-sm transition-all duration-150 cursor-pointer',
+          'border transition-all duration-150 cursor-pointer',
           isActive
-            ? 'bg-[hsl(177_100%_41%/0.10)] border-[hsl(177_100%_41%/0.35)] text-[hsl(177_100%_60%)] font-semibold'
-            : 'bg-white/[0.04] border-[hsl(220_40%_16%)] text-[hsl(218_18%_48%)] hover:border-[hsl(220_40%_22%)] hover:bg-white/[0.07]',
-          open && !isActive && 'border-[hsl(177_100%_41%/0.35)] ring-2 ring-[hsl(177_100%_41%/0.12)]',
-          open && isActive && 'ring-2 ring-[hsl(177_100%_41%/0.18)]'
+            ? 'bg-cyan-50 border-cyan-300 text-cyan-700 font-semibold'
+            : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50',
+          open && !isActive && 'border-cyan-300 ring-2 ring-cyan-100',
+          open && isActive && 'ring-2 ring-cyan-100'
         )}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
         <ChevronDown
           className={clsx(
             'w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200',
-            open ? 'rotate-180 text-[hsl(177_100%_55%)]' : 'text-[hsl(218_18%_40%)] group-hover:text-[hsl(218_18%_55%)]'
+            open ? 'rotate-180 text-cyan-600' : 'text-slate-400 group-hover:text-slate-600'
           )}
         />
       </button>
@@ -125,39 +128,39 @@ export default function GlassSelect({
         <div
           ref={menuRef}
           style={{ position: 'fixed', top: coords.top, left: coords.left, width: coords.width, zIndex: 60 }}
-          className="origin-top animate-glass-pop rounded-xl border border-[hsl(220_40%_17%)] bg-[hsl(220_52%_7%)] backdrop-blur-xl shadow-[0_20px_50px_-10px_hsl(220_80%_2%/0.85)] overflow-hidden"
+          className="origin-top animate-glass-pop rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_-8px_rgba(15,23,42,0.15)] overflow-hidden"
         >
           {autoSearch && (
-            <div className="p-2 border-b border-white/[0.06]/80">
+            <div className="p-2 border-b border-slate-100">
               <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
                 <input
                   autoFocus
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Buscar..."
-                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg pl-6 pr-2 py-1.5 text-foreground/80 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60"
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg pl-6 pr-2 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-200 focus:border-cyan-300"
                 />
               </div>
             </div>
           )}
 
-          <div className="max-h-56 overflow-y-auto p-1">
+          <div className="overflow-y-auto p-1" style={{ maxHeight: coords.maxH }}>
             {/* Opção "Todos" / limpar */}
             <button
               type="button"
               onClick={() => pick('')}
               className={clsx(
                 'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer',
-                value === '' ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:bg-white/[0.06]'
+                value === '' ? 'bg-cyan-50 text-cyan-700 font-semibold' : 'text-slate-500 hover:bg-slate-50'
               )}
             >
               <span>{placeholder}</span>
-              {value === '' && <Check className="w-3.5 h-3.5 text-[hsl(177_100%_55%)]" />}
+              {value === '' && <Check className="w-3.5 h-3.5 text-cyan-600" />}
             </button>
 
             {filtered.length === 0 && (
-              <p className="text-[11px] text-muted-foreground text-center py-3">Nenhum resultado</p>
+              <p className="text-[11px] text-slate-400 text-center py-3">Nenhum resultado</p>
             )}
 
             {filtered.map(opt => {
@@ -169,11 +172,11 @@ export default function GlassSelect({
                   onClick={() => pick(opt.value)}
                   className={clsx(
                     'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer text-left',
-                    active ? 'bg-primary/15 text-primary font-semibold' : 'text-muted-foreground hover:bg-white/[0.06]'
+                    active ? 'bg-cyan-50 text-cyan-700 font-semibold' : 'text-slate-500 hover:bg-slate-50'
                   )}
                 >
                   <span className="truncate">{opt.label}</span>
-                  {active && <Check className="w-3.5 h-3.5 text-[hsl(177_100%_55%)] flex-shrink-0" />}
+                  {active && <Check className="w-3.5 h-3.5 text-cyan-600 flex-shrink-0" />}
                 </button>
               )
             })}

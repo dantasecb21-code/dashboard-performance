@@ -6,23 +6,23 @@
 
 * { box-sizing: border-box; }
 
-/* ── Tema: Obsidian Command ──────────────────────────────────────────── */
+/* ── Tema: Clean Light ───────────────────────────────────────────────── */
 :root {
-  /* Fundos — navy ultra-escuro com leve matiz fria */
-  --background:         222 58% 3.5%;   /* #050A17 quase preto azul */
-  --card:               220 52% 7%;     /* #0B1323 card escuro navy */
-  --card-foreground:    210 22% 96%;
-  --foreground:         210 22% 96%;
-  --muted-foreground:   218 18% 50%;    /* cinza azulado */
-  --border:             220 40% 13%;    /* #111D35 linha sutil */
+  /* Fundos — off-white fria, respira bem */
+  --background:         210 20% 98%;   /* #F8FAFC slate-50 */
+  --card:               0 0% 100%;     /* #FFFFFF */
+  --card-foreground:    222 47% 11%;   /* #0F172A */
+  --foreground:         222 47% 11%;   /* #0F172A slate-900 */
+  --muted-foreground:   215 16% 47%;   /* #64748B slate-500 */
+  --border:             214 32% 91%;   /* #E2E8F0 slate-200 */
 
-  /* Cores de ação */
-  --primary:            177 100% 41%;   /* #00D1C4 ciano elétrico */
-  --accent:             74  100% 50%;   /* #BEFF00 lime elétrico — apenas highlights */
-  --success:            143  78% 46%;   /* #16D461 verde neon */
-  --warning:            26  100% 58%;   /* #FF7A28 laranja */
-  --destructive:        349 100% 61%;   /* #FF3B5C vermelho quente */
-  --info:               207  90% 63%;   /* #3DB8F5 azul céu */
+  /* Cores de ação — saturação reduzida, tom profissional */
+  --primary:            192 91% 36%;   /* #0891B2 cyan-600 */
+  --accent:             152 76% 40%;   /* #16A34A green-600 */
+  --success:            142 72% 29%;   /* #15803D green-700 */
+  --warning:            32  95% 44%;   /* #D97706 amber-600 */
+  --destructive:        0   72% 51%;   /* #DC2626 red-600 */
+  --info:               217 91% 60%;   /* #3B82F6 blue-500 */
 
   --sidebar-width: 220px;
 }
@@ -37,58 +37,64 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Grid de fundo — linhas mais finas e sutis ───────────────────────── */
+/* ── Grid de fundo — linhas discretas no fundo claro ────────────────── */
 .bg-grid {
   background-image:
-    linear-gradient(hsl(0 0% 100% / 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(0 0% 100% / 0.018) 1px, transparent 1px);
+    linear-gradient(hsl(214 32% 80% / 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(214 32% 80% / 0.35) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
-/* ── Radial glow — ciano no canto + detalhe no rodapé ───────────────── */
+/* ── Radial highlight — teal suave no topo ───────────────────────────── */
 .bg-radial-glow {
   background:
-    radial-gradient(ellipse 85% 55% at 8% -5%,
-      hsl(177 100% 41% / 0.13) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 95% 105%,
-      hsl(220 80% 35% / 0.07) 0%, transparent 58%);
+    radial-gradient(ellipse 80% 50% at 10% 0%,
+      hsl(192 91% 36% / 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%,
+      hsl(217 91% 60% / 0.04) 0%, transparent 60%);
 }
 
-/* ── Glass card ──────────────────────────────────────────────────────── */
+/* ── Card limpo — fundo branco com sombra suave ─────────────────────── */
 .glass-card {
   position: relative;
-  background: linear-gradient(
-    148deg,
-    hsl(177 100% 50% / 0.055),
-    hsl(220 52% 8% / 0.0)
-  );
-  border: 1px solid hsl(220 40% 20% / 0.7);
-  backdrop-filter: blur(28px) saturate(160%);
-  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  background: hsl(0 0% 100%);
+  border: 1px solid hsl(214 32% 91%);
   box-shadow:
-    0 20px 50px -15px hsl(220 80% 2% / 0.85),
-    inset 0 1px 0 hsl(177 100% 80% / 0.06);
+    0 1px 3px hsl(215 25% 27% / 0.06),
+    0 4px 12px hsl(215 25% 27% / 0.04);
   border-radius: 0.875rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-/* Linha de accent no topo do card */
+/* Linha accent no topo do card em hover */
 .glass-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 15%; right: 15%;
-  height: 1px;
+  top: 0; left: 20%; right: 20%;
+  height: 2px;
   background: linear-gradient(
     90deg,
     transparent,
-    hsl(177 100% 60% / 0.45),
+    hsl(192 91% 36% / 0),
     transparent
   );
+  border-radius: 0 0 2px 2px;
   pointer-events: none;
+  transition: background 0.25s ease;
 }
 
-/* ── Stat glow — ciano ───────────────────────────────────────────────── */
+.glass-card:hover::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(192 91% 36% / 0.5),
+    transparent
+  );
+}
+
+/* ── Stat value — sem glow, texto escuro nítido ─────────────────────── */
 .stat-glow {
-  text-shadow: 0 0 22px hsl(177 100% 41% / 0.4);
+  color: hsl(192 91% 30%);
 }
 
 /* ── Font heading — Syne: geométrica, arquitetônica ─────────────────── */
@@ -129,20 +135,20 @@ body {
 .kpi-grid > *:nth-child(10)   { animation: fadeInUp 0.22s ease-out 0.33s both; }
 .kpi-grid > *:nth-child(n+11) { animation: fadeInUp 0.22s ease-out 0.36s both; }
 
-/* ── Scrollbar fina ──────────────────────────────────────────────────── */
+/* ── Scrollbar fina — clara ──────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: hsl(220 40% 18%);
+  background: hsl(214 32% 82%);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(177 100% 41% / 0.5);
+  background: hsl(192 91% 36% / 0.5);
 }
 
 /* ── Focus ring acessível ───────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid hsl(177 100% 41%);
+  outline: 2px solid hsl(192 91% 36%);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -160,7 +166,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: hsl(218 18% 40%);
+  color: hsl(215 16% 55%);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -170,7 +176,7 @@ body {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, hsl(220 40% 18%), transparent);
+  background: linear-gradient(90deg, hsl(214 32% 88%), transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

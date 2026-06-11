@@ -44,14 +44,14 @@ export default function AlertCard({ lojas, max = 5 }: Props) {
           >
             <div className="min-w-0">
               <p className="text-sm font-semibold text-foreground truncate">{l.nomeLoja}</p>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="flex items-center gap-1 text-[11px] text-[hsl(218_18%_42%)]">
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <span className="flex items-center gap-1 text-[11px] text-[hsl(218_18%_42%)] flex-shrink-0">
                   <MapPin className="w-3 h-3" />
                   {l.cidade} · {l.uf}
                 </span>
-                <span className="flex items-center gap-1 text-[11px] text-[hsl(218_18%_42%)]">
-                  <User className="w-3 h-3" />
-                  {l.gerenteRegional}
+                <span className="flex items-center gap-1 text-[11px] text-[hsl(218_18%_42%)] min-w-0">
+                  <User className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{l.gerenteRegional}</span>
                 </span>
               </div>
             </div>

@@ -28,7 +28,7 @@ function quadrante(loja: Loja, medVenda: number, medPerda: number): Quadrante {
 }
 
 const Q_COLOR: Record<Quadrante, string> = {
-  'Prioridade Máxima': 'bg-red-100 border-destructive/30 text-destructive',
+  'Prioridade Máxima': 'bg-destructive/15 border-destructive/30 text-destructive',
   'Saudável':           'bg-success/15 border-success/30 text-success',
   'Atenção':            'bg-warning/15 border-warning/30 text-warning',
   'Baixa Prioridade':   'bg-white/[0.06] border-gray-200 text-muted-foreground',

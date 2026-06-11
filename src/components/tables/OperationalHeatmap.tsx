@@ -42,9 +42,9 @@ export default function OperationalHeatmap({ lojas }: Props) {
         <tbody>
           {lojas.map(l => (
             <tr key={l.id} className="border-b border-border hover:bg-white/[0.04]">
-              <td className="px-3 sm:px-4 py-2">
-                <p className="font-medium text-foreground/80 leading-tight">{l.nomeLoja}</p>
-                <p className="text-[10px] text-muted-foreground md:hidden">{l.cidade}/{l.uf}</p>
+              <td className="px-3 sm:px-4 py-2 max-w-[160px] sm:max-w-[220px]">
+                <p className="font-medium text-foreground/80 leading-tight truncate">{l.nomeLoja}</p>
+                <p className="text-[10px] text-muted-foreground md:hidden truncate">{l.cidade}/{l.uf}</p>
               </td>
               <td className="px-2 py-2 text-muted-foreground hidden md:table-cell">{l.cidade}/{l.uf}</td>
               <Cell valor={l.cancelamentoTotal} indicador="cancelamento_total" />
