@@ -15,11 +15,11 @@ interface Props {
 }
 
 const ICON_VARIANT: Record<NonNullable<Props['color']>, string> = {
-  default: 'bg-cyan-50   dark:bg-cyan-950/40  text-cyan-600   dark:text-cyan-400',
-  green:   'bg-green-50  dark:bg-green-950/40 text-green-600  dark:text-green-400',
-  red:     'bg-red-50    dark:bg-red-950/40   text-red-600    dark:text-red-400',
-  yellow:  'bg-amber-50  dark:bg-amber-950/40 text-amber-600  dark:text-amber-400',
-  blue:    'bg-blue-50   dark:bg-blue-950/40  text-blue-600   dark:text-blue-400',
+  default: 'bg-cyan-50   dark:bg-[hsl(192_22%_13%)]  text-cyan-600   dark:text-[hsl(192_50%_52%)]',
+  green:   'bg-green-50  dark:bg-[hsl(142_22%_12%)]  text-green-600  dark:text-[hsl(142_50%_48%)]',
+  red:     'bg-red-50    dark:bg-[hsl(0_22%_14%)]    text-red-600    dark:text-[hsl(0_55%_55%)]',
+  yellow:  'bg-amber-50  dark:bg-[hsl(32_22%_13%)]   text-amber-600  dark:text-[hsl(32_65%_52%)]',
+  blue:    'bg-blue-50   dark:bg-[hsl(217_22%_14%)]  text-blue-600   dark:text-[hsl(217_60%_58%)]',
 }
 
 const GLOW_COLOR: Record<NonNullable<Props['color']>, string> = {
@@ -40,10 +40,10 @@ const HOVER_SHADOW: Record<NonNullable<Props['color']>, string> = {
 
 const VALUE_COLOR: Record<NonNullable<Props['color']>, string> = {
   default: 'text-slate-900 dark:text-slate-50',
-  green:   'text-green-700 dark:text-green-400',
-  red:     'text-red-600   dark:text-red-400',
-  yellow:  'text-amber-700 dark:text-amber-400',
-  blue:    'text-blue-700  dark:text-blue-400',
+  green:   'text-green-700 dark:text-[hsl(142_50%_52%)]',
+  red:     'text-red-600   dark:text-[hsl(0_58%_58%)]',
+  yellow:  'text-amber-700 dark:text-[hsl(32_62%_54%)]',
+  blue:    'text-blue-700  dark:text-[hsl(217_62%_60%)]',
 }
 
 function adaptiveFontSize(value: string | number, size: 'sm' | 'md'): string {
@@ -128,7 +128,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
         </div>
         {Icon && (
           <div className={clsx(
-            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(215_28%_17%)] shrink-0',
+            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(215_22%_16%)] shrink-0',
             ICON_VARIANT[color],
           )}>
             <Icon className="w-3.5 h-3.5" strokeWidth={2} />
@@ -150,7 +150,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       <div className="relative flex items-center gap-2 mt-1.5 min-h-[18px]">
         {subtitle && (
           <p className="text-[9px] sm:text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 truncate">
-            <span className="w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-cyan-500 dark:bg-[hsl(192_40%_40%)] shrink-0" />
             <span className="truncate">{subtitle}</span>
           </p>
         )}
@@ -158,10 +158,10 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
           <span className={clsx(
             'flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0',
             isPositiveDelta
-              ? 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-400'
+              ? 'bg-green-50 dark:bg-[hsl(142_20%_10%)] text-green-700 dark:text-[hsl(142_45%_48%)]'
               : isNegativeDelta
-              ? 'bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400'
-              : 'bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400'
+              ? 'bg-red-50 dark:bg-[hsl(0_20%_11%)] text-red-600 dark:text-[hsl(0_52%_52%)]'
+              : 'bg-slate-100 dark:bg-[hsl(217_20%_14%)] text-slate-500 dark:text-slate-400'
           )}>
             <DeltaIcon className="w-3 h-3" />
             {Math.abs(delta).toFixed(1)}%
