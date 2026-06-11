@@ -81,14 +81,14 @@ function Tooltip({ text }: { text: string }) {
       {open && (
         <div className={clsx(
           'absolute bottom-full mb-2 z-[9999] w-56 rounded-xl pointer-events-none',
-          'bg-white border border-slate-200',
-          'text-slate-700 text-[11px] leading-relaxed p-3 shadow-lg',
+          'bg-white dark:bg-[hsl(222_47%_13%)] border border-slate-200 dark:border-[hsl(214_32%_22%)]',
+          'text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed p-3 shadow-lg dark:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]',
           'whitespace-normal font-normal normal-case tracking-normal',
           alignRight ? 'right-0' : 'left-0',
         )}>
           {text}
           <span className={clsx(
-            'absolute top-full border-4 border-transparent border-t-white block w-0 h-0',
+            'absolute top-full border-4 border-transparent border-t-white dark:border-t-[hsl(222_47%_13%)] block w-0 h-0',
             alignRight ? 'right-3' : 'left-3',
           )} />
         </div>
@@ -121,14 +121,14 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       {/* Cabeçalho */}
       <div className="relative flex items-start justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
-          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 leading-tight line-clamp-2">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 leading-tight line-clamp-2">
             {title}
           </p>
           {tooltip && <Tooltip text={tooltip} />}
         </div>
         {Icon && (
           <div className={clsx(
-            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 shrink-0',
+            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(214_32%_20%)] shrink-0',
             ICON_VARIANT[color],
           )}>
             <Icon className="w-3.5 h-3.5" strokeWidth={2} />
@@ -143,13 +143,13 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
         valueFontSize,
         VALUE_COLOR[color],
       )}>
-        {isEmpty ? <span className="text-slate-300 text-xl">—</span> : value}
+        {isEmpty ? <span className="text-slate-300 dark:text-slate-600 text-xl">—</span> : value}
       </div>
 
       {/* Subtitle / delta */}
       <div className="relative flex items-center gap-2 mt-1.5 min-h-[18px]">
         {subtitle && (
-          <p className="text-[9px] sm:text-[11px] text-slate-500 flex items-center gap-1 truncate">
+          <p className="text-[9px] sm:text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 truncate">
             <span className="w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
             <span className="truncate">{subtitle}</span>
           </p>

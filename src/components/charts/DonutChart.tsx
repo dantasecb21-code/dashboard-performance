@@ -1,5 +1,6 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { fmtPct } from '@/lib/formatters'
@@ -9,6 +10,8 @@ interface Props { data: DataItem[]; title?: string }
 
 export default function DonutChart({ data, title }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
   const innerR = isMobile ? 45 : 60
   const outerR = isMobile ? 72 : 90
 

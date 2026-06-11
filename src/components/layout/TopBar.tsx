@@ -1,9 +1,10 @@
 'use client'
 import { useState } from 'react'
-import { RefreshCw, Clock, SlidersHorizontal, X, Menu } from 'lucide-react'
+import { RefreshCw, Clock, SlidersHorizontal, X, Menu, Sun, Moon } from 'lucide-react'
 import GlobalFilters from '@/components/filters/GlobalFilters'
 import { useData } from '@/context/DataContext'
 import { useFilters } from '@/context/FilterContext'
+import { useTheme } from '@/context/ThemeContext'
 
 interface Props {
   onMenuToggle: () => void
@@ -15,6 +16,7 @@ export default function TopBar({ onMenuToggle }: Props) {
   const { filtros, lojasFiltered, resetFiltros } = useFilters()
 
   const activeCount = Object.values(filtros).filter(v => v !== '').length
+  const { theme, toggle } = useTheme()
 
   const fmtDate = (iso: string | null) => {
     if (!iso) return '—'
@@ -25,7 +27,7 @@ export default function TopBar({ onMenuToggle }: Props) {
   return (
     <div className="sticky top-0 z-20">
       {/* Barra principal */}
-      <div className="relative border-b border-slate-200 bg-white/90 backdrop-blur-xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 shadow-sm">
+      <div className="relative border-b border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white/90 dark:bg-[hsl(222_47%_8%/0.95)] backdrop-blur-xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 shadow-sm dark:shadow-[0_1px_0_hsl(214_32%_20%)]">
 
         {/* Esquerda */}
         <div className="relative flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
@@ -80,10 +82,22 @@ export default function TopBar({ onMenuToggle }: Props) {
         {/* Direita */}
         <div className="relative flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
           {/* Timestamp */}
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5">
-            <Clock className="w-3 h-3 text-slate-400" />
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[hsl(222_47%_13%)] border border-slate-200 dark:border-[hsl(214_32%_20%)] rounded-lg px-2.5 py-1.5">
+            <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
             <span className="font-medium">{fmtDate(updatedAt)}</span>
           </div>
+
+          {/* Toggle dark/light */}
+          <button
+            onClick={toggle}
+            title={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-[hsl(214_32%_20%)] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)] transition-colors cursor-pointer"
+          >
+            {theme === 'dark'
+              ? <Sun className="w-3.5 h-3.5" />
+              : <Moon className="w-3.5 h-3.5" />
+            }
+          </button>
 
           {/* Botão refresh */}
           <button
@@ -104,7 +118,7 @@ export default function TopBar({ onMenuToggle }: Props) {
       <div className={`transition-all duration-200 ease-in-out ${
         showFilters ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
       }`}>
-        <div className="border-b border-slate-200 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4">
+        <div className="border-b border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white/95 dark:bg-[hsl(222_47%_9%/0.97)] backdrop-blur-xl px-4 sm:px-6 py-4">
           <GlobalFilters />
         </div>
       </div>

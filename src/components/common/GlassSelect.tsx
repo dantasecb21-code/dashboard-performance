@@ -109,10 +109,10 @@ export default function GlassSelect({
           'group flex items-center justify-between gap-2 text-xs rounded-lg px-2.5 py-1.5 w-full',
           'border transition-all duration-150 cursor-pointer',
           isActive
-            ? 'bg-cyan-50 border-cyan-300 text-cyan-700 font-semibold'
-            : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50',
-          open && !isActive && 'border-cyan-300 ring-2 ring-cyan-100',
-          open && isActive && 'ring-2 ring-cyan-100'
+            ? 'bg-cyan-50 dark:bg-cyan-900/20 border-cyan-300 dark:border-cyan-800 text-cyan-700 dark:text-cyan-400 font-semibold'
+            : 'bg-white dark:bg-[hsl(222_47%_11%)] border-slate-200 dark:border-[hsl(214_32%_20%)] text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-[hsl(214_32%_28%)] hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)]',
+          open && !isActive && 'border-cyan-300 dark:border-cyan-800 ring-2 ring-cyan-100 dark:ring-cyan-900/40',
+          open && isActive && 'ring-2 ring-cyan-100 dark:ring-cyan-900/40'
         )}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
@@ -128,7 +128,7 @@ export default function GlassSelect({
         <div
           ref={menuRef}
           style={{ position: 'fixed', top: coords.top, left: coords.left, width: coords.width, zIndex: 60 }}
-          className="origin-top animate-glass-pop rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_-8px_rgba(15,23,42,0.15)] overflow-hidden"
+          className="origin-top animate-glass-pop rounded-xl border border-slate-200 dark:border-[hsl(214_32%_20%)] bg-white dark:bg-[hsl(222_47%_11%)] shadow-[0_8px_30px_-8px_rgba(15,23,42,0.15)] dark:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           {autoSearch && (
             <div className="p-2 border-b border-slate-100">
@@ -139,7 +139,7 @@ export default function GlassSelect({
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Buscar..."
-                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg pl-6 pr-2 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-200 focus:border-cyan-300"
+                  className="w-full text-xs bg-slate-50 dark:bg-[hsl(222_47%_14%)] border border-slate-200 dark:border-[hsl(214_32%_22%)] rounded-lg pl-6 pr-2 py-1.5 text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900/40 focus:border-cyan-300 dark:focus:border-cyan-800"
                 />
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function GlassSelect({
               onClick={() => pick('')}
               className={clsx(
                 'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer',
-                value === '' ? 'bg-cyan-50 text-cyan-700 font-semibold' : 'text-slate-500 hover:bg-slate-50'
+                value === '' ? 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)]'
               )}
             >
               <span>{placeholder}</span>
@@ -172,7 +172,7 @@ export default function GlassSelect({
                   onClick={() => pick(opt.value)}
                   className={clsx(
                     'flex items-center justify-between w-full text-xs rounded-lg px-2.5 py-1.5 transition-colors cursor-pointer text-left',
-                    active ? 'bg-cyan-50 text-cyan-700 font-semibold' : 'text-slate-500 hover:bg-slate-50'
+                    active ? 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)]'
                   )}
                 >
                   <span className="truncate">{opt.label}</span>

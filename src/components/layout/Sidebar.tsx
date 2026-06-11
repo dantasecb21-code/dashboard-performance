@@ -44,8 +44,8 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
       <aside className={clsx(
         'group flex flex-col overflow-hidden',
         'fixed top-0 left-0 h-full z-30',
-        'bg-white border-r border-slate-200',
-        'shadow-[2px_0_12px_-4px_hsl(215_25%_27%/0.08)]',
+        'bg-white dark:bg-[hsl(222_47%_9%)] border-r border-slate-200 dark:border-[hsl(214_32%_18%)]',
+        'shadow-[2px_0_12px_-4px_hsl(215_25%_27%/0.08)] dark:shadow-[2px_0_12px_-4px_hsl(222_47%_4%/0.4)]',
         'w-[220px] transition-all duration-200 ease-in-out',
         isOpen ? 'translate-x-0' : '-translate-x-full',
         'md:translate-x-0 md:w-14 md:hover:w-[220px]'
@@ -55,22 +55,22 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(192_91%_36%/0.7)] to-transparent pointer-events-none" />
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-3 py-[18px] border-b border-slate-100 min-h-[65px]">
+        <div className="flex items-center gap-3 px-3 py-[18px] border-b border-slate-100 dark:border-[hsl(214_32%_18%)] min-h-[65px]">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(192_91%_36%)] to-[hsl(192_91%_26%)] flex items-center justify-center flex-shrink-0 shadow-[0_4px_10px_-2px_hsl(192_91%_36%/0.35)]">
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-center justify-between flex-1 min-w-0 overflow-hidden">
             <div className="min-w-0 overflow-hidden hidden md:block
               opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75">
-              <h1 className="text-[13px] font-heading font-bold text-slate-800 leading-none tracking-[0.06em] whitespace-nowrap">
+              <h1 className="text-[13px] font-heading font-bold text-slate-800 dark:text-slate-100 leading-none tracking-[0.06em] whitespace-nowrap">
                 Performance
               </h1>
-              <p className="text-[9px] text-slate-400 tracking-[0.22em] uppercase mt-1 font-semibold whitespace-nowrap">
+              <p className="text-[9px] text-slate-400 dark:text-slate-500 tracking-[0.22em] uppercase mt-1 font-semibold whitespace-nowrap">
                 Dashboard
               </p>
             </div>
             <div className="min-w-0 overflow-hidden md:hidden">
-              <h1 className="text-[13px] font-heading font-bold text-slate-800 leading-none tracking-[0.06em] truncate">
+              <h1 className="text-[13px] font-heading font-bold text-slate-800 dark:text-slate-100 leading-none tracking-[0.06em] truncate">
                 Performance
               </h1>
             </div>
@@ -109,7 +109,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
                   'transition-all duration-200 overflow-hidden cursor-pointer group/item',
                   active
                     ? 'text-white'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-[hsl(222_47%_14%)]'
                 )}
               >
                 {active && (
@@ -125,7 +125,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
                 <Icon
                   className={clsx(
                     'relative w-4 h-4 flex-shrink-0',
-                    active ? 'text-white' : 'text-slate-400 group-hover/item:text-slate-600 transition-colors'
+                    active ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover/item:text-slate-600 dark:group-hover/item:text-slate-300 transition-colors'
                   )}
                   strokeWidth={active ? 2.4 : 2.1}
                 />
@@ -144,7 +144,7 @@ export default function Sidebar({ isOpen = false, onClose }: Props) {
         </nav>
 
         {/* Footer */}
-        <div className="px-3 py-4 border-t border-slate-100">
+        <div className="px-3 py-4 border-t border-slate-100 dark:border-[hsl(214_32%_18%)]">
           <div className="flex items-center gap-2">
             <div
               className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"

@@ -1,5 +1,6 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts'
 import { fmtBRLCompact, fmtBRL } from '@/lib/formatters'
@@ -18,6 +19,8 @@ interface Props {
 
 export default function BarChartGoalVsSales({ data, title, maxItems = 15 }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
   const limit = isMobile ? 8 : maxItems
   const slice = data.slice(0, limit)
   const height = isMobile ? 260 : 300

@@ -1,5 +1,6 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { fmtPct } from '@/lib/formatters'
@@ -14,6 +15,8 @@ interface Props {
 
 export default function StackedBarChart({ data, keys, title, xKey = 'nome', formatter = fmtPct }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
   const limit = isMobile ? 8 : data.length
   const maxLabel = isMobile ? 10 : 16
   const chartData = data.slice(0, limit).map(d => ({

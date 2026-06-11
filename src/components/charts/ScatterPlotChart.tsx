@@ -1,20 +1,23 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { fmtBRLCompact, fmtBRL } from '@/lib/formatters'
 import type { Loja } from '@/types/dashboard'
 
 const STATUS_COLOR: Record<string, string> = {
-  'Saudável': CHART_THEME.colors.success,
-  'Atenção':  CHART_THEME.colors.warning,
-  'Crítica':  CHART_THEME.colors.destructive,
+  'Saudável': 'hsl(142 72% 29%)',
+  'Atenção':  'hsl(32 95% 44%)',
+  'Crítica':  'hsl(0 72% 51%)',
 }
 
 interface Props { lojas: Loja[]; title?: string }
 
 export default function ScatterPlotChart({ lojas, title }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
   const data = lojas
     .filter(l => l.venda !== null && l.perdaVendaTotal !== null)
     .map(l => ({
@@ -37,8 +40,8 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
               if (!payload?.length) return null
               const d = payload[0].payload
               return (
-                <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 10, padding: '8px 12px', fontSize: 12, color: '#0F172A', fontWeight: 500, boxShadow: '0 8px 24px -6px rgba(15,23,42,0.14)' }}>
-                  <p style={{ fontWeight: 700, marginBottom: 4, color: '#0891B2' }}>{d.nome}</p>
+                <div style={{ ...CHART_THEME.tooltip.contentStyle, padding: '8px 12px' }}>
+                  <p style={{ ...CHART_THEME.tooltip.labelStyle, fontWeight: 700, marginBottom: 4 }}>{d.nome}</p>
                   <p>Venda: {fmtBRL(d.x)}</p>
                   <p>Perda: {fmtBRL(d.y)}</p>
                 </div>

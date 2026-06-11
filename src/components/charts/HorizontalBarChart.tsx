@@ -1,5 +1,6 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
@@ -19,6 +20,8 @@ interface Props {
 
 export default function HorizontalBarChart({ data, title, formatter = String, tooltipFormatter }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
   const tipFmt = tooltipFormatter ?? formatter
   const yAxisWidth = isMobile ? 90 : 130
   const maxLabel = isMobile ? 14 : 22

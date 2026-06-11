@@ -1,5 +1,6 @@
 'use client'
-import { CHART_THEME } from '@/lib/chartTheme'
+import { getChartTheme } from '@/lib/chartTheme'
+import { useTheme } from '@/context/ThemeContext'
 import { useIsMobile } from '@/lib/useIsMobile'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import type { DadosMensais } from '@/types/dashboard'
@@ -14,13 +15,14 @@ interface LabelProps {
   x?: number
   y?: number
   value?: number
+  color?: string
 }
 
-function ValueLabel({ x = 0, y = 0, value }: LabelProps) {
+function ValueLabel({ x = 0, y = 0, value, color = 'hsl(192 91% 36%)' }: LabelProps) {
   if (value === null || value === undefined) return null
   return (
     <g transform={`translate(${x},${y - 14})`}>
-      <text textAnchor="middle" fill={CHART_THEME.colors.primary} fontSize={10} fontWeight={600}>
+      <text textAnchor="middle" fill={color} fontSize={10} fontWeight={600}>
         {fmtBRL(value)}
       </text>
     </g>
@@ -29,6 +31,8 @@ function ValueLabel({ x = 0, y = 0, value }: LabelProps) {
 
 export default function LineChartRevenue({ data, title }: Props) {
   const isMobile = useIsMobile()
+  const { theme } = useTheme()
+  const CHART_THEME = getChartTheme(theme === 'dark')
 
   return (
     <div className="glass-card p-4">
@@ -74,7 +78,7 @@ export default function LineChartRevenue({ data, title }: Props) {
             strokeWidth={2}
             dot={{ r: isMobile ? 3 : 5, fill: CHART_THEME.colors.primary }}
             activeDot={{ r: isMobile ? 5 : 7 }}
-            label={isMobile ? undefined : <ValueLabel />}
+            label={isMobile ? undefined : <ValueLabel color={CHART_THEME.colors.primary} />}
           />
         </LineChart>
       </ResponsiveContainer>
