@@ -142,10 +142,10 @@ body {
 
 .dark .bg-radial-glow {
   background:
-    radial-gradient(ellipse 90% 55% at 5% 0%,
-      hsl(192 70% 30% / 0.09) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 50% at 95% 100%,
-      hsl(217 80% 50% / 0.05) 0%, transparent 65%);
+    radial-gradient(ellipse 80% 45% at 5% 0%,
+      hsl(217 30% 20% / 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 95% 100%,
+      hsl(217 30% 20% / 0.08) 0%, transparent 60%);
 }
 
 .dark .section-label {

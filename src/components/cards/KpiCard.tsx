@@ -15,19 +15,19 @@ interface Props {
 }
 
 const ICON_VARIANT: Record<NonNullable<Props['color']>, string> = {
-  default: 'bg-cyan-50   dark:bg-[hsl(192_22%_13%)]  text-cyan-600   dark:text-[hsl(192_50%_52%)]',
-  green:   'bg-green-50  dark:bg-[hsl(142_22%_12%)]  text-green-600  dark:text-[hsl(142_50%_48%)]',
-  red:     'bg-red-50    dark:bg-[hsl(0_22%_14%)]    text-red-600    dark:text-[hsl(0_55%_55%)]',
-  yellow:  'bg-amber-50  dark:bg-[hsl(32_22%_13%)]   text-amber-600  dark:text-[hsl(32_65%_52%)]',
-  blue:    'bg-blue-50   dark:bg-[hsl(217_22%_14%)]  text-blue-600   dark:text-[hsl(217_60%_58%)]',
+  default: 'bg-cyan-50   dark:bg-[hsl(215_18%_14%)]  text-cyan-600   dark:text-[hsl(192_42%_46%)]',
+  green:   'bg-green-50  dark:bg-[hsl(215_18%_14%)]  text-green-600  dark:text-[hsl(142_40%_44%)]',
+  red:     'bg-red-50    dark:bg-[hsl(215_18%_14%)]  text-red-600    dark:text-[hsl(0_44%_50%)]',
+  yellow:  'bg-amber-50  dark:bg-[hsl(215_18%_14%)]  text-amber-600  dark:text-[hsl(32_52%_48%)]',
+  blue:    'bg-blue-50   dark:bg-[hsl(215_18%_14%)]  text-blue-600   dark:text-[hsl(217_52%_54%)]',
 }
 
 const GLOW_COLOR: Record<NonNullable<Props['color']>, string> = {
-  default: 'bg-cyan-100/50   dark:bg-cyan-400/4',
-  green:   'bg-green-100/50  dark:bg-green-400/4',
-  red:     'bg-red-100/50    dark:bg-red-400/4',
-  yellow:  'bg-amber-100/50  dark:bg-amber-400/4',
-  blue:    'bg-blue-100/50   dark:bg-blue-400/4',
+  default: 'bg-cyan-100/50',
+  green:   'bg-green-100/50',
+  red:     'bg-red-100/50',
+  yellow:  'bg-amber-100/50',
+  blue:    'bg-blue-100/50',
 }
 
 const HOVER_SHADOW: Record<NonNullable<Props['color']>, string> = {
@@ -112,9 +112,9 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
       'hover:-translate-y-0.5',
       HOVER_SHADOW[color],
     )}>
-      {/* Corner accent */}
+      {/* Corner accent — apenas light mode */}
       <div className={clsx(
-        'pointer-events-none absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-60 dark:opacity-100',
+        'pointer-events-none absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-50 dark:hidden',
         GLOW_COLOR[color],
       )} />
 
@@ -128,7 +128,7 @@ export default function KpiCard({ title, value, subtitle, delta, icon: Icon, col
         </div>
         {Icon && (
           <div className={clsx(
-            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(215_22%_16%)] shrink-0',
+            'relative p-1.5 sm:p-2 rounded-xl border border-slate-100 dark:border-[hsl(215_18%_18%)] shrink-0',
             ICON_VARIANT[color],
           )}>
             <Icon className="w-3.5 h-3.5" strokeWidth={2} />
