@@ -31,7 +31,7 @@ export default function LineChartRevenue({ data, title }: Props) {
   const isMobile = useIsMobile()
 
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+    <div className="glass-card p-4">
       {title && <h3 className="text-sm font-semibold text-foreground/80 mb-4">{title}</h3>}
 
       <div className="overflow-x-auto mb-3">
@@ -39,7 +39,7 @@ export default function LineChartRevenue({ data, title }: Props) {
           <thead>
             <tr>
               {data.map(d => (
-                <th key={d.mes} className="px-2 py-1 text-center text-muted-foreground font-medium border-b border-white/[0.06]">
+                <th key={d.mes} className="px-2 py-1 text-center text-slate-500 font-medium border-b border-slate-200">
                   {d.mes}
                 </th>
               ))}

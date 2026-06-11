@@ -13,7 +13,7 @@ export default function DonutChart({ data, title }: Props) {
   const outerR = isMobile ? 72 : 90
 
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+    <div className="glass-card p-4">
       {title && <h3 className="text-sm font-semibold text-foreground/80 mb-2">{title}</h3>}
       <ResponsiveContainer width="100%" height={isMobile ? 200 : 240}>
         <PieChart>

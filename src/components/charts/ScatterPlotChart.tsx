@@ -25,7 +25,7 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
     }))
 
   return (
-    <div className="glass-card rounded-xl border border-white/[0.06] p-4 shadow-sm">
+    <div className="glass-card p-4">
       {title && <h3 className="text-sm font-semibold text-foreground/80 mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
         <ScatterChart margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
@@ -37,8 +37,8 @@ export default function ScatterPlotChart({ lojas, title }: Props) {
               if (!payload?.length) return null
               const d = payload[0].payload
               return (
-                <div style={{ background: 'hsl(220 52% 7%)', border: '1px solid hsl(220 40% 20%)', borderRadius: 10, padding: '8px 12px', fontSize: 12, color: 'hsl(210 22% 96%)' }}>
-                  <p style={{ fontWeight: 600, marginBottom: 2 }}>{d.nome}</p>
+                <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 10, padding: '8px 12px', fontSize: 12, color: '#0F172A', fontWeight: 500, boxShadow: '0 8px 24px -6px rgba(15,23,42,0.14)' }}>
+                  <p style={{ fontWeight: 700, marginBottom: 4, color: '#0891B2' }}>{d.nome}</p>
                   <p>Venda: {fmtBRL(d.x)}</p>
                   <p>Perda: {fmtBRL(d.y)}</p>
                 </div>
